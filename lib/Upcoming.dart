@@ -12,9 +12,14 @@ List<String> upcoming = [
 ];
 int eta = 13;
 
-
 class _CurrentRideState extends State<CurrentRide> {
-  List<String> cur = ["Sabriyah", "11am", "Cascadilla", "PSB", "+1 123 456 7890"];
+  List<String> cur = [
+    "Sabriyah",
+    "11am",
+    "Cascadilla",
+    "PSB",
+    "+1 123 456 7890"
+  ];
   bool _inProgress = false;
 
   @override
@@ -56,13 +61,10 @@ class _CurrentRideState extends State<CurrentRide> {
                       RaisedButton(
                         child: Icon(Icons.message, color: Colors.black),
                         color: Colors.white,
-                        onPressed: () {
-
-                        },
+                        onPressed: () {},
                       )
                     ],
                   ),
-
                 ])));
   }
 }
