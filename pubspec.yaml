@@ -12,6 +12,7 @@ dependencies:
 
   cupertino_icons: ^0.1.2
   sliding_up_panel: ^0.3.6
+  url_launcher: ^5.0.3
 
 dev_dependencies:
   flutter_test:

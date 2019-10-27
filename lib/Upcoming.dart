@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-List<String> cur = ["Sabriyah", "11am", "Cascadilla", "PSB"];
 List<String> upcoming = [
   "Chris @ 12pm",
   "Laura @ 3pm",
@@ -10,8 +10,13 @@ List<String> upcoming = [
   "Paulie @ 8am tomorrow",
   "Lisa @ 9am tomorrow"
 ];
+int eta = 13;
 
-class CurrentRide extends StatelessWidget {
+
+class _CurrentRideState extends State<CurrentRide> {
+  List<String> cur = ["Sabriyah", "11am", "Cascadilla", "PSB", "+1 123 456 7890"];
+  bool _inProgress = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,19 +27,21 @@ class CurrentRide extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Text('${cur[0]} @ ${cur[1]}',
+                  Text('${cur[0]} ${_inProgress ? '' : '@ ${cur[1]}'}',
                       style: Theme.of(context).textTheme.headline),
-                  Text('From ${cur[2]}',
+                  Text(_inProgress ? 'ETA $eta minutes' : 'From ${cur[2]}',
                       style: Theme.of(context).textTheme.headline),
                   Text('To ${cur[3]}',
                       style: Theme.of(context).textTheme.headline),
                   Row(
                     children: <Widget>[
                       RaisedButton(
-                        child: Text('Arrived'),
+                        child: Text(_inProgress ? 'Here' : 'Arrived'),
                         color: Colors.white,
                         onPressed: () {
-
+                          setState(() {
+                            _inProgress = true;
+                          });
                         },
                       ),
                       SizedBox(width: 10.0),
@@ -42,7 +49,7 @@ class CurrentRide extends StatelessWidget {
                         child: Icon(Icons.call, color: Colors.green),
                         color: Colors.white,
                         onPressed: () {
-
+                          launch("tel:${cur[4]}");
                         },
                       ),
                       SizedBox(width: 10.0),
@@ -57,6 +64,13 @@ class CurrentRide extends StatelessWidget {
                   ),
 
                 ])));
+  }
+}
+
+class CurrentRide extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _CurrentRideState();
   }
 }
 

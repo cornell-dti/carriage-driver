@@ -4,7 +4,9 @@ import 'Home.dart';
 import 'Login.dart';
 import 'Upcoming.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   BorderRadiusGeometry radius = BorderRadius.only(
