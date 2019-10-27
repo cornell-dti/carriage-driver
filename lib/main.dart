@@ -3,10 +3,6 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'Home.dart';
 import 'Login.dart';
 import 'Upcoming.dart';
-import 'CurrentRide.dart';
-import 'Schedule.dart';
-import 'BottomMenu.dart';
-import 'Map.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,6 +20,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: SlidingUpPanel(
+        minHeight: 62.0,
+        panelSnapping: false,
         panel: Upcoming(),
         body: Home(),
           borderRadius: radius

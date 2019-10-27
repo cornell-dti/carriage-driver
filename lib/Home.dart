@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Map.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -7,6 +8,7 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: Text('Carriage'),
       ),
+      body: Map(),
     );
   }
 }
