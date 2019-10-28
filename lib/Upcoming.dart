@@ -21,11 +21,12 @@ class _CurrentRideState extends State<CurrentRide> {
     "+1 123 456 7890"
   ];
   bool _inProgress = false;
+  bool _messaging = false;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 150.0,
+        height: _messaging ? 200.0 : 150.0,
         child: Padding(
             padding: EdgeInsets.only(left: 16.0),
             child: Column(
@@ -61,10 +62,45 @@ class _CurrentRideState extends State<CurrentRide> {
                       RaisedButton(
                         child: Icon(Icons.message, color: Colors.black),
                         color: Colors.white,
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            _messaging = !_messaging;
+                          });
+                        },
                       )
                     ],
                   ),
+                  Visibility(
+                    visible: _messaging,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: <Widget>[
+                          ActionChip(
+                            label: Text('Where are you?'),
+                            onPressed: () {
+                              launch('sms:${cur[4]}?body=Where are you%3F');
+                            },
+                          ),
+                          SizedBox(width: 5.0),
+                          ActionChip(
+                            label: Text('Let me pull around.'),
+                            onPressed: () {
+                              launch('sms:${cur[4]}?body=Let me pull around.');
+                            },
+                          ),
+                          SizedBox(width: 5.0),
+                          ActionChip(
+                            label: Text('Be there soon!'),
+                            onPressed: (){
+                              launch('sms:${cur[4]}?body=Be there soon%21');
+                            },
+                          ),
+                          SizedBox(width: 10.0)
+                        ],
+                      ),
+                    ),
+                  )
                 ])));
   }
 }
