@@ -64,10 +64,10 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Greeting(name: 'Chris'),
-              LeftSubheading(heading: 'Upcoming Rides'),
+              LeftSubheading(heading: 'Next Ride'),
               Center(child: NextRide()),
               SizedBox(height: 20.0),
-              LeftSubheading(heading: 'Today\'s schedule'),
+              LeftSubheading(heading: 'Upcoming Rides'),
               Flexible(
                   child: Center(
                 child: ListView.separated(
