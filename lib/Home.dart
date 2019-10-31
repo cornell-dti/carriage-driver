@@ -38,6 +38,10 @@ class LeftSubheading extends StatelessWidget {
   }
 }
 
+Widget _ride(BuildContext context, int index) {
+  return NextRide();
+}
+
 class Home extends StatelessWidget {
   BorderRadiusGeometry radius = BorderRadius.only(
       topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0));
@@ -54,7 +58,17 @@ class Home extends StatelessWidget {
               LeftSubheading(heading: 'Upcoming Rides'),
               Center(child: NextRide()),
               SizedBox(height: 20.0),
-              LeftSubheading(heading: 'Today\'s schedule')
+              LeftSubheading(heading: 'Today\'s schedule'),
+              Flexible(
+                child: Center(
+                  child: ListView.separated(
+                    itemCount: 3,
+                    itemBuilder: _ride,
+                    separatorBuilder: (BuildContext context, int index) => Divider(),
+                    padding: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 5.0),
+                  ),
+                )
+              )
             ]),
         bottomNavigationBar:  BottomNavigationBar(
           selectedItemColor: Colors.blue,
