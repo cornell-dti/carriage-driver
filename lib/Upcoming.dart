@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+TextStyle head = TextStyle(fontSize: 40, fontWeight: FontWeight.bold);
+
 class CircleImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -90,60 +92,83 @@ class Time extends StatelessWidget {
   }
 }
 
-class NextRide extends StatelessWidget {
+class Summary extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 30.0, top: 50.0, bottom: 10.0),
+            child: Text('Ride Summary', style: head),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class UpcomingRide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 350.0,
       height: 170.0,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(
-            Radius.circular(10.0),
-          ),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.grey,
-                offset: Offset(5.0, 10.0),
-                blurRadius: 5.0,
-                spreadRadius: 0.0)
-          ],
-        ),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return Summary();
+          }));
+        },
         child: Container(
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                flex: 4,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Date(date: 'Oct 30'),
-                    Time(time: '10:12 PM'),
-                    Padding(
-                        padding: const EdgeInsets.only(left: 20.0, top: 10.0),
-                        child: Rider())
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: Column(
-                        children: <Widget>[
-                          Location(heading: 'From', destination: 'PSB'),
-                          SizedBox(height: 16.0),
-                          Location(heading: 'To', destination: 'Cascadilla')
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              )
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(10.0),
+            ),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey,
+                  offset: Offset(5.0, 10.0),
+                  blurRadius: 5.0,
+                  spreadRadius: 0.0)
             ],
+          ),
+          child: Container(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Date(date: 'Oct 30'),
+                      Time(time: '10:12 PM'),
+                      Padding(
+                          padding: const EdgeInsets.only(left: 20.0, top: 10.0),
+                          child: Rider())
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: Column(
+                          children: <Widget>[
+                            Location(heading: 'From', destination: 'PSB'),
+                            SizedBox(height: 16.0),
+                            Location(heading: 'To', destination: 'Cascadilla')
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

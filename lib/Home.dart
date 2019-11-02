@@ -10,8 +10,7 @@ class Greeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      child: Text('Hi $name!',
-          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+      child: Text('Hi $name!', style: head),
       padding: EdgeInsets.only(left: 30.0, top: 50.0, bottom: 10.0),
     );
   }
@@ -52,7 +51,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget _ride(BuildContext context, int index) {
-    return NextRide();
+    return UpcomingRide();
   }
 
   @override
@@ -65,7 +64,12 @@ class _HomeState extends State<Home> {
             children: <Widget>[
               Greeting(name: 'Chris'),
               LeftSubheading(heading: 'Next Ride'),
-              Center(child: NextRide()),
+              Center(
+                  child: Column(
+                children: <Widget>[
+                  UpcomingRide(),
+                ],
+              )),
               SizedBox(height: 20.0),
               LeftSubheading(heading: 'Upcoming Rides'),
               Flexible(
@@ -78,8 +82,20 @@ class _HomeState extends State<Home> {
                   padding:
                       EdgeInsets.only(left: 30.0, right: 30.0, bottom: 5.0),
                 ),
-              ))
+              )),
             ]),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) {
+                return Map();
+              }
+            ));
+          },
+          label: Text('Start Ride'),
+          icon: Icon(Icons.directions_car),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Colors.blue,
           items: <BottomNavigationBarItem>[
