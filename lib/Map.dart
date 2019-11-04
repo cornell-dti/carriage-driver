@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class Direction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 600),
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
       child: Container(
-        height: 30,
-        width: 30,
+        height: 180,
+        width: MediaQuery.of(context).size.width,
         color: Colors.white,
         child: Row(
           children: <Widget>[
@@ -47,38 +46,63 @@ class Map extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SlidingUpPanel(
-        minHeight: 200.0,
-        maxHeight: 300.0,
-        isDraggable: false,
-        borderRadius: radius,
-        body: Container(
-          // Map will go here!
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/images/placeholder.png'),
-                  fit: BoxFit.cover)),
-          child: Direction()
-        ),
-        panel: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/images/terry.jpg'),
-              radius: 30,
+      body: Stack(
+        children: <Widget>[
+          Container(
+            // Map will go here!
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/images/placeholder.png'),
+                      fit: BoxFit.cover)),
+          ),
+          Container(
+            child: Direction(),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 200,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 140),
+                    child: ButtonTheme(
+                      minWidth: 150,
+                      height: 40,
+                      child: RaisedButton(
+                        color: Colors.red,
+                        textColor: Colors.white,
+                        child: Text('Arrived'),
+                        onPressed: () {},
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 80.0),
-            RaisedButton(
-              color: Colors.red,
-              textColor: Colors.white,
-              child: Text('Arrived'),
-              onPressed: () {},
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            )
-          ],
-        ),
-      ),
+          ),
+          Positioned(
+            bottom: 160, // height of sheet - radius
+            left: MediaQuery.of(context).size.width / 2 - 40,
+            child: Container(
+              padding: EdgeInsets.all(2.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.green
+              ),
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/images/terry.jpg'),
+                radius: 40,
+              ),
+            ),
+          )
+        ],
+      )
     );
   }
 }
+
