@@ -2,29 +2,16 @@ import 'package:flutter/material.dart';
 
 TextStyle head = TextStyle(fontSize: 40, fontWeight: FontWeight.bold);
 
-class CircleImage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    double _size = 50.0;
-
-    return Container(
-      width: _size,
-      height: _size,
-      decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-              fit: BoxFit.cover, image: AssetImage('assets/images/terry.jpg'))),
-    );
-  }
-}
-
 class Rider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Row(
         children: <Widget>[
-          CircleImage(),
+          CircleAvatar(
+            backgroundImage: AssetImage('assets/images/terry.jpg'),
+            radius: 25,
+          ),
           SizedBox(width: 10.0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
