@@ -10,8 +10,11 @@ class Greeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      child: Text('Hi $name!', style: head),
-      padding: EdgeInsets.only(left: 30.0, top: 50.0, bottom: 10.0),
+      child: Text('Hi $name!', style: Theme.of(context).textTheme.headline),
+      padding: EdgeInsets.only(
+          left: 24.0,
+          top: 18.0 + MediaQuery.of(context).padding.top,
+          bottom: 16.0),
     );
   }
 }
@@ -24,9 +27,8 @@ class LeftSubheading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 30.0, bottom: 15.0),
-      child: Text('$heading',
-          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+      padding: EdgeInsets.only(left: 24.0, bottom: 16.0),
+      child: Text('$heading', style: Theme.of(context).textTheme.subhead),
     );
   }
 }
@@ -70,32 +72,53 @@ class _HomeState extends State<Home> {
                   UpcomingRide(),
                 ],
               )),
-              SizedBox(height: 20.0),
+              SizedBox(height: 3),
+              Center(
+                child: RaisedButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return Map();
+                    }));
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(24))),
+                  color: Colors.red,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Icon(Icons.directions_car, color: Colors.white),
+                      SizedBox(width: 5),
+                      Text('Start Ride', style: TextStyle(color: Colors.white)),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 8.0),
               LeftSubheading(heading: 'Upcoming Rides'),
               Flexible(
-                  child: Center(
                 child: ListView.separated(
                   itemCount: 3,
                   itemBuilder: _ride,
                   separatorBuilder: (BuildContext context, int index) =>
                       Divider(),
                   padding:
-                      EdgeInsets.only(left: 30.0, right: 30.0, bottom: 5.0),
+                      EdgeInsets.only(left: 24.0, right: 24.0, bottom: 5.0),
                 ),
-              )),
+              ),
             ]),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) {
-                return Map();
-              }
-            ));
-          },
-          label: Text('Start Ride'),
-          icon: Icon(Icons.directions_car),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+//        floatingActionButton: FloatingActionButton.extended(
+//          onPressed: () {
+//            Navigator.of(context).push(MaterialPageRoute(
+//              builder: (context) {
+//                return Map();
+//              }
+//            ));
+//          },
+//          label: Text('Start Ride'),
+//          icon: Icon(Icons.directions_car),
+//        ),
+//        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Colors.blue,
           items: <BottomNavigationBarItem>[

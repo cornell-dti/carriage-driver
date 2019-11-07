@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-TextStyle head = TextStyle(fontSize: 40, fontWeight: FontWeight.bold);
-
 class Rider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -12,12 +10,17 @@ class Rider extends StatelessWidget {
             backgroundImage: AssetImage('assets/images/terry.jpg'),
             radius: 25,
           ),
-          SizedBox(width: 10.0),
+          SizedBox(width: 12.0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('Terry Cruz', style: TextStyle(fontWeight: FontWeight.bold)),
-              Text('Big Arms', style: TextStyle(color: Colors.grey))
+              Text('Terry Cruz',
+                  style: TextStyle(fontSize: 12, letterSpacing: 0.23)),
+              Text('Big Arms',
+                  style: TextStyle(
+                      color: Color.fromRGBO(142, 142, 147, 1),
+                      fontSize: 10,
+                      letterSpacing: 0.19))
             ],
           )
         ],
@@ -40,9 +43,16 @@ class Location extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text('$heading',
-                style: TextStyle(fontSize: 14, color: Colors.grey)),
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).accentColor,
+                    letterSpacing: 0)),
+            SizedBox(height: 4),
             Text('$destination',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
+                style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -0.41))
           ],
         ),
       ],
@@ -58,8 +68,12 @@ class Date extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 20.0, top: 20.0),
-      child: Text('$date', style: TextStyle(fontSize: 20, color: Colors.grey)),
+      padding: EdgeInsets.only(left: 24.0, top: 12.0),
+      child: Text('$date',
+          style: TextStyle(
+              fontSize: 17,
+              color: Theme.of(context).accentColor,
+              letterSpacing: -0.41)),
     );
   }
 }
@@ -72,9 +86,10 @@ class Time extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 20.0, top: 5.0),
+      padding: EdgeInsets.only(left: 24.0, top: 12.0),
       child: Text('$time',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+          style: TextStyle(
+              fontSize: 34, fontWeight: FontWeight.bold, letterSpacing: 0.37)),
     );
   }
 }
@@ -87,7 +102,8 @@ class Summary extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(left: 30.0, top: 50.0, bottom: 10.0),
-            child: Text('Ride Summary', style: head),
+            child: Text('Ride Summary',
+                style: Theme.of(context).textTheme.headline),
           )
         ],
       ),
@@ -98,9 +114,10 @@ class Summary extends StatelessWidget {
 class UpcomingRide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width - 48;
     return Container(
-      width: 350.0,
-      height: 170.0,
+      width: width,
+      height: width / 2,
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -111,46 +128,45 @@ class UpcomingRide extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(
-              Radius.circular(10.0),
+              Radius.circular(3.0),
             ),
             boxShadow: [
               BoxShadow(
-                  color: Colors.grey,
-                  offset: Offset(5.0, 10.0),
-                  blurRadius: 5.0,
-                  spreadRadius: 0.0)
+                  color: Color.fromARGB(15, 0, 0, 0),
+                  offset: Offset(0, 4.0),
+                  blurRadius: 10.0,
+                  spreadRadius: 1.0)
             ],
           ),
           child: Container(
             child: Row(
               children: <Widget>[
                 Expanded(
-                  flex: 4,
+                  flex: 181,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Date(date: 'Oct 30'),
-                      Time(time: '10:12 PM'),
+                      Time(time: '10:12'),
                       Padding(
-                          padding: const EdgeInsets.only(left: 20.0, top: 10.0),
+                          padding: const EdgeInsets.only(left: 24.0, top: 10.0),
                           child: Rider())
                     ],
                   ),
                 ),
                 Expanded(
-                  flex: 3,
+                  flex: 146,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 20.0),
-                        child: Column(
-                          children: <Widget>[
-                            Location(heading: 'From', destination: 'PSB'),
-                            SizedBox(height: 16.0),
-                            Location(heading: 'To', destination: 'Cascadilla')
-                          ],
-                        ),
-                      )
+                      Column(
+                        children: <Widget>[
+                          Location(heading: 'Pick up', destination: 'PSB'),
+                          SizedBox(height: 12.0),
+                          Location(
+                              heading: 'Drop off', destination: 'Cascadilla')
+                        ],
+                      ),
                     ],
                   ),
                 )

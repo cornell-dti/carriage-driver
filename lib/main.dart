@@ -11,8 +11,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Carriage',
         theme: ThemeData(
-          primarySwatch: Colors.red,
-        ),
+            primarySwatch: Colors.red,
+            fontFamily: 'SFPro',
+            accentColor: Color.fromRGBO(60, 60, 67, 0.6),
+            textTheme: TextTheme(
+              headline: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+              subhead: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
+            )),
         home: Login());
   }
 }
