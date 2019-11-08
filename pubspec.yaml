@@ -11,6 +11,9 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^0.1.2
+  sliding_up_panel: ^0.3.6
+  url_launcher: ^5.0.3
+  google_sign_in: ^4.0.7
 
 dev_dependencies:
   flutter_test:
@@ -18,5 +21,12 @@ dev_dependencies:
 
 
 flutter:
+  fonts:
+    - family: SFPro
+      fonts:
+        - asset: fonts/SF-Pro-Text-Medium.ttf
   uses-material-design: true
+  assets:
+    - assets/images/
+
 
