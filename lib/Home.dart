@@ -40,11 +40,14 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
+DateTime fakeTime = DateTime.now().add(Duration(hours: 1));
+
 class _HomeState extends State<Home> {
   BorderRadiusGeometry radius = BorderRadius.only(
       topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0));
 
   int _selectedIndex = 0;
+  bool _starting = DateTime.now().difference(fakeTime).inHours <= 1;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -72,29 +75,32 @@ class _HomeState extends State<Home> {
                   UpcomingRide(),
                 ],
               )),
-              SizedBox(height: 3),
-              Center(
-                child: RaisedButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return Map();
-                    }));
-                  },
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(24))),
-                  color: Colors.red,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.directions_car, color: Colors.white),
-                      SizedBox(width: 5),
-                      Text('Start Ride', style: TextStyle(color: Colors.white)),
-                    ],
+              SizedBox(height: 4.0),
+              Visibility(
+                visible: _starting,
+                child: Center(
+                  child: RaisedButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return Map();
+                      }));
+                    },
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(24))),
+                    color: Colors.red,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.directions_car, color: Colors.white),
+                        SizedBox(width: 5),
+                        Text('Start Ride', style: TextStyle(color: Colors.white)),
+                      ],
+                    ),
                   ),
                 ),
               ),
-              SizedBox(height: 8.0),
+              SizedBox(height: 4.0),
               LeftSubheading(heading: 'Upcoming Rides'),
               Flexible(
                 child: ListView.separated(
@@ -107,18 +113,6 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ]),
-//        floatingActionButton: FloatingActionButton.extended(
-//          onPressed: () {
-//            Navigator.of(context).push(MaterialPageRoute(
-//              builder: (context) {
-//                return Map();
-//              }
-//            ));
-//          },
-//          label: Text('Start Ride'),
-//          icon: Icon(Icons.directions_car),
-//        ),
-//        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Colors.blue,
           items: <BottomNavigationBarItem>[

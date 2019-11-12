@@ -1,6 +1,24 @@
 import 'package:flutter/material.dart';
 
-class Rider extends StatelessWidget {
+class Rider extends StatefulWidget {
+  Rider({Key key}) : super(key: key);
+
+  @override
+  _RiderState createState() => _RiderState();
+}
+
+class _RiderState extends State<Rider> {
+  String _riderName;
+  String _injury;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch the Rider and their Injury from API
+    _riderName = "Terry Crews";
+    _injury = "Big Arms";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -14,9 +32,9 @@ class Rider extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('Terry Cruz',
+              Text('$_riderName',
                   style: TextStyle(fontSize: 12, letterSpacing: 0.23)),
-              Text('Big Arms',
+              Text('$_injury',
                   style: TextStyle(
                       color: Color.fromRGBO(142, 142, 147, 1),
                       fontSize: 10,
@@ -111,7 +129,15 @@ class Summary extends StatelessWidget {
   }
 }
 
-class UpcomingRide extends StatelessWidget {
+class UpcomingRide extends StatefulWidget {
+  UpcomingRide({Key key, DateTime startTime}) : super(key: key);
+
+  @override
+  _UpcomingRideState createState() => _UpcomingRideState();
+}
+
+class _UpcomingRideState extends State<UpcomingRide> {
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width - 48;

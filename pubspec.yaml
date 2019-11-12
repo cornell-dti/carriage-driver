@@ -11,8 +11,6 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^0.1.2
-  sliding_up_panel: ^0.3.6
-  url_launcher: ^5.0.3
   google_sign_in: ^4.0.7
 
 dev_dependencies:
