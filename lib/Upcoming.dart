@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'Map.dart';
 
@@ -18,8 +17,8 @@ class _RiderState extends State<Rider> {
   void initState() {
     super.initState();
     // Fetch the Rider and their Injury from API
-    _riderName = "Terry Crews";
-    _injury = "Big Arms";
+    _riderName = "Terry Cruz";
+    _injury = "Wheelchair";
   }
 
   @override
@@ -37,7 +36,7 @@ class _RiderState extends State<Rider> {
             children: <Widget>[
               Text('$_riderName',
                   style: TextStyle(fontSize: 12, letterSpacing: 0.23)),
-              Text('$_injury',
+              Text('Needs: $_injury',
                   style: TextStyle(
                       color: Color.fromRGBO(142, 142, 147, 1),
                       fontSize: 10,
@@ -107,6 +106,7 @@ class _DateState extends State<Date> {
   @override
   void initState() {
     super.initState();
+    // Fetch date
     _date = "Nov 12";
   }
 
@@ -136,6 +136,7 @@ class _TimeState extends State<Time> {
   @override
   void initState() {
     super.initState();
+    // Fetch start time
     _time = "10:12";
   }
 
@@ -250,14 +251,10 @@ class _CurrentRideState extends State<CurrentRide> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Column(
-                        children: <Widget>[
                           Location(heading: 'Pick up'),
                           SizedBox(height: 12.0),
                           Location(heading: 'Drop off')
                         ],
-                      ),
-                    ],
                   ),
                 )
               ],
@@ -286,6 +283,80 @@ class _CurrentRideState extends State<CurrentRide> {
                   ),
                 ),
               ),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+}
+
+class UpcomingRide extends StatefulWidget {
+  UpcomingRide({Key key, DateTime startTime}) : super(key: key);
+
+  @override
+  _UpcomingRideState createState() => _UpcomingRideState();
+}
+
+class _UpcomingRideState extends State<UpcomingRide> {
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width - 48;
+
+    return AnimatedContainer(
+      duration: Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+      width: width,
+      height: width / 2,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return Summary();
+          }));
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(3),
+            boxShadow: [
+              BoxShadow(
+                  color: Color.fromARGB(15, 0, 0, 0),
+                  offset: Offset(0, 4.0),
+                  blurRadius: 10.0,
+                  spreadRadius: 1.0)
+            ],
+          ),
+          child: Column(children: <Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 181,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Date(),
+                      Time(),
+                      Padding(
+                          padding: EdgeInsets.only(left: 24.0, top: 10.0),
+                          child:
+                          // Some kind of responsive grid will need to go here
+                          CircleAvatar(
+                            backgroundImage: AssetImage('assets/images/terry.jpg'),
+                            radius: 25,
+                          ))
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 146,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                     
+                    ],
+                  ),
+                )
+              ],
             ),
           ]),
         ),

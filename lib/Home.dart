@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'Upcoming.dart';
-import 'Map.dart';
 
 class Greeting extends StatelessWidget {
   String name;
@@ -41,10 +40,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  BorderRadiusGeometry radius = BorderRadius.only(
-      topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0));
-
   int _selectedIndex = 0;
+
+  String _name;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch name of user
+    _name = "Chris";
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -53,7 +58,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget _ride(BuildContext context, int index) {
-    return CurrentRide();
+    return UpcomingRide();
   }
 
   @override
@@ -64,7 +69,7 @@ class _HomeState extends State<Home> {
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Greeting(name: 'Chris'),
+              Greeting(name: _name),
               LeftSubheading(heading: 'Upcoming Ride'),
               Center(
                   child: Column(
