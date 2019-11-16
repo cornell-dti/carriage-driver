@@ -40,14 +40,11 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-DateTime fakeTime = DateTime.now().add(Duration(hours: 1));
-
 class _HomeState extends State<Home> {
   BorderRadiusGeometry radius = BorderRadius.only(
       topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0));
 
   int _selectedIndex = 0;
-  bool _starting = DateTime.now().difference(fakeTime).inHours <= 1;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -56,7 +53,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget _ride(BuildContext context, int index) {
-    return UpcomingRide();
+    return CurrentRide();
   }
 
   @override
@@ -68,40 +65,15 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Greeting(name: 'Chris'),
-              LeftSubheading(heading: 'Next Ride'),
+              LeftSubheading(heading: 'Upcoming Ride'),
               Center(
                   child: Column(
                 children: <Widget>[
-                  UpcomingRide(),
+                  CurrentRide(),
                 ],
               )),
-              SizedBox(height: 4.0),
-              Visibility(
-                visible: _starting,
-                child: Center(
-                  child: RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return Map();
-                      }));
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(24))),
-                    color: Colors.red,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(Icons.directions_car, color: Colors.white),
-                        SizedBox(width: 5),
-                        Text('Start Ride', style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 4.0),
-              LeftSubheading(heading: 'Upcoming Rides'),
+              SizedBox(height: 16.0),
+              LeftSubheading(heading: 'Today\'s Schedule'),
               Flexible(
                 child: ListView.separated(
                   itemCount: 3,

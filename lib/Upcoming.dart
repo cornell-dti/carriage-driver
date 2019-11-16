@@ -1,4 +1,7 @@
+import 'dart:core';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'Map.dart';
 
 class Rider extends StatefulWidget {
   Rider({Key key}) : super(key: key);
@@ -57,7 +60,6 @@ class Location extends StatefulWidget {
 }
 
 class _LocationState extends State<Location> {
-
   String _location;
 
   @override
@@ -93,10 +95,10 @@ class _LocationState extends State<Location> {
 }
 
 class Date extends StatefulWidget {
-  Date({ Key key }) : super(key:key);
+  Date({Key key}) : super(key: key);
 
   @override
-  _DateState createState () => _DateState();
+  _DateState createState() => _DateState();
 }
 
 class _DateState extends State<Date> {
@@ -122,10 +124,10 @@ class _DateState extends State<Date> {
 }
 
 class Time extends StatefulWidget {
-  Time({Key key}) : super(key : key);
+  Time({Key key}) : super(key: key);
 
   @override
-  _TimeState createState () => _TimeState();
+  _TimeState createState() => _TimeState();
 }
 
 class _TimeState extends State<Time> {
@@ -149,7 +151,7 @@ class _TimeState extends State<Time> {
 }
 
 class Summary extends StatefulWidget {
-  Summary({Key key}) : super(key : key);
+  Summary({Key key}) : super(key: key);
 
   @override
   _SummaryState createState() => _SummaryState();
@@ -172,21 +174,43 @@ class _SummaryState extends State<Summary> {
   }
 }
 
-class UpcomingRide extends StatefulWidget {
-  UpcomingRide({Key key, DateTime startTime}) : super(key: key);
+class CurrentRide extends StatefulWidget {
+  CurrentRide({Key key, DateTime startTime}) : super(key: key);
 
   @override
-  _UpcomingRideState createState() => _UpcomingRideState();
+  _CurrentRideState createState() => _CurrentRideState();
 }
 
-class _UpcomingRideState extends State<UpcomingRide> {
+class _CurrentRideState extends State<CurrentRide> {
+  double _containerHeight;
+  double _containerWidth;
+  bool _starting = false;
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width - 48;
-    return Container(
-      width: width,
-      height: width / 2,
+
+    double btnWidth = 0.48 * MediaQuery.of(context).size.width;
+    double btnHeight = 0.059 * MediaQuery.of(context).size.height;
+    double btnPadding = 24;
+
+    if(_starting) {
+      setState(() {
+        _containerWidth = width;
+        _containerHeight = width / 2 + btnHeight + btnPadding;
+      });
+    } else {
+      setState(() {
+        _containerWidth = width;
+        _containerHeight = width / 2;
+      });
+    }
+
+    return AnimatedContainer(
+      duration: Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+      width: _containerWidth,
+      height: _containerHeight,
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -196,9 +220,7 @@ class _UpcomingRideState extends State<UpcomingRide> {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(
-              Radius.circular(3.0),
-            ),
+            borderRadius: BorderRadius.circular(3),
             boxShadow: [
               BoxShadow(
                   color: Color.fromARGB(15, 0, 0, 0),
@@ -207,8 +229,8 @@ class _UpcomingRideState extends State<UpcomingRide> {
                   spreadRadius: 1.0)
             ],
           ),
-          child: Container(
-            child: Row(
+          child: Column(children: <Widget>[
+            Row(
               children: <Widget>[
                 Expanded(
                   flex: 181,
@@ -218,7 +240,7 @@ class _UpcomingRideState extends State<UpcomingRide> {
                       Date(),
                       Time(),
                       Padding(
-                          padding: const EdgeInsets.only(left: 24.0, top: 10.0),
+                          padding: EdgeInsets.only(left: 24.0, top: 10.0),
                           child: Rider())
                     ],
                   ),
@@ -232,8 +254,7 @@ class _UpcomingRideState extends State<UpcomingRide> {
                         children: <Widget>[
                           Location(heading: 'Pick up'),
                           SizedBox(height: 12.0),
-                          Location(
-                              heading: 'Drop off')
+                          Location(heading: 'Drop off')
                         ],
                       ),
                     ],
@@ -241,7 +262,32 @@ class _UpcomingRideState extends State<UpcomingRide> {
                 )
               ],
             ),
-          ),
+            Visibility(
+              visible: _starting,
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: btnPadding, bottom: btnPadding),
+                  child: ButtonTheme(
+                    minWidth: btnWidth,
+                    height: btnHeight,
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return Map();
+                        }));
+                      },
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3)),
+                      color: Theme.of(context).accentColor,
+                      child:
+                          Text('START', style: TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ]),
         ),
       ),
     );
