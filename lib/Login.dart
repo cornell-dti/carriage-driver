@@ -1,5 +1,21 @@
 import 'package:flutter/material.dart';
 import 'Home.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  scopes: [
+    'email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+  ],
+);
+
+Future<void> _handleSignIn() async {
+  try {
+    await _googleSignIn.signIn();
+  } catch (error) {
+    print(error);
+  }
+}
 
 class Login extends StatefulWidget {
   @override
@@ -31,11 +47,14 @@ class SignInButton extends StatelessWidget {
     return OutlineButton(
         splashColor: Colors.grey,
         onPressed: () {
-//          signInWithGoogle().whenComplete(() {
+          _handleSignIn().whenComplete(() {
+            // Remove true once we actually have login
+            if (_googleSignIn.currentUser != null || true) {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return Home();
           }));
-//          });
+            }
+          });
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
         highlightElevation: 0,
