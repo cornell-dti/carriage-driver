@@ -49,10 +49,11 @@ class SignInButton extends StatelessWidget {
         onPressed: () {
           _handleSignIn().whenComplete(() {
             // Remove true once we actually have login
-            if (_googleSignIn.currentUser != null || true) {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return Home();
-          }));
+            if (_googleSignIn.currentUser != null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return Home();
+              }));
+              _googleSignIn.signOut();
             }
           });
         },
