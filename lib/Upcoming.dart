@@ -303,11 +303,11 @@ class _UpcomingRideState extends State<UpcomingRide> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width - 48;
 
-    return AnimatedContainer(
-      duration: Duration(seconds: 1),
-      curve: Curves.fastOutSlowIn,
-      width: width,
-      height: width / 2,
+    return Container(
+      constraints: BoxConstraints(
+        minWidth: width, maxWidth: width,
+        minHeight: width / 2
+      ),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -352,7 +352,8 @@ class _UpcomingRideState extends State<UpcomingRide> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Route(destinations: ["hello", "bello", "fre", "hdh"],)
+                      Route(destinations: ["PSB", "Gates", "Cascadilla", "Rockefeller"]),
+                      SizedBox(height: 24)
                     ],
                   ),
                 )
@@ -418,8 +419,9 @@ class _RouteState extends State<Route> {
             ],
           ),
           Container(
-            margin: const EdgeInsetsDirectional.only(start: 4.0),
-            child: Text(widget.destinations[index]),
+            margin: const EdgeInsetsDirectional.only(start: 10.0),
+            child: Text(widget.destinations[index],
+                style: Theme.of(context).textTheme.display1),
           ),
         ],
       ),
