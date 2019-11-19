@@ -352,7 +352,7 @@ class _UpcomingRideState extends State<UpcomingRide> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                     
+                      Route(destinations: ["hello", "bello", "fre", "hdh"],)
                     ],
                   ),
                 )
@@ -361,6 +361,78 @@ class _UpcomingRideState extends State<UpcomingRide> {
           ]),
         ),
       ),
+    );
+  }
+}
+
+class Route extends StatefulWidget {
+  const Route ({
+    Key key,
+    @required this.destinations
+  }) : assert(destinations != null),
+        super(key: key);
+
+  final List<String> destinations;
+
+  @override
+  _RouteState createState() => _RouteState();
+}
+
+class _RouteState extends State<Route> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  bool _isFirst(int index) {
+    return index == 0;
+  }
+
+  bool _isLast(int index) {
+    return index == widget.destinations.length - 1;
+  }
+
+  Widget _buildLine(bool visible) {
+    return Container(
+      width: visible ? 1.0 : 0.0,
+      height: 10.0,
+      color: Colors.black,
+    );
+  }
+
+  Widget _buildVerticalHeader(BuildContext context, int index) {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              _buildLine(!_isFirst(index)),
+              Container(
+                width: 8, height: 8,
+                decoration: BoxDecoration(
+                  color: Colors.black
+                ),),
+              _buildLine(!_isLast(index)),
+            ],
+          ),
+          Container(
+            margin: const EdgeInsetsDirectional.only(start: 4.0),
+            child: Text(widget.destinations[index]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: widget.destinations.length,
+      itemBuilder: _buildVerticalHeader,
     );
   }
 }
