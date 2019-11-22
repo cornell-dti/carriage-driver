@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'Map.dart';
 
 class Rider extends StatefulWidget {
-  Rider({Key key}) : super(key: key);
+  Rider({Key key, @required this.name}) : super(key: key);
+
+  String name;
 
   @override
   _RiderState createState() => _RiderState();
@@ -17,7 +19,7 @@ class _RiderState extends State<Rider> {
   void initState() {
     super.initState();
     // Fetch the Rider and their Injury from API
-    _riderName = "Terry Cruz";
+    _riderName = widget.name;
     _injury = "Wheelchair";
   }
 
@@ -50,9 +52,10 @@ class _RiderState extends State<Rider> {
 }
 
 class Location extends StatefulWidget {
-  Location({Key key, @required this.heading}) : super(key: key);
+  Location({Key key, @required this.heading, @required this.location}) : super(key: key);
 
   String heading;
+  String location;
 
   @override
   _LocationState createState() => _LocationState();
@@ -65,7 +68,7 @@ class _LocationState extends State<Location> {
   void initState() {
     super.initState();
     // Fetch Pickup or Drop off Location
-    _location = "PSB";
+    _location = widget.location;
   }
 
   @override
@@ -183,35 +186,27 @@ class CurrentRide extends StatefulWidget {
 }
 
 class _CurrentRideState extends State<CurrentRide> {
-  double _containerHeight;
-  double _containerWidth;
   bool _starting = false;
+  List<List<String>> _riders = [
+    ['Terry Cruz', 'Cascadilla'],
+    ['Chris Hansen', 'Rhodes']
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width - 48;
+    double _width = MediaQuery.of(context).size.width - 48;
 
     double btnWidth = 0.48 * MediaQuery.of(context).size.width;
     double btnHeight = 0.059 * MediaQuery.of(context).size.height;
     double btnPadding = 24;
 
-    if (_starting) {
-      setState(() {
-        _containerWidth = width;
-        _containerHeight = width / 2 + btnHeight + btnPadding;
-      });
-    } else {
-      setState(() {
-        _containerWidth = width;
-        _containerHeight = width / 2;
-      });
-    }
-
-    return AnimatedContainer(
-      duration: Duration(seconds: 1),
-      curve: Curves.fastOutSlowIn,
-      width: _containerWidth,
-      height: _containerHeight,
+    return Container(
+      constraints: BoxConstraints(maxWidth: _width, minHeight: _width / 2),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -230,61 +225,63 @@ class _CurrentRideState extends State<CurrentRide> {
                   spreadRadius: 1.0)
             ],
           ),
-          child: Column(children: <Widget>[
-            Row(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Expanded(
-                  flex: 181,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Date(),
-                      Time(),
-                      Padding(
-                          padding: EdgeInsets.only(left: 24.0, top: 12.0),
-                          child: Rider())
-                    ],
-                  ),
+                Date(),
+                Time(),
+                Padding(
+                  padding: EdgeInsets.only(left: 24),
+                  child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _riders.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: EdgeInsets.only(top: 0, bottom: 12),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Rider(name: _riders[index][0]),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 12),
+                                  child: Location(heading: 'Pick up', location: _riders[index][1]),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      }),
                 ),
-                Expanded(
-                  flex: 146,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Location(heading: 'Pick up'),
-                      SizedBox(height: 12.0),
-                      Location(heading: 'Drop off')
-                    ],
-                  ),
-                )
-              ],
-            ),
-            Visibility(
-              visible: _starting,
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: btnPadding, bottom: btnPadding),
-                  child: ButtonTheme(
-                    minWidth: btnWidth,
-                    height: btnHeight,
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return Map();
-                        }));
-                      },
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(3)),
-                      color: Theme.of(context).accentColor,
-                      child:
-                          Text('START', style: TextStyle(color: Colors.white)),
+                Visibility(
+                  visible: _starting,
+                  child: Center(
+                    child: Padding(
+                      padding:
+                          EdgeInsets.only(top: btnPadding, bottom: btnPadding),
+                      child: ButtonTheme(
+                        minWidth: btnWidth,
+                        height: btnHeight,
+                        child: RaisedButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return Map();
+                            }));
+                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(3)),
+                          color: Theme.of(context).accentColor,
+                          child: Text('START',
+                              style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ]),
+              ]),
         ),
       ),
     );
@@ -306,7 +303,11 @@ class _UpcomingRideState extends State<UpcomingRide> {
   void initState() {
     super.initState();
     // Fetch Upcoming Information
-    _riders = ['assets/images/terry.jpg', 'assets/images/terry.jpg', 'assets/images/terry.jpg'];
+    _riders = [
+      'assets/images/terry.jpg',
+      'assets/images/terry.jpg',
+      'assets/images/terry.jpg'
+    ];
     _destinations = [
       "Fgafd",
       "Morrison",
@@ -321,11 +322,11 @@ class _UpcomingRideState extends State<UpcomingRide> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width - 48;
+    double _width = MediaQuery.of(context).size.width - 48;
 
     return Container(
       constraints: BoxConstraints(
-          minWidth: width, maxWidth: width, minHeight: width / 2),
+          minWidth: _width, maxWidth: _width, minHeight: _width / 2),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -356,15 +357,16 @@ class _UpcomingRideState extends State<UpcomingRide> {
                       Date(),
                       Time(),
                       Padding(
-                          padding: EdgeInsets.only(left: 24.0, top: 12.0, right: 24.0, bottom: 12.0),
+                          padding: EdgeInsets.only(
+                              left: 24.0, top: 12.0, right: 24.0, bottom: 12.0),
                           child: Wrap(
                             spacing: 12,
                             runSpacing: 12,
-                            children: List.generate(_riders.length, (int index) {
+                            children:
+                                List.generate(_riders.length, (int index) {
                               return CircleAvatar(
                                 radius: 25,
-                                backgroundImage:
-                                    AssetImage(_riders[index]),
+                                backgroundImage: AssetImage(_riders[index]),
                               );
                             }),
                           ))
