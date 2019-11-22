@@ -326,8 +326,10 @@ class _UpcomingRideState extends State<UpcomingRide> {
                   spreadRadius: 1.0)
             ],
           ),
-          child: Column(children: <Widget>[
+          child: Column(
+              children: <Widget>[
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Expanded(
                   flex: 181,
@@ -350,9 +352,8 @@ class _UpcomingRideState extends State<UpcomingRide> {
                 Expanded(
                   flex: 146,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Route(destinations: ["PSB", "Gates", "Cascadilla", "Rockefeller"]),
+                      Route(destinations: ["Fgafd", "Morrison","PSB", "Gates", "Cascadilla", "Rockefeller", "gfa", "hfa"]),
                       SizedBox(height: 24)
                     ],
                   ),

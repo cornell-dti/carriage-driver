@@ -48,12 +48,10 @@ class SignInButton extends StatelessWidget {
         splashColor: Colors.grey,
         onPressed: () {
           _handleSignIn().whenComplete(() {
-            // Remove true once we actually have login
             if (_googleSignIn.currentUser != null) {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                 return Home();
               }));
-              _googleSignIn.signOut();
             }
           });
         },
