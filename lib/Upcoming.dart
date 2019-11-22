@@ -195,7 +195,7 @@ class _CurrentRideState extends State<CurrentRide> {
     double btnHeight = 0.059 * MediaQuery.of(context).size.height;
     double btnPadding = 24;
 
-    if(_starting) {
+    if (_starting) {
       setState(() {
         _containerWidth = width;
         _containerHeight = width / 2 + btnHeight + btnPadding;
@@ -241,7 +241,7 @@ class _CurrentRideState extends State<CurrentRide> {
                       Date(),
                       Time(),
                       Padding(
-                          padding: EdgeInsets.only(left: 24.0, top: 10.0),
+                          padding: EdgeInsets.only(left: 24.0, top: 12.0),
                           child: Rider())
                     ],
                   ),
@@ -251,10 +251,10 @@ class _CurrentRideState extends State<CurrentRide> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                          Location(heading: 'Pick up'),
-                          SizedBox(height: 12.0),
-                          Location(heading: 'Drop off')
-                        ],
+                      Location(heading: 'Pick up'),
+                      SizedBox(height: 12.0),
+                      Location(heading: 'Drop off')
+                    ],
                   ),
                 )
               ],
@@ -299,15 +299,33 @@ class UpcomingRide extends StatefulWidget {
 }
 
 class _UpcomingRideState extends State<UpcomingRide> {
+  List<String> _riders;
+  List<String> _destinations;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch Upcoming Information
+    _riders = ['assets/images/terry.jpg', 'assets/images/terry.jpg', 'assets/images/terry.jpg'];
+    _destinations = [
+      "Fgafd",
+      "Morrison",
+      "PSB",
+      "Gates",
+      "Cascadilla",
+      "Rockefeller",
+      "gfa",
+      "hfa"
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width - 48;
 
     return Container(
       constraints: BoxConstraints(
-        minWidth: width, maxWidth: width,
-        minHeight: width / 2
-      ),
+          minWidth: width, maxWidth: width, minHeight: width / 2),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -326,8 +344,7 @@ class _UpcomingRideState extends State<UpcomingRide> {
                   spreadRadius: 1.0)
             ],
           ),
-          child: Column(
-              children: <Widget>[
+          child: Column(children: <Widget>[
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -339,12 +356,17 @@ class _UpcomingRideState extends State<UpcomingRide> {
                       Date(),
                       Time(),
                       Padding(
-                          padding: EdgeInsets.only(left: 24.0, top: 10.0),
-                          child:
-                          // Some kind of responsive grid will need to go here
-                          CircleAvatar(
-                            backgroundImage: AssetImage('assets/images/terry.jpg'),
-                            radius: 25,
+                          padding: EdgeInsets.only(left: 24.0, top: 12.0, right: 24.0, bottom: 12.0),
+                          child: Wrap(
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: List.generate(_riders.length, (int index) {
+                              return CircleAvatar(
+                                radius: 25,
+                                backgroundImage:
+                                    AssetImage(_riders[index]),
+                              );
+                            }),
                           ))
                     ],
                   ),
@@ -353,7 +375,7 @@ class _UpcomingRideState extends State<UpcomingRide> {
                   flex: 146,
                   child: Column(
                     children: <Widget>[
-                      Route(destinations: ["Fgafd", "Morrison","PSB", "Gates", "Cascadilla", "Rockefeller", "gfa", "hfa"]),
+                      Route(destinations: _destinations),
                       SizedBox(height: 24)
                     ],
                   ),
@@ -368,10 +390,8 @@ class _UpcomingRideState extends State<UpcomingRide> {
 }
 
 class Route extends StatefulWidget {
-  const Route ({
-    Key key,
-    @required this.destinations
-  }) : assert(destinations != null),
+  const Route({Key key, @required this.destinations})
+      : assert(destinations != null),
         super(key: key);
 
   final List<String> destinations;
@@ -381,7 +401,6 @@ class Route extends StatefulWidget {
 }
 
 class _RouteState extends State<Route> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -412,10 +431,10 @@ class _RouteState extends State<Route> {
             children: <Widget>[
               _buildLine(!_isFirst(index)),
               Container(
-                width: 8, height: 8,
-                decoration: BoxDecoration(
-                  color: Colors.black
-                ),),
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(color: Colors.black),
+              ),
               _buildLine(!_isLast(index)),
             ],
           ),
