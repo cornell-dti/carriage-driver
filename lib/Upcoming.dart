@@ -188,13 +188,14 @@ class CurrentRide extends StatefulWidget {
 class _CurrentRideState extends State<CurrentRide> {
   bool _starting = false;
   List<List<String>> _riders = [
-    ['Terry Cruz', 'Cascadilla'],
-    ['Chris Hansen', 'Rhodes']
+    ['Terry Cruz', 'Pick up', 'Cascadilla'],
+    ['Chris Hansen', 'Drop off', 'Rhodes']
   ];
 
   @override
   void initState() {
     super.initState();
+    // Will need to fetch data here
   }
 
   @override
@@ -247,7 +248,7 @@ class _CurrentRideState extends State<CurrentRide> {
                               Expanded(
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 12),
-                                  child: Location(heading: 'Pick up', location: _riders[index][1]),
+                                  child: Location(heading: _riders[index][1], location: _riders[index][2]),
                                 ),
                               )
                             ],
