@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'Home.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-GoogleSignIn _googleSignIn = GoogleSignIn(
+GoogleSignIn googleSignIn = GoogleSignIn(
   scopes: [
     'email',
     'https://www.googleapis.com/auth/userinfo.profile',
   ],
 );
 
-Future<void> _handleSignIn() async {
+_handleSignIn() async {
   try {
-    await _googleSignIn.signIn();
+    await googleSignIn.signIn();
   } catch (error) {
     print(error);
   }
@@ -23,21 +23,38 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  GoogleSignInAccount currentUser; // this is synonymous with Google's currentUser
+
+  setCurrentUser (GoogleSignInAccount account) {
+    setState(() {
+      currentUser = account;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-            color: Colors.white,
-            child: Center(
-                child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                FlutterLogo(size: 150),
-                SizedBox(height: 50),
-                SignInButton()
-              ],
-            ))));
+    googleSignIn.signInSilently();
+    googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      setCurrentUser(account);
+    });
+    print(currentUser == null);
+    if (currentUser == null) {
+      return Scaffold(
+          body: Container(
+              color: Colors.white,
+              child: Center(
+                  child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FlutterLogo(size: 150),
+                  SizedBox(height: 50),
+                  SignInButton()
+                ],
+              ))));
+    } else {
+      return Home();
+    }
   }
 }
 
@@ -47,13 +64,7 @@ class SignInButton extends StatelessWidget {
     return OutlineButton(
         splashColor: Colors.grey,
         onPressed: () {
-          _handleSignIn().whenComplete(() {
-            if (_googleSignIn.currentUser != null) {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return Home();
-              }));
-            }
-          });
+          _handleSignIn();
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
         highlightElevation: 0,
@@ -78,3 +89,4 @@ class SignInButton extends StatelessWidget {
             )));
   }
 }
+

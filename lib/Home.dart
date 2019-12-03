@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Upcoming.dart';
+import 'Login.dart';
 
 class Greeting extends StatelessWidget {
   String name;
@@ -69,7 +70,13 @@ class _HomeState extends State<Home> {
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+
               Greeting(name: _name),
+              RaisedButton(
+                onPressed: (){
+                  googleSignIn.signOut();
+                },
+              ),
               LeftSubheading(heading: 'Upcoming Ride'),
               Center(
                   child: Column(
