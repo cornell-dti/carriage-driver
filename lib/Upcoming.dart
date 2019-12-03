@@ -52,7 +52,8 @@ class _RiderState extends State<Rider> {
 }
 
 class Location extends StatefulWidget {
-  Location({Key key, @required this.heading, @required this.location}) : super(key: key);
+  Location({Key key, @required this.heading, @required this.location})
+      : super(key: key);
 
   String heading;
   String location;
@@ -248,7 +249,9 @@ class _CurrentRideState extends State<CurrentRide> {
                               Expanded(
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 12),
-                                  child: Location(heading: _riders[index][1], location: _riders[index][2]),
+                                  child: Location(
+                                      heading: _riders[index][1],
+                                      location: _riders[index][2]),
                                 ),
                               )
                             ],

@@ -62,41 +62,43 @@ class _HomeState extends State<Home> {
     return UpcomingRide();
   }
 
+  Widget _ridesPage(BuildContext context) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Greeting(name: _name),
+          LeftSubheading(heading: 'Upcoming Ride'),
+          Center(
+              child: Column(
+            children: <Widget>[
+              CurrentRide(),
+            ],
+          )),
+          SizedBox(height: 16.0),
+          LeftSubheading(heading: 'Today\'s Schedule'),
+          Flexible(
+            child: ListView.separated(
+              itemCount: 3,
+              itemBuilder: _ride,
+              separatorBuilder: (BuildContext context, int index) => Divider(),
+              padding: EdgeInsets.only(left: 24.0, right: 24.0, bottom: 5.0),
+            ),
+          ),
+        ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-
-              Greeting(name: _name),
-              RaisedButton(
-                onPressed: (){
-                  googleSignIn.signOut();
-                },
-              ),
-              LeftSubheading(heading: 'Upcoming Ride'),
-              Center(
-                  child: Column(
-                children: <Widget>[
-                  CurrentRide(),
-                ],
-              )),
-              SizedBox(height: 16.0),
-              LeftSubheading(heading: 'Today\'s Schedule'),
-              Flexible(
-                child: ListView.separated(
-                  itemCount: 3,
-                  itemBuilder: _ride,
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(),
-                  padding:
-                      EdgeInsets.only(left: 24.0, right: 24.0, bottom: 5.0),
-                ),
-              ),
-            ]),
+        body: _selectedIndex == 0
+            ? _ridesPage(context)
+            : _selectedIndex == 1
+                ? Column()
+                : Column(
+                    children: <Widget>[SignOutButton()],
+                  ),
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Colors.blue,
           items: <BottomNavigationBarItem>[
@@ -111,6 +113,18 @@ class _HomeState extends State<Home> {
           onTap: _onItemTapped,
         ),
       ),
+    );
+  }
+}
+
+class SignOutButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      child: Text('Sign out'),
+      onPressed: () {
+        googleSignIn.signOut();
+      },
     );
   }
 }

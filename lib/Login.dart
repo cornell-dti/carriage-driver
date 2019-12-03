@@ -23,9 +23,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  GoogleSignInAccount currentUser; // this is synonymous with Google's currentUser
+  GoogleSignInAccount
+      currentUser; // this is synonymous with Google's currentUser
 
-  setCurrentUser (GoogleSignInAccount account) {
+  setCurrentUser(GoogleSignInAccount account) {
     setState(() {
       currentUser = account;
     });
@@ -37,7 +38,6 @@ class _LoginState extends State<Login> {
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
     });
-    print(currentUser == null);
     if (currentUser == null) {
       return Scaffold(
           body: Container(
@@ -89,4 +89,3 @@ class SignInButton extends StatelessWidget {
             )));
   }
 }
-
