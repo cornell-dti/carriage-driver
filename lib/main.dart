@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'dart:io';
+import 'dart:convert' as convert;
 import 'Login.dart';
 
 void main() {
@@ -21,4 +24,18 @@ class MyApp extends StatelessWidget {
             )),
         home: Login());
   }
+}
+
+String localhost() {
+  if(Platform.isAndroid) {
+    return 'http://10.0.2.2:3000';
+  } else {
+    return 'http://localhost:3000';
+  }
+}
+
+_authenticationRequest() async {
+  Response response = await post(localhost(), body: {});
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}');
 }

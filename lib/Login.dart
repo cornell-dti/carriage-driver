@@ -32,12 +32,25 @@ class _LoginState extends State<Login> {
     });
   }
 
+  Future<String> signInWithGoogle(GoogleSignInAccount account) async {
+    GoogleSignInAuthentication auth;
+    try {
+      print('e');
+      auth = await account.authentication; }
+    catch (error) {
+      print(error);
+    }
+    print(auth.idToken);
+    return '${auth.idToken}';
+  }
+
   @override
   Widget build(BuildContext context) {
     googleSignIn.signInSilently();
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
     });
+    print(signInWithGoogle(currentUser));
     if (currentUser == null) {
       return Scaffold(
           body: Container(
