@@ -34,8 +34,18 @@ String localhost() {
   }
 }
 
-_authenticationRequest() async {
-  Response response = await post(localhost(), body: {});
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
+authenticationRequest(String token) async {
+  print('made it');
+  var endpoint = localhost() + '/verify';
+  print('okay2');
+  Response response = await post(endpoint, body: {"token": "${token}"});
+  return response.body;
+//  print('Response status: ${response.statusCode}');
+////  print('Response body: ${response.body}');
+}
+
+getRequest() async{
+  var endpoint = localhost() + '/driver/1';
+  Response response = await get(endpoint);
+  print(response.statusCode);
 }

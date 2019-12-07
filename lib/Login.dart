@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Home.dart';
+import 'main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 GoogleSignIn googleSignIn = GoogleSignIn(
@@ -17,6 +18,18 @@ _handleSignIn() async {
   }
 }
 
+Future<String> tokenFromAccount(GoogleSignInAccount account) async {
+  GoogleSignInAuthentication auth;
+  try {
+    auth = await account.authentication;
+    print('okay');
+  }
+  catch (error) {
+    print('error');
+  }
+  return auth.idToken;
+}
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -32,25 +45,19 @@ class _LoginState extends State<Login> {
     });
   }
 
-  Future<String> signInWithGoogle(GoogleSignInAccount account) async {
-    GoogleSignInAuthentication auth;
-    try {
-      print('e');
-      auth = await account.authentication; }
-    catch (error) {
-      print(error);
-    }
-    print(auth.idToken);
-    return '${auth.idToken}';
-  }
-
   @override
   Widget build(BuildContext context) {
     googleSignIn.signInSilently();
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
     });
-    print(signInWithGoogle(currentUser));
+    tokenFromAccount(currentUser).then(
+        (token) async {
+          var body = await authenticationRequest(token);
+          print(body);
+        }
+    );
+//    getRequest();
     if (currentUser == null) {
       return Scaffold(
           body: Container(
