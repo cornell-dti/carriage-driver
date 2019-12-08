@@ -28,24 +28,15 @@ class MyApp extends StatelessWidget {
 
 String localhost() {
   if(Platform.isAndroid) {
-    return 'http://10.0.2.2:3000';
+//    return 'http://10.0.2.2:3000';
+  return 'http://192.168.155.135:3000';
   } else {
     return 'http://localhost:3000';
   }
 }
 
 authenticationRequest(String token) async {
-  print('made it');
   var endpoint = localhost() + '/verify';
-  print('okay2');
-  Response response = await post(endpoint, body: {"token": "${token}"});
+  Response response = await post(endpoint, body: {"token": token});
   return response.body;
-//  print('Response status: ${response.statusCode}');
-////  print('Response body: ${response.body}');
-}
-
-getRequest() async{
-  var endpoint = localhost() + '/driver/1';
-  Response response = await get(endpoint);
-  print(response.statusCode);
 }

@@ -23,8 +23,7 @@ Future<String> tokenFromAccount(GoogleSignInAccount account) async {
   try {
     auth = await account.authentication;
     print('okay');
-  }
-  catch (error) {
+  } catch (error) {
     print('error');
   }
   return auth.idToken;
@@ -36,8 +35,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  GoogleSignInAccount
-      currentUser; // this is synonymous with Google's currentUser
+  GoogleSignInAccount currentUser;
+  String token;
 
   setCurrentUser(GoogleSignInAccount account) {
     setState(() {
@@ -46,18 +45,22 @@ class _LoginState extends State<Login> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     googleSignIn.signInSilently();
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
+      tokenFromAccount(currentUser).then((token) async {
+        var body = await authenticationRequest(token);
+        return body;
+      }).then((result) {
+        print(result);
+      });
     });
-    tokenFromAccount(currentUser).then(
-        (token) async {
-          var body = await authenticationRequest(token);
-          print(body);
-        }
-    );
-//    getRequest();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     if (currentUser == null) {
       return Scaffold(
           body: Container(
