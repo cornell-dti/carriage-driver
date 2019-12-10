@@ -50,7 +50,11 @@ class _LoginState extends State<Login> {
     super.initState();
     currentUser = null;
     success = false;
-    googleSignIn.signInSilently();
+    try {
+      googleSignIn.signInSilently(); }
+    catch (error) {
+      googleSignIn.signIn();
+    }
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
       tokenFromAccount(currentUser).then((token) async {
