@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'Home.dart';
 import 'main.dart';
@@ -36,7 +37,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   GoogleSignInAccount currentUser;
-  String token;
+  bool success;
 
   setCurrentUser(GoogleSignInAccount account) {
     setState(() {
@@ -47,20 +48,27 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+    currentUser = null;
+    success = false;
     googleSignIn.signInSilently();
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
       tokenFromAccount(currentUser).then((token) async {
-        var body = await authenticationRequest(token);
-        return body;
-      }).then((result) {
-        print(result);
+        return await authenticationRequest(token);
+      }).then((response) {
+        var json = jsonDecode(response);
+        setState(() {
+          success = json['success'] == 'true' ? true : false;
+        });
+        print(success);
+        return json['success'];
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // add guard based on backend verification later
     if (currentUser == null) {
       return Scaffold(
           body: Container(
