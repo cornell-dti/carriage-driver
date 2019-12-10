@@ -60,7 +60,7 @@ class _LoginState extends State<Login> {
         setState(() {
           success = json['success'] == 'true' ? true : false;
         });
-        print(success);
+        print(json['success']);
         return json['success'];
       });
     });
