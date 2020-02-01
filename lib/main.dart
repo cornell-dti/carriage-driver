@@ -28,8 +28,7 @@ class MyApp extends StatelessWidget {
 
 String localhost() {
   if(Platform.isAndroid) {
-//    return 'http://10.0.2.2:3000';
-    return 'http://10.132.0.103:3000';
+    return 'http://10.0.2.2:3000'; // works for emulator
   } else {
     return 'http://localhost:3000';
   }
