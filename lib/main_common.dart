@@ -9,7 +9,7 @@ void mainCommon() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var config = AppConfig.of(context);
+    AppConfig config = AppConfig.of(context);
     return _buildApp(config.baseUrl);
   }
 
