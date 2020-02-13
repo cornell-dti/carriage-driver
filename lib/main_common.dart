@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'app_config.dart';
 import 'Login.dart';
 
-void main() {
-  runApp(MyApp());
+void mainCommon() {
+
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var config = AppConfig.of(context);
+    return _buildApp(config.baseUrl);
+  }
+
+  Widget _buildApp(String baseUrl) {
     return MaterialApp(
         title: 'Carriage',
         theme: ThemeData(
