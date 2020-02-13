@@ -34,7 +34,7 @@ class Direction extends StatelessWidget {
 }
 
 class Map extends StatelessWidget {
-  BorderRadiusGeometry radius = BorderRadius.only(
+  final BorderRadiusGeometry radius = BorderRadius.only(
     topLeft: Radius.circular(24.0),
     topRight: Radius.circular(24.0),
   );

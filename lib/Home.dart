@@ -3,7 +3,7 @@ import 'Upcoming.dart';
 import 'Login.dart';
 
 class Greeting extends StatelessWidget {
-  String name;
+  final String name;
 
   Greeting({@required this.name});
 
@@ -20,7 +20,7 @@ class Greeting extends StatelessWidget {
 }
 
 class LeftSubheading extends StatelessWidget {
-  String heading;
+  final String heading;
 
   LeftSubheading({@required this.heading});
 

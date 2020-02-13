@@ -17,8 +17,8 @@ jobs:
       - name: Get
         run: flutter pub get
       - name: Analyze
-        run: flutter analyze || echo "Ignore Analyze temporarily."
+        run: flutter analyze
       - name: Test
-        run: flutter test || echo "Ignore Analyze temporarily."
+        run: flutter test
       - name: Build
         run: flutter build aot
