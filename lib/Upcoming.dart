@@ -5,7 +5,7 @@ import 'Map.dart';
 class Rider extends StatefulWidget {
   Rider({Key key, @required this.name}) : super(key: key);
 
-  String name;
+  final String name;
 
   @override
   _RiderState createState() => _RiderState();
@@ -55,8 +55,8 @@ class Location extends StatefulWidget {
   Location({Key key, @required this.heading, @required this.location})
       : super(key: key);
 
-  String heading;
-  String location;
+  final String heading;
+  final String location;
 
   @override
   _LocationState createState() => _LocationState();

@@ -51,8 +51,8 @@ class _LoginState extends State<Login> {
     currentUser = null;
     success = false;
     try {
-      googleSignIn.signInSilently(); }
-    catch (error) {
+      googleSignIn.signInSilently();
+    } catch (error) {
       googleSignIn.signIn();
     }
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
