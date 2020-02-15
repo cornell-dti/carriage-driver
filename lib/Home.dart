@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'Upcoming.dart';
-import 'Map.dart';
+import 'Login.dart';
 
 class Greeting extends StatelessWidget {
-  String name;
+  final String name;
 
   Greeting({@required this.name});
 
@@ -20,7 +20,7 @@ class Greeting extends StatelessWidget {
 }
 
 class LeftSubheading extends StatelessWidget {
-  String heading;
+  final String heading;
 
   LeftSubheading({@required this.heading});
 
@@ -41,10 +41,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  BorderRadiusGeometry radius = BorderRadius.only(
-      topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0));
-
   int _selectedIndex = 0;
+
+  String _name;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch name of user
+    _name = "Chris";
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -56,69 +62,43 @@ class _HomeState extends State<Home> {
     return UpcomingRide();
   }
 
+  Widget _ridesPage(BuildContext context) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Greeting(name: _name),
+          LeftSubheading(heading: 'Upcoming Ride'),
+          Center(
+              child: Column(
+            children: <Widget>[
+              CurrentRide(),
+            ],
+          )),
+          SizedBox(height: 16.0),
+          LeftSubheading(heading: 'Today\'s Schedule'),
+          Flexible(
+            child: ListView.separated(
+              itemCount: 3,
+              itemBuilder: _ride,
+              separatorBuilder: (BuildContext context, int index) => Divider(),
+              padding: EdgeInsets.only(left: 24.0, right: 24.0, bottom: 5.0),
+            ),
+          ),
+        ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Greeting(name: 'Chris'),
-              LeftSubheading(heading: 'Next Ride'),
-              Center(
-                  child: Column(
-                children: <Widget>[
-                  UpcomingRide(),
-                ],
-              )),
-              SizedBox(height: 3),
-              Center(
-                child: RaisedButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return Map();
-                    }));
-                  },
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(24))),
-                  color: Colors.red,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.directions_car, color: Colors.white),
-                      SizedBox(width: 5),
-                      Text('Start Ride', style: TextStyle(color: Colors.white)),
-                    ],
+        body: _selectedIndex == 0
+            ? _ridesPage(context)
+            : _selectedIndex == 1
+                ? Column()
+                : Column(
+                    children: <Widget>[SignOutButton()],
                   ),
-                ),
-              ),
-              SizedBox(height: 8.0),
-              LeftSubheading(heading: 'Upcoming Rides'),
-              Flexible(
-                child: ListView.separated(
-                  itemCount: 3,
-                  itemBuilder: _ride,
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(),
-                  padding:
-                      EdgeInsets.only(left: 24.0, right: 24.0, bottom: 5.0),
-                ),
-              ),
-            ]),
-//        floatingActionButton: FloatingActionButton.extended(
-//          onPressed: () {
-//            Navigator.of(context).push(MaterialPageRoute(
-//              builder: (context) {
-//                return Map();
-//              }
-//            ));
-//          },
-//          label: Text('Start Ride'),
-//          icon: Icon(Icons.directions_car),
-//        ),
-//        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Colors.blue,
           items: <BottomNavigationBarItem>[
@@ -133,6 +113,18 @@ class _HomeState extends State<Home> {
           onTap: _onItemTapped,
         ),
       ),
+    );
+  }
+}
+
+class SignOutButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      child: Text('Sign out'),
+      onPressed: () {
+        googleSignIn.signOut();
+      },
     );
   }
 }
