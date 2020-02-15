@@ -12,7 +12,7 @@ import 'package:carriage/main_common.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  
 
     expect(1 + 1, 2);
   });
