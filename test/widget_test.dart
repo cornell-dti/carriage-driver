@@ -7,12 +7,11 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:carriage/main_common.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-  
+
 
     expect(1 + 1, 2);
   });
