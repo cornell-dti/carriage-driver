@@ -61,7 +61,7 @@ class _LoginState extends State<Login> {
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
       tokenFromAccount(currentUser).then((token) async {
-        return await authenticationRequest("http://localhost:3000", token);
+        return await authenticationRequest(AppConfig.of(context).baseUrl, token);
       }).then((response) {
         var json = jsonDecode(response);
         /** setState(() {
