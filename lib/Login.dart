@@ -61,14 +61,14 @@ class _LoginState extends State<Login> {
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
       tokenFromAccount(currentUser).then((token) async {
-        return await authenticationRequest(AppConfig.of(context).baseUrl, token);
+        return await authenticationRequest("http://localhost:3000", token);
       }).then((response) {
         var json = jsonDecode(response);
-        setState(() {
-          success = json['success'] == 'true' ? true : false;
-        });
-        print(json['success']);
-        return json['success'];
+        /** setState(() {
+          success = json['id'] == 'true' ? true : false;
+        }); */
+        print(json['id']);
+        return json['id'];
       });
     });
   }
