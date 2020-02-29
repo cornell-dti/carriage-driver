@@ -70,10 +70,10 @@ class _HomeState extends State<Home> {
           LeftSubheading(heading: 'Upcoming Ride'),
           Center(
               child: Column(
-            children: <Widget>[
-              CurrentRide(),
-            ],
-          )),
+                children: <Widget>[
+                  CurrentRide(),
+                ],
+              )),
           SizedBox(height: 16.0),
           LeftSubheading(heading: 'Today\'s Schedule'),
           Flexible(
@@ -87,18 +87,44 @@ class _HomeState extends State<Home> {
         ]);
   }
 
+  Widget _noRidesLeftPage (BuildContext context) {
+    return Column (
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Greeting(name: _name),
+        Center (
+            child: Column (
+              children: <Widget>[
+                Image(
+                  image: AssetImage('assets/images/steeringWheel.png'),
+                  height: 77,
+                ),
+                Text(
+                  'Congratulations! You are done for the day. \n'
+                      'Come back tomorrow!',
+                  textAlign: TextAlign.center,
+                )
+              ],
+            )
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         body: _selectedIndex == 0
-            ? _ridesPage(context)
+            ? _noRidesLeftPage(context)
+        //? _ridesPage(context)
             : _selectedIndex == 1
-                ? Column()
-                : Column(
-                    children: <Widget>[SignOutButton()],
-                  ),
+            ? Column()
+            : Column(
+          children: <Widget>[SignOutButton()],
+        ),
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Colors.blue,
           items: <BottomNavigationBarItem>[
@@ -128,3 +154,4 @@ class SignOutButton extends StatelessWidget {
     );
   }
 }
+
