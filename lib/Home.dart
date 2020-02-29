@@ -89,17 +89,18 @@ class _HomeState extends State<Home> {
 
   Widget _noRidesLeftPage (BuildContext context) {
     return Column (
-      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Greeting(name: _name),
+        SizedBox(height: 195),
         Center (
             child: Column (
               children: <Widget>[
                 Image(
                   image: AssetImage('assets/images/steeringWheel.png'),
-                  height: 77,
+
                 ),
+                SizedBox(height: 22),
                 Text(
                   'Congratulations! You are done for the day. \n'
                       'Come back tomorrow!',
@@ -118,7 +119,7 @@ class _HomeState extends State<Home> {
       onWillPop: () async => false,
       child: Scaffold(
         body: _selectedIndex == 0
-            ? _noRidesLeftPage(context)
+           ? _noRidesLeftPage(context)
         //? _ridesPage(context)
             : _selectedIndex == 1
             ? Column()
