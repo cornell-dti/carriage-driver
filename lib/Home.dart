@@ -91,7 +91,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget _noRidesLeftPage (BuildContext context) {
-    final String wheel = 'assets/images/steeringWheel.svg';
+    //final String wheel = 'assets/images/steeringWheel.svg';
     return Column (
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
