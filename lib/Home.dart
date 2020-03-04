@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_svg/flutter_svg.dart';
 import 'Upcoming.dart';
 import 'Login.dart';
 
@@ -91,7 +90,6 @@ class _HomeState extends State<Home> {
   }
 
   Widget _noRidesLeftPage (BuildContext context) {
-    //final String wheel = 'assets/images/steeringWheel.svg';
     return Column (
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -100,10 +98,6 @@ class _HomeState extends State<Home> {
         Center (
             child: Column (
               children: <Widget>[
-//                  SvgPicture.asset(
-//                    wheel,
-//                    semanticsLabel: "steering wheel",
-//                  ),
                 Image(
                   image: AssetImage('assets/images/steeringWheel@3x.png'),
                   width: 77,
