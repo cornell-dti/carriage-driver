@@ -120,11 +120,21 @@ class _HomeState extends State<Home> {
 class SignOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      child: Text('Sign out'),
-      onPressed: () {
-        googleSignIn.signOut();
-      },
+    return SizedBox(
+      width: double.maxFinite,
+      height: 100,
+      child: RaisedButton(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Sign out',
+                textAlign: TextAlign.start),
+          ],
+        ),
+        onPressed: () {
+          googleSignIn.signOut();
+        },
+      ),
     );
   }
 }
