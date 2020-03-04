@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//import 'package:flutter_svg/flutter_svg.dart';
 import 'Upcoming.dart';
 import 'Login.dart';
 
@@ -42,7 +43,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
-
+  List<UpcomingRide> rides;
   String _name;
 
   @override
@@ -50,6 +51,8 @@ class _HomeState extends State<Home> {
     super.initState();
     // Fetch name of user
     _name = "Chris";
+    // TODO: fetch info about rides
+    rides = new List();
   }
 
   void _onItemTapped(int index) {
@@ -88,6 +91,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget _noRidesLeftPage (BuildContext context) {
+    final String wheel = 'assets/images/steeringWheel.svg';
     return Column (
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -96,9 +100,14 @@ class _HomeState extends State<Home> {
         Center (
             child: Column (
               children: <Widget>[
+//                  SvgPicture.asset(
+//                    wheel,
+//                    semanticsLabel: "steering wheel",
+//                  ),
                 Image(
-                  image: AssetImage('assets/images/steeringWheel.png'),
-
+                  image: AssetImage('assets/images/steeringWheel@3x.png'),
+                  width: 77,
+                  height: 77,
                 ),
                 SizedBox(height: 22),
                 Text(
@@ -119,8 +128,7 @@ class _HomeState extends State<Home> {
       onWillPop: () async => false,
       child: Scaffold(
         body: _selectedIndex == 0
-           ? _noRidesLeftPage(context)
-        //? _ridesPage(context)
+            ? (rides.length == 0 ? _noRidesLeftPage(context) : _ridesPage(context))
             : _selectedIndex == 1
             ? Column()
             : Column(
