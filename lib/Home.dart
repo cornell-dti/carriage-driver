@@ -100,8 +100,8 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 Image(
                   image: AssetImage('assets/images/steeringWheel@3x.png'),
-                  width: 77,
-                  height: 77,
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  height: MediaQuery.of(context).size.width * 0.2,
                 ),
                 SizedBox(height: 22),
                 Text(
