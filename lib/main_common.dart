@@ -22,9 +22,9 @@ class MyApp extends StatelessWidget {
             fontFamily: 'SFPro',
             accentColor: Color.fromRGBO(60, 60, 67, 0.6),
             textTheme: TextTheme(
-              headline5: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-              subtitle1: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
-              headline4: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold)
+              headline: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+              subhead: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
+              display1: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold)
             )
             ),
         home: Login());

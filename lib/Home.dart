@@ -10,7 +10,7 @@ class Greeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      child: Text('Hi $name!', style: Theme.of(context).textTheme.headline5),
+      child: Text('Hi $name!', style: Theme.of(context).textTheme.headline),
       padding: EdgeInsets.only(
           left: 24.0,
           top: 18.0 + MediaQuery.of(context).padding.top,
@@ -28,7 +28,7 @@ class LeftSubheading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 24.0, bottom: 16.0),
-      child: Text('$heading', style: Theme.of(context).textTheme.subtitle1),
+      child: Text('$heading', style: Theme.of(context).textTheme.subhead),
     );
   }
 }

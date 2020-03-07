@@ -18,7 +18,7 @@ class Direction extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text('600 Feet',
-                        style: Theme.of(context).textTheme.headline5),
+                        style: Theme.of(context).textTheme.headline),
                     Text('Tower Road',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
