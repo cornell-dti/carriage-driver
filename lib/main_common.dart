@@ -25,7 +25,8 @@ class MyApp extends StatelessWidget {
               headline5: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
               subtitle1: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
               headline4: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold)
-            )),
+            )
+            ),
         home: Login());
   }
 }
