@@ -97,7 +97,7 @@ class _HomeState extends State<Home> {
             : _selectedIndex == 1
                 ? Column()
                 : Column(
-                    children: <Widget>[SignOutButton()],
+                    children: <Widget>[SizedBox(height: 50),SignOutButton()],
                   ),
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Colors.blue,
@@ -120,10 +120,7 @@ class _HomeState extends State<Home> {
 class SignOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.maxFinite,
-      height: 100,
-      child: RaisedButton(
+    return RaisedButton(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -134,7 +131,6 @@ class SignOutButton extends StatelessWidget {
         onPressed: () {
           googleSignIn.signOut();
         },
-      ),
     );
   }
 }
