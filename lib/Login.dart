@@ -40,7 +40,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   GoogleSignInAccount currentUser;
-  bool success;
+  String id;
 
   setCurrentUser(GoogleSignInAccount account) {
     setState(() {
@@ -52,7 +52,7 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     currentUser = null;
-    success = false;
+    id = null;
     try {
       googleSignIn.signInSilently();
     } catch (error) {
@@ -65,10 +65,13 @@ class _LoginState extends State<Login> {
       }).then((response) {
         var json = jsonDecode(response);
         setState(() {
-          success = json['success'] == 'true' ? true : false;
+          id = (json['id'] != null) ? json['id'] : null;
+          if (id = null) {
+            currentUser = null;
+          }
         });
-        print(json['success']);
-        return json['success'];
+        print(json['id']);
+        return json['id'];
       });
     });
   }

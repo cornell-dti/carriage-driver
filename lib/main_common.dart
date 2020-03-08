@@ -25,13 +25,14 @@ class MyApp extends StatelessWidget {
               headline: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
               subhead: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
               display1: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold)
-            )),
+            )
+            ),
         home: Login());
   }
 }
 
 authenticationRequest(String baseUrl, String token) async {
-  var endpoint = baseUrl + '/verify';
+  var endpoint = baseUrl + '/auth';
   Response response = await post(endpoint, body: {"token": token});
   return response.body;
 }

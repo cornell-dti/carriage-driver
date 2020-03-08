@@ -42,7 +42,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
-
+  List<UpcomingRide> rides;
   String _name;
 
   @override
@@ -50,6 +50,8 @@ class _HomeState extends State<Home> {
     super.initState();
     // Fetch name of user
     _name = "Chris";
+    // TODO: fetch info about rides
+    rides = new List();
   }
 
   void _onItemTapped(int index) {
@@ -70,10 +72,10 @@ class _HomeState extends State<Home> {
           LeftSubheading(heading: 'Upcoming Ride'),
           Center(
               child: Column(
-            children: <Widget>[
-              CurrentRide(),
-            ],
-          )),
+                children: <Widget>[
+                  CurrentRide(),
+                ],
+              )),
           SizedBox(height: 16.0),
           LeftSubheading(heading: 'Today\'s Schedule'),
           Flexible(
@@ -87,17 +89,49 @@ class _HomeState extends State<Home> {
         ]);
   }
 
+  Widget _noRidesLeftPage (BuildContext context) {
+    return Column (
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Greeting(name: _name),
+        SizedBox(height: 195),
+        Center (
+            child: Column (
+              children: <Widget>[
+                Image(
+                  image: AssetImage('assets/images/steeringWheel@3x.png'),
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  height: MediaQuery.of(context).size.width * 0.2,
+                ),
+                SizedBox(height: 22),
+                Text(
+                  'Congratulations! You are done for the day. \n'
+                      'Come back tomorrow!',
+                  textAlign: TextAlign.center,
+                )
+              ],
+            )
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         body: _selectedIndex == 0
-            ? _ridesPage(context)
+            ? (rides.length == 0 ? _noRidesLeftPage(context) : _ridesPage(context))
             : _selectedIndex == 1
                 ? Column()
                 : Column(
-                    children: <Widget>[SignOutButton()],
+                    children: <Widget>[SizedBox(height: 50), Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                       SignOutButton(),
+                      ],
+                    )],
                   ),
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Colors.blue,
@@ -121,10 +155,12 @@ class SignOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
-      child: Text('Sign out'),
+      child: Text('Sign out', textAlign: TextAlign.start),
       onPressed: () {
         googleSignIn.signOut();
       },
+
     );
   }
 }
+
