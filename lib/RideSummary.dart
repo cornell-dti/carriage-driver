@@ -9,9 +9,10 @@ class StatText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 4.0, bottom: 4.0),
-      child: Text('$text', style: Theme.of(context).textTheme.caption),
-    );
+        padding: EdgeInsets.only(top: 4.0, bottom: 4.0),
+        child: Opacity(
+            opacity: 0.6,
+            child: Text('$text', style: Theme.of(context).textTheme.caption)));
   }
 }
 
@@ -123,19 +124,20 @@ class _FinishedRideState extends State<FinishedRide> {
                 left: 24.0, right: 24.0, top: 8.0, bottom: 16.0),
             child: Column(children: <Widget>[
               Text("$_startDest - $_endDest",
-                  style: Theme.of(context).textTheme.display1),
+                  style: Theme.of(context).textTheme.subhead),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        // TODO: need another package for this
+                        // TODO: need another package for actual datetime formatting, hardcoding text for now
                         Text("1:00 PM - 1:30 PM",
                             style: Theme.of(context).textTheme.display1),
                         Text(
-                            "$_distance mile, ${_riders.length} rider${_riders.length > 0 ? "s" : ""}",
+                            "$_distance mile${_distance != 1 ? "s" : ""}, ${_riders.length} rider${_riders.length > 0 ? "s" : ""}",
                             style: Theme.of(context).textTheme.display1)
                       ],
                     ),
@@ -147,7 +149,7 @@ class _FinishedRideState extends State<FinishedRide> {
                         runSpacing: 12,
                         children: List.generate(_riders.length, (int index) {
                           return CircleAvatar(
-                            radius: 25,
+                            radius: 20,
                             backgroundImage: AssetImage(_riders[index]),
                           );
                         }),
