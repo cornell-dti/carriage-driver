@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Upcoming.dart';
 import 'Home.dart';
+import 'package:intl/intl.dart';
 
 class StatText extends StatelessWidget {
   final String text;
@@ -133,8 +134,7 @@ class _FinishedRideState extends State<FinishedRide> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        // TODO: need another package for actual datetime formatting, hardcoding text for now
-                        Text("1:00 PM - 1:30 PM",
+                        Text("${DateFormat.jm().format(_startTime)} - ${DateFormat.jm().format(_endTime)}",
                             style: Theme.of(context)
                                 .textTheme
                                 .body1
