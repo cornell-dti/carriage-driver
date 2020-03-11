@@ -31,6 +31,7 @@ class _DriverStatsState extends State<DriverStats> {
 
   @override
   void initState() {
+    super.initState();
     // TODO: fetch real data, this is placeholder
     _rides = 420;
     _students = 692;
