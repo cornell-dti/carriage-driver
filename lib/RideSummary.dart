@@ -126,19 +126,30 @@ class _FinishedRideState extends State<FinishedRide> {
               Text("$_startDest - $_endDest",
                   style: Theme.of(context).textTheme.subhead),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         // TODO: need another package for actual datetime formatting, hardcoding text for now
                         Text("1:00 PM - 1:30 PM",
-                            style: Theme.of(context).textTheme.display1),
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption
+                                .apply(color: Colors.black)),
+                        Divider(
+                          height: 8.0,
+                          thickness: 0.0,
+                          color: Color(0),
+                        ),
                         Text(
                             "$_distance mile${_distance != 1 ? "s" : ""}, ${_riders.length} rider${_riders.length > 0 ? "s" : ""}",
-                            style: Theme.of(context).textTheme.display1)
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption
+                                .apply(color: Colors.black))
                       ],
                     ),
                   ),
@@ -231,7 +242,9 @@ class _RideSummaryState extends State<RideSummary> {
                 CurrentRide(),
               ],
             )),
-            DriverStats()
+            Padding(
+                padding: EdgeInsets.only(top: 36.0, bottom: 24.0),
+                child: DriverStats())
           ]))
         ]);
   }
