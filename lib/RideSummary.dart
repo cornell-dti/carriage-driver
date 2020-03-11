@@ -123,7 +123,7 @@ class _FinishedRideState extends State<FinishedRide> {
           ),
           child: Padding(
             padding: EdgeInsets.only(
-                left: 24.0, right: 24.0, top: 8.0, bottom: 16.0),
+                left: 24.0, right: 24.0, top: 16.0, bottom: 16.0),
             child: Column(children: <Widget>[
               Text("$_startDest - $_endDest",
                   style: Theme.of(context).textTheme.subhead),
@@ -135,7 +135,8 @@ class _FinishedRideState extends State<FinishedRide> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("${DateFormat.jm().format(_startTime)} - ${DateFormat.jm().format(_endTime)}",
+                        Text(
+                            "${DateFormat.jm().format(_startTime)} - ${DateFormat.jm().format(_endTime)}",
                             style: Theme.of(context)
                                 .textTheme
                                 .body1
@@ -235,14 +236,8 @@ class _RideSummaryState extends State<RideSummary> {
           Expanded(
               child: ListView(shrinkWrap: true, children: <Widget>[
             _recentRide(),
-            // TODO: maybe abstract out this upcoming ride bit since it is copypaste from Home.ridesPage
             LeftSubheading(heading: 'Upcoming Ride'),
-            Center(
-                child: Column(
-              children: <Widget>[
-                CurrentRide(),
-              ],
-            )),
+            Center(child: CurrentRide()),
             Padding(
                 padding: EdgeInsets.only(top: 36.0, bottom: 24.0),
                 child: DriverStats())
