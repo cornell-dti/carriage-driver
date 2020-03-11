@@ -137,8 +137,8 @@ class _FinishedRideState extends State<FinishedRide> {
                         Text("1:00 PM - 1:30 PM",
                             style: Theme.of(context)
                                 .textTheme
-                                .caption
-                                .apply(color: Colors.black)),
+                                .body1
+                                .copyWith(fontSize: 12)),
                         Divider(
                           height: 8.0,
                           thickness: 0.0,
@@ -148,8 +148,8 @@ class _FinishedRideState extends State<FinishedRide> {
                             "$_distance mile${_distance != 1 ? "s" : ""}, ${_riders.length} rider${_riders.length > 0 ? "s" : ""}",
                             style: Theme.of(context)
                                 .textTheme
-                                .caption
-                                .apply(color: Colors.black))
+                                .body1
+                                .copyWith(fontSize: 12))
                       ],
                     ),
                   ),
