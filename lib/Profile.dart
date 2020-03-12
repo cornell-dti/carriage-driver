@@ -66,7 +66,10 @@ class _ProfileState extends State<Profile> {
                                 child: FittedBox (
                                   child: FloatingActionButton (
                                     backgroundColor: Colors.black,
-                                    child: Icon(Icons.add),
+                                    child: Icon(
+                                        Icons.add,
+                                        size: _picBtnDiameter
+                                    ),
                                     onPressed: () {},
                                   ),
                                 ),
@@ -96,7 +99,6 @@ class _ProfileState extends State<Profile> {
                           Text("Joined 03/2020", style: Theme.of(context).textTheme.display2)
                         ]
                     )
-
                   ]
               )
           )
