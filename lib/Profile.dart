@@ -13,9 +13,11 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
-    double _picRadius = _width * 0.13;
-    double _picMarginLR = _picRadius / 3;
-    double _picMarginTB = _picRadius / 2;
+    double _picDiameter = _width * 0.27;
+    double _picRadius = _picDiameter / 2;
+    double _picMarginLR = _picDiameter / 6.25;
+    double _picMarginTB = _picDiameter / 4;
+    double _picBtnDiameter = _picDiameter * 0.39;
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -47,10 +49,32 @@ class _ProfileState extends State<Profile> {
                   children: [
                     Padding (
                         padding: EdgeInsets.only(left: _picMarginLR, right: _picMarginLR, top: _picMarginTB, bottom: _picMarginTB),
-                        child:
-                        CircleAvatar(
-                          backgroundImage: AssetImage('assets/images/terry.jpg'),
-                          radius: _picRadius,
+                        child: Stack (
+                          children: [
+                            Padding (
+                                padding: EdgeInsets.only(bottom: _picDiameter * 0.05),
+                                child: CircleAvatar(
+                                  backgroundImage: AssetImage('assets/images/terry.jpg'),
+                                  radius: _picRadius,
+                                )
+                            ),
+
+                            Positioned(
+                              child: Container (
+                                height: _picBtnDiameter,
+                                width: _picBtnDiameter,
+                                child: FittedBox (
+                                  child: FloatingActionButton (
+                                    backgroundColor: Colors.black,
+                                    child: Icon(Icons.add),
+                                    onPressed: () {},
+                                  ),
+                                ),
+                              ),
+                              left: _picDiameter * 0.61,
+                              top: _picDiameter * 0.66
+                            )
+                          ],
                         )
                     ),
                     Column (
@@ -60,11 +84,11 @@ class _ProfileState extends State<Profile> {
                               children: [
                                 Text("Terry Cruz", style: Theme.of(context).textTheme.subhead),
                                 Padding(
-                                  padding: EdgeInsets.only(left: 12),
-                                  child: Icon(
-                                    Icons.edit,
-                                    size: 20,
-                                  )
+                                    padding: EdgeInsets.only(left: 12),
+                                    child: Icon(
+                                      Icons.edit,
+                                      size: 20,
+                                    )
                                 )
                               ]
                           ),
