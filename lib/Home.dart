@@ -121,6 +121,17 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Widget _profilePage(BuildContext context) {
+    return Column (
+      children: <Widget>[
+        Profile(),
+        Padding (
+          padding: EdgeInsets.only(top: 6),
+          child: AccountInfo()
+        )
+      ],
+    );
+  }
   Widget getPage(BuildContext context, int index) {
     switch (index) {
       case (RIDES):
@@ -141,7 +152,7 @@ class _HomeState extends State<Home> {
         );
         break;
       case (PROFILE):
-        return Profile();
+        return _profilePage(context);
         break;
       default:
         return Column();

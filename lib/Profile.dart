@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+
 class Profile extends StatefulWidget {
   Profile({Key key}) : super(key: key);
   @override
@@ -60,22 +61,22 @@ class _ProfileState extends State<Profile> {
                             ),
 
                             Positioned(
-                              child: Container (
-                                height: _picBtnDiameter,
-                                width: _picBtnDiameter,
-                                child: FittedBox (
-                                  child: FloatingActionButton (
-                                    backgroundColor: Colors.black,
-                                    child: Icon(
-                                        Icons.add,
-                                        size: _picBtnDiameter
+                                child: Container (
+                                  height: _picBtnDiameter,
+                                  width: _picBtnDiameter,
+                                  child: FittedBox (
+                                    child: FloatingActionButton (
+                                      backgroundColor: Colors.black,
+                                      child: Icon(
+                                          Icons.add,
+                                          size: _picBtnDiameter
+                                      ),
+                                      onPressed: () {},
                                     ),
-                                    onPressed: () {},
                                   ),
                                 ),
-                              ),
-                              left: _picDiameter * 0.61,
-                              top: _picDiameter * 0.66
+                                left: _picDiameter * 0.61,
+                                top: _picDiameter * 0.66
                             )
                           ],
                         )
@@ -85,7 +86,8 @@ class _ProfileState extends State<Profile> {
                         children: [
                           Row(
                               children: [
-                                Text("Terry Cruz", style: Theme.of(context).textTheme.subhead),
+                                Text("Terry Cruz", style: Theme.of(context).textTheme.subhead
+                                ),
                                 Padding(
                                     padding: EdgeInsets.only(left: 12),
                                     child: Icon(
@@ -103,6 +105,84 @@ class _ProfileState extends State<Profile> {
               )
           )
         ]
+    );
+  }
+}
+
+class AccountInfo extends StatefulWidget {
+  @override
+  _AccountInfoState createState() => _AccountInfoState();
+}
+
+class _AccountInfoState extends State<AccountInfo> {
+
+  Widget infoRow(BuildContext context, IconData icon, String text) {
+    return Padding(
+        padding: EdgeInsets.only(top: 17.5, bottom: 17.5),
+        child: Row(
+          children: <Widget>[
+            Icon(icon),
+            SizedBox(width: 19),
+            Expanded (
+              child: Text(
+                text,
+                style: Theme.of(context).textTheme.display3,
+              ),
+            ),
+            Icon(Icons.arrow_forward_ios)
+          ],
+        )
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<IconData> icons = new List();
+    icons.add(Icons.mail_outline);
+    icons.add(Icons.phone);
+    final List<String> tempText = new List();
+    tempText.add("terrycruz@hotmail.com");
+    tempText.add("Add your number");
+
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(3),
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromARGB(15, 0, 0, 0),
+                offset: Offset(0, 4.0),
+                blurRadius: 10.0,
+                spreadRadius: 1.0
+            )
+          ],
+        ),
+        child: Padding(
+            padding: EdgeInsets.only(top: 24, left: 16, right: 16),
+            child: Column (
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                    'Account Info',
+                    style: Theme.of(context).textTheme.subhead
+                ),
+                ListView.separated(
+                    padding: EdgeInsets.all(0),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: icons.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return infoRow(context, icons[index], tempText[index]);
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return Divider(
+                        height: 0,
+                      );
+                    }
+                )
+              ],
+            )
+        )
     );
   }
 }
