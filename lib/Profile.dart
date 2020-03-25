@@ -1,8 +1,9 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
+import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
   Profile({Key key}) : super(key: key);
@@ -11,6 +12,15 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  File _image;
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = image;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -55,7 +65,9 @@ class _ProfileState extends State<Profile> {
                             Padding (
                                 padding: EdgeInsets.only(bottom: _picDiameter * 0.05),
                                 child: CircleAvatar(
-                                  backgroundImage: AssetImage('assets/images/terry.jpg'),
+                                  backgroundImage: _image == null
+                                      ? AssetImage('assets/images/terry.jpg')
+                                      : FileImage(_image),
                                   radius: _picRadius,
                                 )
                             ),
@@ -71,7 +83,7 @@ class _ProfileState extends State<Profile> {
                                           Icons.add,
                                           size: _picBtnDiameter
                                       ),
-                                      onPressed: () {},
+                                      onPressed: getImage,
                                     ),
                                   ),
                                 ),
@@ -90,9 +102,11 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 Padding(
                                     padding: EdgeInsets.only(left: 12),
-                                    child: Icon(
-                                      Icons.edit,
-                                      size: 20,
+                                    child: IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () {
+
+                                      },
                                     )
                                 )
                               ]
