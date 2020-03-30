@@ -13,7 +13,6 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   File _image;
-  final GlobalKey<FormState>_formKey = GlobalKey<FormState>();
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
