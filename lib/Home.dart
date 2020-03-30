@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
     // Fetch name of user
     _name = "Chris";
     // TODO: fetch info about rides
-    rides = new List();
+    rides = [UpcomingRide(startTime: DateTime.now())];
   }
 
   void _onItemTapped(int index) {
