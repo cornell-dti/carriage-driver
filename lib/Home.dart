@@ -43,7 +43,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   static const int RIDES = 0;
-  static const int SUMMARY = 1;
+  static const int HISTORY = 1;
   static const int PROFILE = 2;
 
   int _selectedIndex = RIDES;
@@ -138,7 +138,7 @@ class _HomeState extends State<Home> {
         if (rides.length == 0) return _noRidesLeftPage(context);
         else return _ridesPage(context);
         break;
-      case (SUMMARY):
+      case (HISTORY):
         return Column(
           children: <Widget>[
             SizedBox(height: 50),
