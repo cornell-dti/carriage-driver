@@ -13,9 +13,10 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   File _image;
+  final GlobalKey<FormState>_formKey = GlobalKey<FormState>();
+
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-
     setState(() {
       _image = image;
     });
@@ -29,6 +30,7 @@ class _ProfileState extends State<Profile> {
     double _picMarginLR = _picDiameter / 6.25;
     double _picMarginTB = _picDiameter / 4;
     double _picBtnDiameter = _picDiameter * 0.39;
+
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -93,28 +95,43 @@ class _ProfileState extends State<Profile> {
                           ],
                         )
                     ),
-                    Column (
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 30),
+                      child: Stack (
+                        overflow: Overflow.visible,
                         children: [
                           Row(
+                            //crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text("Terry Cruz", style: Theme.of(context).textTheme.subhead
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only(left: 12),
-                                    child: IconButton(
-                                      icon: Icon(Icons.edit),
-                                      onPressed: () {
-
-                                      },
+                                Text("Terry Cruz",
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
                                     )
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                      Icons.edit,
+                                      size: 20
+                                  ),
+                                  onPressed: () {
+                                  },
                                 )
                               ]
                           ),
-                          SizedBox(height: 4),
-                          Text("Joined 03/2020", style: Theme.of(context).textTheme.display2)
-                        ]
+                          Positioned(
+                            child: Text("Joined 03/2020",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context).accentColor,
+                                )
+                            ),
+                            top: 45,
+                          )
+                        ],
+                      )
                     )
+
                   ]
               )
           )
@@ -132,7 +149,7 @@ class _AccountInfoState extends State<AccountInfo> {
 
   Widget infoRow(BuildContext context, IconData icon, String text) {
     return Padding(
-        padding: EdgeInsets.only(top: 17.5, bottom: 17.5),
+        padding: EdgeInsets.only(top: 10, bottom: 10),
         child: Row(
           children: <Widget>[
             Icon(icon),
@@ -140,10 +157,16 @@ class _AccountInfoState extends State<AccountInfo> {
             Expanded (
               child: Text(
                 text,
-                style: Theme.of(context).textTheme.display3,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Theme.of(context).accentColor,
+                ),
               ),
             ),
-            Icon(Icons.arrow_forward_ios)
+            IconButton(
+              icon: Icon(Icons.arrow_forward_ios),
+              onPressed: () {},
+            )
           ],
         )
     );
@@ -178,7 +201,10 @@ class _AccountInfoState extends State<AccountInfo> {
               children: <Widget>[
                 Text(
                     'Account Info',
-                    style: Theme.of(context).textTheme.subhead
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold
+                    )
                 ),
                 ListView.separated(
                     padding: EdgeInsets.all(0),
