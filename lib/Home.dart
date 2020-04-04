@@ -126,8 +126,8 @@ class _HomeState extends State<Home> {
       children: <Widget>[
         Profile(),
         Padding (
-          padding: EdgeInsets.only(top: 6),
-          child: AccountInfo()
+            padding: EdgeInsets.only(top: 6),
+            child: AccountInfo()
         )
       ],
     );
@@ -135,9 +135,10 @@ class _HomeState extends State<Home> {
   Widget getPage(BuildContext context, int index) {
     switch (index) {
       case (RIDES):
-        if (rides.length == 0) return _noRidesLeftPage(context);
-        else return _ridesPage(context);
-        break;
+        if (rides.length == 0) {
+          return _noRidesLeftPage(context);
+        }
+        return _ridesPage(context);
       case (HISTORY):
         return Column(
           children: <Widget>[
