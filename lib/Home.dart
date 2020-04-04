@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Upcoming.dart';
 import 'Login.dart';
+import 'Profile.dart';
 
 class Greeting extends StatelessWidget {
   final String name;
@@ -41,7 +42,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
+  static const int RIDES = 0;
+  static const int HISTORY = 1;
+  static const int PROFILE = 2;
+
+  int _selectedIndex = RIDES;
   List<UpcomingRide> rides;
   String _name;
 
@@ -116,23 +121,48 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Widget _profilePage(BuildContext context) {
+    return Column (
+      children: <Widget>[
+        Profile(),
+        Padding (
+            padding: EdgeInsets.only(top: 6),
+            child: AccountInfo()
+        )
+      ],
+    );
+  }
+  Widget getPage(BuildContext context, int index) {
+    switch (index) {
+      case (RIDES):
+        if (rides.length == 0) {
+          return _noRidesLeftPage(context);
+        }
+        return _ridesPage(context);
+      case (HISTORY):
+        return Column(
+          children: <Widget>[
+            SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SignOutButton(),
+              ],
+            )
+          ],
+        );
+      case (PROFILE):
+        return _profilePage(context);
+      default:
+        return Column();
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        body: _selectedIndex == 0
-            ? (rides.length == 0 ? _noRidesLeftPage(context) : _ridesPage(context))
-            : _selectedIndex == 1
-                ? Column()
-                : Column(
-                    children: <Widget>[SizedBox(height: 50), Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                       SignOutButton(),
-                      ],
-                    )],
-                  ),
+        body: getPage(context, _selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Colors.blue,
           items: <BottomNavigationBarItem>[
@@ -159,7 +189,6 @@ class SignOutButton extends StatelessWidget {
       onPressed: () {
         googleSignIn.signOut();
       },
-
     );
   }
 }
