@@ -150,17 +150,14 @@ class _HomeState extends State<Home> {
             )
           ],
         );
-        break;
       case (PROFILE):
         return _profilePage(context);
-        break;
       default:
         return Column();
     }
   }
   @override
   Widget build(BuildContext context) {
-    rides.add(UpcomingRide());
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(

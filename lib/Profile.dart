@@ -1,25 +1,15 @@
-import 'dart:io';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
   Profile({Key key}) : super(key: key);
+
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  File _image;
-
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = image;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,10 +56,8 @@ class _ProfileState extends State<Profile> {
                             Padding (
                                 padding: EdgeInsets.only(bottom: _picDiameter * 0.05),
                                 child: CircleAvatar(
-                                  backgroundImage: _image == null
-                                      ? AssetImage('assets/images/terry.jpg')
-                                      : FileImage(_image),
                                   radius: _picRadius,
+                                  backgroundImage: AssetImage('assets/images/terry.jpg'),
                                 )
                             ),
 
@@ -84,7 +72,7 @@ class _ProfileState extends State<Profile> {
                                           Icons.add,
                                           size: _picBtnDiameter
                                       ),
-                                      onPressed: getImage,
+                                      onPressed: () {}
                                     ),
                                   ),
                                 ),
@@ -100,7 +88,6 @@ class _ProfileState extends State<Profile> {
                         overflow: Overflow.visible,
                         children: [
                           Row(
-                            //crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text("Terry Cruz",
                                     style: TextStyle(
@@ -130,7 +117,6 @@ class _ProfileState extends State<Profile> {
                         ],
                       )
                     )
-
                   ]
               )
           )
@@ -173,12 +159,8 @@ class _AccountInfoState extends State<AccountInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final List<IconData> icons = new List();
-    icons.add(Icons.mail_outline);
-    icons.add(Icons.phone);
-    final List<String> tempText = new List();
-    tempText.add("terrycruz@hotmail.com");
-    tempText.add("Add your number");
+    List<IconData> icons = [Icons.mail_outline, Icons.phone];
+    List<String> tempText = ["terrycruz@hotmail.com", "Add your number"];
 
     return Container(
         decoration: BoxDecoration(
