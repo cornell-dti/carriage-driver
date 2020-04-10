@@ -108,10 +108,18 @@ class Time extends StatelessWidget {
   }
 }
 
-// TODO make stateful again
-class Summary extends StatelessWidget {
+class Summary extends StatefulWidget {
   Summary({Key key}) : super(key: key);
 
+
+  @override
+  SummaryState createState() => SummaryState();
+}
+class SummaryState extends State<Summary> {
+  
+  @override void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
