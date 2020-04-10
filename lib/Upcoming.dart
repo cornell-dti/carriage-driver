@@ -1,27 +1,14 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'Map.dart';
+import 'Ride.dart';
 
-class Rider extends StatefulWidget {
-  Rider({Key key, @required this.name}) : super(key: key);
+class Rider extends StatelessWidget {
+  Rider(this.riderName, {Key key, this.injury}) : super(key: key);
 
-  final String name;
-
-  @override
-  _RiderState createState() => _RiderState();
-}
-
-class _RiderState extends State<Rider> {
-  String _riderName;
-  String _injury;
-
-  @override
-  void initState() {
-    super.initState();
-    // Fetch the Rider and their Injury from API
-    _riderName = widget.name;
-    _injury = "Wheelchair";
-  }
+  final String riderName;
+  final String injury;
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +23,15 @@ class _RiderState extends State<Rider> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('$_riderName',
+              Text('$riderName',
                   style: TextStyle(fontSize: 12, letterSpacing: 0.23)),
-              Text('Needs: $_injury',
-                  style: TextStyle(
-                      color: Color.fromRGBO(142, 142, 147, 1),
-                      fontSize: 10,
-                      letterSpacing: 0.19))
+              // TODO: check if we can update sdk version for this
+              if (injury != null)
+                Text('Needs: $injury',
+                    style: TextStyle(
+                        color: Color.fromRGBO(142, 142, 147, 1),
+                        fontSize: 10,
+                        letterSpacing: 0.19))
             ],
           )
         ],
@@ -51,26 +40,11 @@ class _RiderState extends State<Rider> {
   }
 }
 
-class Location extends StatefulWidget {
-  Location({Key key, @required this.heading, @required this.location})
-      : super(key: key);
-
+class Location extends StatelessWidget {
   final String heading;
   final String location;
 
-  @override
-  _LocationState createState() => _LocationState();
-}
-
-class _LocationState extends State<Location> {
-  String _location;
-
-  @override
-  void initState() {
-    super.initState();
-    // Fetch Pickup or Drop off Location
-    _location = widget.location;
-  }
+  Location(this.heading, this.location, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -79,13 +53,13 @@ class _LocationState extends State<Location> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('${widget.heading}',
+            Text('$heading',
                 style: TextStyle(
                     fontSize: 12,
                     color: Theme.of(context).accentColor,
                     letterSpacing: 0)),
             SizedBox(height: 4),
-            Text('$_location',
+            Text('$location',
                 style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -97,28 +71,18 @@ class _LocationState extends State<Location> {
   }
 }
 
-class Date extends StatefulWidget {
-  Date({Key key}) : super(key: key);
+class Date extends StatelessWidget {
+  Date(this.date, {Key key}) : super(key: key);
 
-  @override
-  _DateState createState() => _DateState();
-}
+  final DateTime date;
 
-class _DateState extends State<Date> {
-  String _date;
-
-  @override
-  void initState() {
-    super.initState();
-    // Fetch date
-    _date = "Nov 12";
-  }
+  final DateFormat format = new DateFormat('MMM d');
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 24.0, top: 12.0),
-      child: Text('$_date',
+      child: Text(format.format(date),
           style: TextStyle(
               fontSize: 17,
               color: Theme.of(context).accentColor,
@@ -127,42 +91,27 @@ class _DateState extends State<Date> {
   }
 }
 
-class Time extends StatefulWidget {
-  Time({Key key}) : super(key: key);
+class Time extends StatelessWidget {
+  Time(this.time, {Key key}) : super(key: key);
 
-  @override
-  _TimeState createState() => _TimeState();
-}
-
-class _TimeState extends State<Time> {
-  String _time;
-
-  @override
-  void initState() {
-    super.initState();
-    // Fetch start time
-    _time = "10:12";
-  }
+  final TimeOfDay time;
 
   @override
   Widget build(BuildContext context) {
+    final localizations = MaterialLocalizations.of(context);
     return Padding(
       padding: EdgeInsets.only(left: 24.0, top: 12.0),
-      child: Text('$_time',
+      child: Text(localizations.formatTimeOfDay(time),
           style: TextStyle(
               fontSize: 34, fontWeight: FontWeight.bold, letterSpacing: 0.37)),
     );
   }
 }
 
-class Summary extends StatefulWidget {
+// TODO make stateful again
+class Summary extends StatelessWidget {
   Summary({Key key}) : super(key: key);
 
-  @override
-  _SummaryState createState() => _SummaryState();
-}
-
-class _SummaryState extends State<Summary> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -180,7 +129,16 @@ class _SummaryState extends State<Summary> {
 }
 
 class CurrentRide extends StatefulWidget {
-  CurrentRide({Key key, DateTime startTime}) : super(key: key);
+  CurrentRide(Ride ride, {Key key})
+      : date = ride.startTime,
+        super(key: key);
+
+  final DateTime date;
+  // TODO: placeholder values
+  final List<List<String>> riders = [
+    ['Terry Cruz', 'Pick up', 'Cascadilla'],
+    ['Chris Hansen', 'Drop off', 'Rhodes']
+  ];
 
   @override
   _CurrentRideState createState() => _CurrentRideState();
@@ -188,11 +146,6 @@ class CurrentRide extends StatefulWidget {
 
 class _CurrentRideState extends State<CurrentRide> {
   bool _starting = false;
-  List<List<String>> _riders = [
-    ['Terry Cruz', 'Pick up', 'Cascadilla'],
-    ['Chris Hansen', 'Drop off', 'Rhodes']
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -230,28 +183,27 @@ class _CurrentRideState extends State<CurrentRide> {
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Date(),
-                Time(),
+                Date(widget.date),
+                Time(TimeOfDay.fromDateTime(widget.date)),
                 Padding(
                   padding: EdgeInsets.only(left: 24),
                   child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: _riders.length,
+                      itemCount: widget.riders.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Padding(
                           padding: EdgeInsets.only(top: 0, bottom: 12),
                           child: Row(
                             children: <Widget>[
                               Expanded(
-                                child: Rider(name: _riders[index][0]),
+                                child: Rider(widget.riders[index][0]),
                               ),
                               Expanded(
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 12),
-                                  child: Location(
-                                      heading: _riders[index][1],
-                                      location: _riders[index][2]),
+                                  child: Location(widget.riders[index][1],
+                                      widget.riders[index][2]),
                                 ),
                               )
                             ],
@@ -292,41 +244,31 @@ class _CurrentRideState extends State<CurrentRide> {
   }
 }
 
-class UpcomingRide extends StatefulWidget {
-  UpcomingRide({Key key, DateTime startTime}) : super(key: key);
+class FutureRide extends StatelessWidget {
+  FutureRide(Ride ride, {Key key})
+      : date = ride.startTime,
+        time = TimeOfDay.fromDateTime(ride.startTime),
+        super(key: key);
 
-  @override
-  _UpcomingRideState createState() => _UpcomingRideState();
-}
+  final DateTime date;
+  final TimeOfDay time;
 
-class _UpcomingRideState extends State<UpcomingRide> {
-  List<String> _riders;
-  List<String> _destinations;
+  // TODO: placeholder
+  List<String> somehowGetRiderImages() {
+    return ['assets/images/terry.jpg', 'assets/images/terry.jpg'];
+  }
 
-  @override
-  void initState() {
-    super.initState();
-    // Fetch Upcoming Information
-    _riders = [
-      'assets/images/terry.jpg',
-      'assets/images/terry.jpg',
-      'assets/images/terry.jpg'
-    ];
-    _destinations = [
-      "Fgafd",
-      "Morrison",
-      "PSB",
-      "Gates",
-      "Cascadilla",
-      "Rockefeller",
-      "gfa",
-      "hfa"
-    ];
+  // TODO: placeholder
+  List<String> somehowGetDestinations() {
+    return ["Fgafd", "Morrison", "PSB", "Gates"];
   }
 
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width - 48;
+
+    var _riderImgs = somehowGetRiderImages();
+    var _destinations = somehowGetDestinations();
 
     return Container(
       constraints: BoxConstraints(
@@ -358,8 +300,8 @@ class _UpcomingRideState extends State<UpcomingRide> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Date(),
-                      Time(),
+                      Date(date),
+                      Time(time),
                       Padding(
                           padding: EdgeInsets.only(
                               left: 24.0, top: 12.0, right: 24.0, bottom: 12.0),
@@ -367,10 +309,10 @@ class _UpcomingRideState extends State<UpcomingRide> {
                             spacing: 12,
                             runSpacing: 12,
                             children:
-                                List.generate(_riders.length, (int index) {
+                                List.generate(_riderImgs.length, (int index) {
                               return CircleAvatar(
                                 radius: 25,
-                                backgroundImage: AssetImage(_riders[index]),
+                                backgroundImage: AssetImage(_riderImgs[index]),
                               );
                             }),
                           ))
@@ -395,30 +337,19 @@ class _UpcomingRideState extends State<UpcomingRide> {
   }
 }
 
-class Route extends StatefulWidget {
+class Route extends StatelessWidget {
   const Route({Key key, @required this.destinations})
       : assert(destinations != null),
         super(key: key);
 
   final List<String> destinations;
 
-  @override
-  _RouteState createState() => _RouteState();
-}
-
-class _RouteState extends State<Route> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   bool _isFirst(int index) {
     return index == 0;
   }
 
   bool _isLast(int index) {
-    return index == widget.destinations.length - 1;
+    return index == destinations.length - 1;
   }
 
   Widget _buildLine(bool visible) {
@@ -446,7 +377,7 @@ class _RouteState extends State<Route> {
           ),
           Container(
             margin: const EdgeInsetsDirectional.only(start: 10.0),
-            child: Text(widget.destinations[index],
+            child: Text(destinations[index],
                 style: Theme.of(context).textTheme.display1),
           ),
         ],
@@ -459,7 +390,7 @@ class _RouteState extends State<Route> {
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: widget.destinations.length,
+      itemCount: destinations.length,
       itemBuilder: _buildVerticalHeader,
     );
   }

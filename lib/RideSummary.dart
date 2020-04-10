@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Ride.dart';
 import 'Upcoming.dart';
 import 'Home.dart';
 import 'package:intl/intl.dart';
@@ -194,12 +195,21 @@ class RideSummary extends StatefulWidget {
 
 class _RideSummaryState extends State<RideSummary> {
   String _name;
+  Ride _currentRide;
 
   @override
   void initState() {
     super.initState();
-    // Fetch name of user
+    // TODO: placeholder
     _name = "Chris";
+    _currentRide = new Ride(
+        id: "1",
+        startLocation: "Teagle Hall",
+        endLocation: "RPCC",
+        startTime: new DateTime(2020,11,14),
+        endTime: new DateTime(2020,11,14),
+        riderId: [ "Terry Cruz", "Chris Hansen" ],
+      );
   }
 
 // TODO: ignore recent finished ride if it was too long ago
@@ -232,12 +242,12 @@ class _RideSummaryState extends State<RideSummary> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Greeting(name: _name),
+          Greeting(_name),
           Expanded(
               child: ListView(shrinkWrap: true, children: <Widget>[
             _recentRide(),
             LeftSubheading(heading: 'Upcoming Ride'),
-            Center(child: CurrentRide()),
+            Center(child: CurrentRide(_currentRide)),
             Padding(
                 padding: EdgeInsets.only(top: 36.0, bottom: 24.0),
                 child: DriverStats())
