@@ -37,10 +37,7 @@ class Ride {
       repeatsOn: getOrNull(json,'repeatsOn')
     );
   }
-
-  // TODO: hi chris where do i move this to
-  static dynamic getOrNull(Map<String,dynamic> map, String key) {
-    return map.containsKey(key) ? map[key] : null;
-  }
-
+}
+dynamic getOrNull(Map<String,dynamic> map, String key) {
+  return map.containsKey(key) ? map[key] : null;
 }
