@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'Login.dart';
 
 class Profile extends StatefulWidget {
   Profile({Key key}) : super(key: key);
@@ -57,7 +58,7 @@ class _ProfileState extends State<Profile> {
                                 padding: EdgeInsets.only(bottom: _picDiameter * 0.05),
                                 child: CircleAvatar(
                                   radius: _picRadius,
-                                  backgroundImage: AssetImage('assets/images/terry.jpg'),
+                                  backgroundImage: NetworkImage(imageUrl),
                                 )
                             ),
 
@@ -89,7 +90,7 @@ class _ProfileState extends State<Profile> {
                         children: [
                           Row(
                               children: [
-                                Text("Terry Cruz",
+                                Text(name,
                                     style: TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.bold,
@@ -160,7 +161,7 @@ class _AccountInfoState extends State<AccountInfo> {
   @override
   Widget build(BuildContext context) {
     List<IconData> icons = [Icons.mail_outline, Icons.phone];
-    List<String> tempText = ["terrycruz@hotmail.com", "Add your number"];
+    List<String> tempText = [email, "Add your number"];
 
     return Container(
         decoration: BoxDecoration(
