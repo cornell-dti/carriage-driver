@@ -16,7 +16,7 @@ class _RideData {
 
 class Rides extends StatefulWidget {
   // TODO: placeholder
-  String driverId = "test";
+  final String driverId = "test";
 
   @override
   _RidesState createState() => _RidesState();
