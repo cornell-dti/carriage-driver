@@ -9,6 +9,8 @@ class Rider extends StatelessWidget {
 
   final String riderName;
   final String injury;
+  // TODO: placeholder
+  final String img = 'assets/images/terry.jpg';
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class Rider extends StatelessWidget {
       child: Row(
         children: <Widget>[
           CircleAvatar(
-            backgroundImage: AssetImage('assets/images/terry.jpg'),
+            backgroundImage: AssetImage(img),
             radius: 25,
           ),
           SizedBox(width: 12.0),
@@ -25,13 +27,15 @@ class Rider extends StatelessWidget {
             children: <Widget>[
               Text('$riderName',
                   style: TextStyle(fontSize: 12, letterSpacing: 0.23)),
-              // TODO: check if we can update sdk version for this
-              if (injury != null)
-                Text('Needs: $injury',
+              () {
+              if (injury != null) {
+                return Text('Needs: $injury',
                     style: TextStyle(
                         color: Color.fromRGBO(142, 142, 147, 1),
                         fontSize: 10,
-                        letterSpacing: 0.19))
+                        letterSpacing: 0.19));
+              } else return new Container();
+              }()
             ],
           )
         ],
@@ -111,15 +115,16 @@ class Time extends StatelessWidget {
 class Summary extends StatefulWidget {
   Summary({Key key}) : super(key: key);
 
-
   @override
   SummaryState createState() => SummaryState();
 }
+
 class SummaryState extends State<Summary> {
-  
-  @override void initState() {
+  @override
+  void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,6 +141,16 @@ class SummaryState extends State<Summary> {
   }
 }
 
+enum StopType { pickup, dropoff }
+
+// Data for ride stops for CurrentRide widget
+class _StopData {
+  String name;
+  String location;
+  StopType stopType;
+  _StopData(this.name, this.location, this.stopType);
+}
+
 class CurrentRide extends StatefulWidget {
   CurrentRide(Ride ride, {Key key})
       : date = ride.startTime,
@@ -143,9 +158,9 @@ class CurrentRide extends StatefulWidget {
 
   final DateTime date;
   // TODO: placeholder values
-  final List<List<String>> riders = [
-    ['Terry Cruz', 'Pick up', 'Cascadilla'],
-    ['Chris Hansen', 'Drop off', 'Rhodes']
+  final List<_StopData> stops = [
+    new _StopData('Terry Cruz', 'Cascadilla', StopType.pickup),
+    new _StopData('Chris Hansen', 'Rhodes', StopType.dropoff)
   ];
 
   @override
@@ -158,6 +173,17 @@ class _CurrentRideState extends State<CurrentRide> {
   void initState() {
     super.initState();
     // Will need to fetch data here
+  }
+
+  String _stopLabelText(StopType t) {
+    switch (t) {
+      case StopType.pickup:
+        return 'Pick up';
+      case StopType.dropoff:
+        return 'Drop off';
+    }
+    // TODO: maybe change if we have a convention for this?
+    throw new Exception("impossible");
   }
 
   @override
@@ -188,64 +214,64 @@ class _CurrentRideState extends State<CurrentRide> {
                   spreadRadius: 1.0)
             ],
           ),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Date(widget.date),
-                Time(TimeOfDay.fromDateTime(widget.date)),
-                Padding(
-                  padding: EdgeInsets.only(left: 24),
-                  child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: widget.riders.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: EdgeInsets.only(top: 0, bottom: 12),
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Rider(widget.riders[index][0]),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 12),
-                                  child: Location(widget.riders[index][1],
-                                      widget.riders[index][2]),
-                                ),
-                              )
-                            ],
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+                  Widget>[
+            Date(widget.date),
+            Time(TimeOfDay.fromDateTime(widget.date)),
+            Padding(
+              padding: EdgeInsets.only(left: 24),
+              child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: widget.stops.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 0, bottom: 12),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Rider(widget.stops[index].name),
                           ),
-                        );
-                      }),
-                ),
-                Visibility(
-                  visible: _starting,
-                  child: Center(
-                    child: Padding(
-                      padding:
-                          EdgeInsets.only(top: btnPadding, bottom: btnPadding),
-                      child: ButtonTheme(
-                        minWidth: btnWidth,
-                        height: btnHeight,
-                        child: RaisedButton(
-                          onPressed: () {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return Map();
-                            }));
-                          },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(3)),
-                          color: Theme.of(context).accentColor,
-                          child: Text('START',
-                              style: TextStyle(color: Colors.white)),
-                        ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 12),
+                              child: Location(
+                                  _stopLabelText(widget.stops[index].stopType),
+                                  widget.stops[index].location),
+                            ),
+                          )
+                        ],
                       ),
+                    );
+                  }),
+            ),
+            Visibility(
+              visible: _starting,
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: btnPadding, bottom: btnPadding),
+                  child: ButtonTheme(
+                    minWidth: btnWidth,
+                    height: btnHeight,
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return Map();
+                        }));
+                      },
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3)),
+                      color: Theme.of(context).accentColor,
+                      child:
+                          Text('START', style: TextStyle(color: Colors.white)),
                     ),
                   ),
                 ),
-              ]),
+              ),
+            ),
+          ]),
         ),
       ),
     );
@@ -260,24 +286,16 @@ class FutureRide extends StatelessWidget {
 
   final DateTime date;
   final TimeOfDay time;
-
   // TODO: placeholder
-  List<String> somehowGetRiderImages() {
-    return ['assets/images/terry.jpg', 'assets/images/terry.jpg'];
-  }
-
-  // TODO: placeholder
-  List<String> somehowGetDestinations() {
-    return ["Fgafd", "Morrison", "PSB", "Gates"];
-  }
+  final List<String> destinations = ["Fgafd", "Morrison", "PSB", "Gates"];
+  final List<String> riderImgs = [
+    'assets/images/terry.jpg',
+    'assets/images/terry.jpg'
+  ];
 
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width - 48;
-
-    var _riderImgs = somehowGetRiderImages();
-    var _destinations = somehowGetDestinations();
-
     return Container(
       constraints: BoxConstraints(
           minWidth: _width, maxWidth: _width, minHeight: _width / 2),
@@ -317,10 +335,10 @@ class FutureRide extends StatelessWidget {
                             spacing: 12,
                             runSpacing: 12,
                             children:
-                                List.generate(_riderImgs.length, (int index) {
+                                List.generate(riderImgs.length, (int index) {
                               return CircleAvatar(
                                 radius: 25,
-                                backgroundImage: AssetImage(_riderImgs[index]),
+                                backgroundImage: AssetImage(riderImgs[index]),
                               );
                             }),
                           ))
@@ -331,7 +349,7 @@ class FutureRide extends StatelessWidget {
                   flex: 146,
                   child: Column(
                     children: <Widget>[
-                      Route(destinations: _destinations),
+                      Route(destinations: destinations),
                       SizedBox(height: 24)
                     ],
                   ),
