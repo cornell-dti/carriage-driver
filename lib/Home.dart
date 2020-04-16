@@ -49,13 +49,10 @@ class _HomeState extends State<Home> {
 
   int _selectedIndex = RIDES;
   List<FutureRide> rides;
-  String _name;
 
   @override
   void initState() {
     super.initState();
-    // Fetch name of user
-    _name = "Chris";
   }
 
   void _onItemTapped(int index) {
