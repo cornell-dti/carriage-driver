@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -36,16 +37,19 @@ class _RidesState extends State<Rides> {
     final dateFormat = DateFormat("yyyy-MM-dd");
     // TODO: use real endpoint
     final response = await http
-        .get('localhost:3000/active-rides?date=${dateFormat.format(now)}');
+        .get(new Uri.http('localhost:3000','/active-rides',{"date":dateFormat.format(now)}));
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body)["data"];
-      List<Ride> activeRides = data.map((e) => Ride.fromJson(e));
-      List<Ride> rides = activeRides
+      List<Ride> rides =
+          data.map((e) => Ride.fromJson(e))
           .where((e) => e.driverId.contains(widget.driverId))
           .toList()
           ..sort((a, b) => a.startTime.compareTo(b.startTime));
-      rides.removeAt(0);
-      Ride currentRide = rides[0];
+      Ride currentRide;
+      if(rides.length > 0) {
+        currentRide = rides[0];
+        rides.removeAt(0);
+      }
       var d = _RideData(rides,currentRide);
       return d;
     } else {

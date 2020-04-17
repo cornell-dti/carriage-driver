@@ -26,18 +26,21 @@ class Ride {
 
   factory Ride.fromJson(Map<String,dynamic> json) {
     return Ride(
-      id: json['id'],
+      id: getOrNull(json,'id'),
       startLocation: json['startLocation'],
       endLocation: json['endLocation'],
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
       isScheduled: json['isScheduled'],
       riderId: json['riderId'],
-      driverId: getOrNull(json,'driverId'),
-      repeatsOn: getOrNull(json,'repeatsOn')
+      driverId: json['driverId'],
+      repeatsOn: getOrNull(json,'repeatsOn'),
     );
   }
 }
-dynamic getOrNull(Map<String,dynamic> map, String key) {
-  return map.containsKey(key) ? map[key] : null;
+dynamic id(x) => x;
+dynamic getOrNull<T>(Map<String,dynamic> map, String key, {dynamic parse(T s) = id}) {
+  var x = map.containsKey(key) ? map[key] : null;
+  if(x == null) return null;
+  return parse(x);
 }
