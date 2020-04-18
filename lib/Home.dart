@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     // Fetch name of user
-    _name = "Chris";
+    _name = getName().split(' ').first;
     // TODO: fetch info about rides
     rides = [UpcomingRide(startTime: DateTime.now())];
   }
@@ -125,10 +125,8 @@ class _HomeState extends State<Home> {
     return Column (
       children: <Widget>[
         Profile(),
-        Padding (
-            padding: EdgeInsets.only(top: 6),
-            child: AccountInfo()
-        )
+
+
       ],
     );
   }
@@ -152,7 +150,9 @@ class _HomeState extends State<Home> {
           ],
         );
       case (PROFILE):
-        return _profilePage(context);
+        return SingleChildScrollView(
+          child: _profilePage(context)
+        );
       default:
         return Column();
     }

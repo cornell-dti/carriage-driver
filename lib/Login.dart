@@ -9,6 +9,15 @@ import 'main_common.dart';
 String name;
 String email;
 String imageUrl;
+String driverID;
+
+String getName() {
+  return name;
+}
+
+String getID() {
+  return driverID;
+}
 
 GoogleSignIn googleSignIn = GoogleSignIn(
   scopes: [
@@ -103,6 +112,7 @@ class _LoginState extends State<Login> {
       name = googleSignIn.currentUser.displayName;
       email = googleSignIn.currentUser.email;
       imageUrl = googleSignIn.currentUser.photoUrl;
+      driverID = id;
       return Home();
     }
   }
