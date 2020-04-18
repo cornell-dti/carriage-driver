@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'dart:convert';
-import 'package:carriage/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'Login.dart';
@@ -248,7 +247,7 @@ class _ProfileState extends State<Profile> {
                       snapshot.data.vehicle]
                 )
               ],
-            );;
+            );
           }
           else if (snapshot.hasError) {
             return SafeArea(
