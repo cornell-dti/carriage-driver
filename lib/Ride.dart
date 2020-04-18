@@ -26,15 +26,15 @@ class Ride {
 
   factory Ride.fromJson(Map<String,dynamic> json) {
     return Ride(
-      id: getOrNull(json,'id'),
+      id: json['id'],
       startLocation: json['startLocation'],
       endLocation: json['endLocation'],
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
       isScheduled: json['isScheduled'],
-      riderId: json['riderId'],
-      driverId: json['driverId'],
-      repeatsOn: getOrNull(json,'repeatsOn'),
+      riderId: json['riderID'],
+      driverId: (json['driverID'] as List<dynamic>).cast<String>().toList(),
+      // repeatsOn: getOrNull(json,'repeatsOn'),
     );
   }
 }

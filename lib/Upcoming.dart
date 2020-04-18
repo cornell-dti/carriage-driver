@@ -157,7 +157,7 @@ class CurrentRide extends StatefulWidget {
         super(key: key);
 
   final DateTime date;
-  // TODO: placeholder values
+  // TODO: still placeholder values
   final List<_StopData> stops = [
     new _StopData('Terry Cruz', 'Cascadilla', StopType.pickup),
     new _StopData('Chris Hansen', 'Rhodes', StopType.dropoff)

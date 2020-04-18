@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'Home.dart';
 import 'Ride.dart';
 import 'Upcoming.dart';
 import 'package:http/http.dart' as http;
+import 'app_config.dart';
 
 // Data for Rides page
 class _RideData {
@@ -33,18 +33,66 @@ class _RidesState extends State<Rides> {
   }
 
   Future<_RideData> _fetchRides() async {
-    var now = DateTime.now();
+    // TODO: temporary placeholder response for testing
+    // replace when backend sends all fields
+    String responseBody = '''
+{
+  "data": [
+    {
+        "id": "6c5e8b60-819f-11ea-8b9d-c3580ef31720",
+        "isScheduled": false,
+        "startLocation": "Cascadilla",
+        "endLocation": "Rhodes",
+        "startTime": "2020-01-02T14:00:00.000Z",
+        "endTime": "2020-01-02T16:00:00.000Z",
+        "riderID": "61274c50-819f-11ea-8b9d-c3580ef31720",
+        "riderID": null,
+        "repeatsOn": null,
+        "driverID": ["test"]
+    },
+    {
+        "id": "95eda1a0-788a-11ea-951d-ebcedc63b5e1",
+        "startLocation": "Baker",
+        "endLocation": "Risley",
+        "startTime": "2020-01-02T05:00:00.000Z",
+        "endTime": "2020-01-02T00:00:00.000Z",
+        "isScheduled": false,
+        "riderID": null,
+        "repeatsOn": null,
+        "driverID": ["test"]
+    },
+    {
+        "id": "95eda1a0-788a-11ea-951d-ebcedc63b5e1",
+        "startLocation": "Gates Hall",
+        "endLocation": "Morrill Hall",
+        "startTime": "2020-01-02T05:00:00.000Z",
+        "endTime": "2020-01-02T00:00:00.000Z",
+        "isScheduled": false,
+        "riderID": null,
+        "repeatsOn": null,
+        "driverID": ["bad"]
+    }
+  ]
+}''';
+    await new Future.delayed(const Duration(seconds: 1));
+    List<Ride> rides = _ridesFromJson(responseBody);
+    Ride currentRide;
+    if (rides.length > 0) {
+      currentRide = rides[0];
+      rides.removeAt(0);
+    }
+    var d = _RideData(rides, currentRide);
+    return d;
+
+    /*
+    AppConfig config = AppConfig.of(context);
     final dateFormat = DateFormat("yyyy-MM-dd");
-    // TODO: use real endpoint
+    var now = DateTime.now();
     final response = await http
-        .get(new Uri.http('localhost:3000','/active-rides',{"date":dateFormat.format(now)}));
+        .get(new Uri.http(config.baseUrl,'/active-rides',{"date":dateFormat.format(now)}));
     if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body)["data"];
-      List<Ride> rides =
-          data.map((e) => Ride.fromJson(e))
-          .where((e) => e.driverId.contains(widget.driverId))
-          .toList()
-          ..sort((a, b) => a.startTime.compareTo(b.startTime));
+      String responseBody = response.body;
+      List<Ride> rides = _ridesFromJson(responseBody);
       Ride currentRide;
       if(rides.length > 0) {
         currentRide = rides[0];
@@ -55,6 +103,17 @@ class _RidesState extends State<Rides> {
     } else {
       throw Exception('Failed to load rides.');
     }
+    */
+  }
+
+  List<Ride> _ridesFromJson(String json) {
+    var data = jsonDecode(json)["data"];
+    List<Ride> res = data
+        .map<Ride>((e) => Ride.fromJson(e))
+        .where((Ride e) => e.driverId.contains(widget.driverId))
+        .toList();
+    res.sort((a, b) => a.startTime.compareTo(b.startTime));
+    return res;
   }
 
   // TODO: replace this when name is stored somewhere
@@ -92,23 +151,27 @@ class _RidesState extends State<Rides> {
   }
 
   Widget _mainPage(BuildContext context, _RideData data) {
-    return Column(children: <Widget>[
-      LeftSubheading(heading: 'Upcoming Ride'),
-      Center(
-        child: CurrentRide(data.currentRide),
-      ),
-      SizedBox(height: 16.0),
-      LeftSubheading(heading: 'Today\'s Schedule'),
-      Flexible(
-        child: ListView.separated(
-          itemCount: data.rides.length,
-          itemBuilder: (BuildContext c, int index) =>
-              _futureRide(c, data, index),
-          separatorBuilder: (BuildContext context, int index) => Divider(),
-          padding: EdgeInsets.only(left: 24.0, right: 24.0, bottom: 5.0),
-        ),
-      )
-    ]);
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // height: 20,
+        children: <Widget>[
+          LeftSubheading(heading: 'Upcoming Ride'),
+          Center(
+            child: CurrentRide(data.currentRide),
+          ),
+          SizedBox(height: 16.0),
+          LeftSubheading(heading: 'Today\'s Schedule'),
+          Expanded(
+            child: ListView.separated(
+              itemCount: data.rides.length,
+              itemBuilder: (BuildContext c, int index) =>
+                  _futureRide(c, data, index),
+              separatorBuilder: (BuildContext context, int index) => Divider(),
+              padding: EdgeInsets.only(left: 24.0, right: 24.0, bottom: 5.0),
+              shrinkWrap: true,
+            ),
+          )
+        ]);
   }
 
   @override
@@ -117,21 +180,22 @@ class _RidesState extends State<Rides> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Greeting(getNameFromSharedStateSomewhere()),
-          FutureBuilder<_RideData>(
-              future: rideData,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data.rides.length == 0) {
-                    return _emptyPage(context);
-                  } else {
-                    return _mainPage(context, snapshot.data);
-                  }
-                } else if (snapshot.hasError) {
-                  // TODO: placeholder error response
-                  return Text("${snapshot.error}");
-                }
-                return CircularProgressIndicator();
-              })
+          Expanded(
+              child: FutureBuilder<_RideData>(
+                  future: rideData,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data.rides.length == 0) {
+                        return _emptyPage(context);
+                      } else {
+                        return _mainPage(context, snapshot.data);
+                      }
+                    } else if (snapshot.hasError) {
+                      // TODO: placeholder error response
+                      return Text("${snapshot.error}");
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  }))
         ]);
   }
 }
