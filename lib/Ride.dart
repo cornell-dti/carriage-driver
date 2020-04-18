@@ -32,15 +32,15 @@ class Ride {
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
       isScheduled: json['isScheduled'],
-      riderId: json['riderID'],
-      driverId: (json['driverID'] as List<dynamic>).cast<String>().toList(),
-      // repeatsOn: getOrNull(json,'repeatsOn'),
+      riderId: (json['riderID'] as List<dynamic>).cast<String>().toList(),
+      driverId: (json['driverID'] as List<dynamic>)?.cast<String>()?.toList() ?? [],
+      repeatsOn: getOrNull(json,'repeatsOn', parse: (e) => (e as List<dynamic>).cast<String>().toList())
     );
   }
 }
-dynamic id(x) => x;
-dynamic getOrNull<T>(Map<String,dynamic> map, String key, {dynamic parse(T s) = id}) {
+T getOrNull<T>(Map<String,dynamic> map, String key, {T parse(dynamic s)}) {
   var x = map.containsKey(key) ? map[key] : null;
   if(x == null) return null;
+  if(parse == null) return x;
   return parse(x);
 }

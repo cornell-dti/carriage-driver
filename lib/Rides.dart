@@ -44,9 +44,8 @@ class _RidesState extends State<Rides> {
         "endLocation": "Rhodes",
         "startTime": "2020-01-02T14:00:00.000Z",
         "endTime": "2020-01-02T16:00:00.000Z",
-        "riderID": "61274c50-819f-11ea-8b9d-c3580ef31720",
-        "riderID": null,
-        "repeatsOn": null,
+        "riderID": ["123"],
+        "repeatsOn": ["Monday","Wednesday"],
         "driverID": ["test"]
     },
     {
@@ -56,7 +55,7 @@ class _RidesState extends State<Rides> {
         "startTime": "2020-01-02T05:00:00.000Z",
         "endTime": "2020-01-02T00:00:00.000Z",
         "isScheduled": false,
-        "riderID": null,
+        "riderID": ["abc"],
         "repeatsOn": null,
         "driverID": ["test"]
     },
@@ -67,9 +66,8 @@ class _RidesState extends State<Rides> {
         "startTime": "2020-01-02T05:00:00.000Z",
         "endTime": "2020-01-02T00:00:00.000Z",
         "isScheduled": false,
-        "riderID": null,
-        "repeatsOn": null,
-        "driverID": ["bad"]
+        "riderID": ["123"],
+        "driverID": null
     }
   ]
 }''';
