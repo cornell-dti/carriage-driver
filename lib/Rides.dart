@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'Home.dart';
 import 'Ride.dart';
 import 'Upcoming.dart';
-import 'package:http/http.dart' as http;
-import 'app_config.dart';
+// import 'dart:io';
+// import 'package:intl/intl.dart';
+// import 'package:http/http.dart' as http;
 
 // Data for Rides page
 class _RideData {
