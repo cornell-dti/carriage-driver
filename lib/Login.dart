@@ -61,25 +61,26 @@ class _LoginState extends State<Login> {
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
       tokenFromAccount(currentUser).then((token) async {
-        return await authenticationRequest(AppConfig.of(context).baseUrl, token);
+        return await authenticationRequest(AppConfig.of(context).baseUrl, token, currentUser.email);
       }).then((response) {
         var json = jsonDecode(response);
+        print(json);
         setState(() {
-          id = (json['id'] != null) ? json['id'] : null;
-          if (id = null) {
+          if(!json.containsKey('id')) {
+            id = null;
             currentUser = null;
+          } else {
+            id = json['id'];
           }
         });
-        print(json['id']);
-        return json['id'];
+        return id;
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // add guard based on backend verification later
-    if (currentUser == null) {
+    if (id == null) {
       return Scaffold(
           body: Container(
               color: Colors.white,
