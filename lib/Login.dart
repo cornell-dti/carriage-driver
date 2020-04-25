@@ -63,48 +63,42 @@ class _LoginState extends State<Login> {
       googleSignIn.signIn();
     }
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
-        setCurrentUser(account);
-        tokenFromAccount(currentUser).then((token) async {
-          print('token:');
-          print(token);
-          return await authenticationRequest(AppConfig
-              .of(context)
-              .baseUrl, token);
-        }).then((response) {
-          var json = jsonDecode(response);
-          print("json:");
-          print(json);
-          setState(() {
-            id = (json['id'] != null) ? json['id'] : null;
-            if (id == null) {
-              currentUser = null;
-              //googleSignIn.signOut();
-            }
-          });
-          print("json id:");
-          print(json['id']);
-          //return json['id'];
+      setCurrentUser(account);
+      tokenFromAccount(currentUser).then((token) async {
+        return await authenticationRequest(
+            AppConfig.of(context).baseUrl, token, currentUser.email);
+      }).then((response) {
+        var json = jsonDecode(response);
+        print(json);
+        setState(() {
+          if (!json.containsKey('id')) {
+            id = null;
+            currentUser = null;
+          } else {
+            id = json['id'];
+          }
         });
+        return id;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    print('build');
     if (id == null) {
       return Scaffold(
           body: Container(
               color: Colors.white,
               child: Center(
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FlutterLogo(size: 150),
-                      SizedBox(height: 50),
-                      SignInButton()
-                    ],
-                  ))));
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FlutterLogo(size: 150),
+                  SizedBox(height: 50),
+                  SignInButton()
+                ],
+              ))));
     } else {
       assert(googleSignIn.currentUser.displayName != null);
       assert(googleSignIn.currentUser.email != null);
