@@ -55,9 +55,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    // Fetch name of user
-    //_name = widget.name.split(' ').first;
-    _name = widget.name;
+    _name = widget.name.split(' ').first;
     // TODO: fetch info about rides
     rides = [UpcomingRide(startTime: DateTime.now())];
   }
@@ -151,7 +149,6 @@ class _HomeState extends State<Home> {
           ],
         );
       case (PROFILE):
-        return _profilePage(context);
         return SingleChildScrollView(
           child: _profilePage(context)
         );

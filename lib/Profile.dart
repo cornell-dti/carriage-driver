@@ -276,7 +276,7 @@ class InfoGroup extends StatefulWidget {
 class _InfoGroupState extends State<InfoGroup> {
 
   Widget infoRow(BuildContext context, IconData icon, String text) {
-    double paddingTB = 5;
+    double paddingTB = 10;
     return Padding(
         padding: EdgeInsets.only(top: paddingTB, bottom: paddingTB),
         child: Row(
