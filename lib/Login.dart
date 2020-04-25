@@ -69,7 +69,6 @@ class _LoginState extends State<Login> {
             AppConfig.of(context).baseUrl, token, currentUser.email);
       }).then((response) {
         var json = jsonDecode(response);
-        print(json);
         setState(() {
           if (!json.containsKey('id')) {
             id = null;
