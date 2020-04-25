@@ -23,14 +23,10 @@ class Rides extends StatefulWidget {
 }
 
 class _RidesState extends State<Rides> {
-  Future<_RideData> rideData;
-
   @override
   void initState() {
     super.initState();
-    rideData = _fetchRides();
   }
-
   Future<_RideData> _fetchRides() async {
     // TODO: temporary placeholder response for testing
     // replace when backend sends all fields
@@ -179,7 +175,7 @@ class _RidesState extends State<Rides> {
           Greeting(getNameFromSharedStateSomewhere()),
           Expanded(
               child: FutureBuilder<_RideData>(
-                  future: rideData,
+                  future: _fetchRides(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data.rides.length == 0) {
