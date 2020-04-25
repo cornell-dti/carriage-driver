@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'LocationTracker.dart';
 import 'Upcoming.dart';
 import 'Login.dart';
 import 'Profile.dart';
@@ -57,6 +58,8 @@ class _HomeState extends State<Home> {
     _name = "Chris";
     // TODO: fetch info about rides
     rides = [UpcomingRide(startTime: DateTime.now())];
+    
+    LocationTracker.initialize();
   }
 
   void _onItemTapped(int index) {
