@@ -11,14 +11,6 @@ String email;
 String imageUrl;
 String driverID;
 
-String getName() {
-  return name;
-}
-
-String getID() {
-  return driverID;
-}
-
 GoogleSignIn googleSignIn = GoogleSignIn(
   scopes: [
     'email',
@@ -40,7 +32,7 @@ Future<String> tokenFromAccount(GoogleSignInAccount account) async {
     auth = await account.authentication;
     print('okay');
   } catch (error) {
-    print('error');
+    return null;
   }
   return auth.idToken;
 }
@@ -71,49 +63,58 @@ class _LoginState extends State<Login> {
       googleSignIn.signIn();
     }
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
-      setCurrentUser(account);
-      tokenFromAccount(currentUser).then((token) async {
-        return await authenticationRequest(AppConfig.of(context).baseUrl, token);
-      }).then((response) {
-        var json = jsonDecode(response);
-        setState(() {
-          id = (json['id'] != null) ? json['id'] : null;
-          if (id = null) {
-            currentUser = null;
-          }
+        setCurrentUser(account);
+        tokenFromAccount(currentUser).then((token) async {
+          print('token:');
+          print(token);
+          return await authenticationRequest(AppConfig
+              .of(context)
+              .baseUrl, token);
+        }).then((response) {
+          var json = jsonDecode(response);
+          print("json:");
+          print(json);
+          setState(() {
+            id = (json['id'] != null) ? json['id'] : null;
+            if (id == null) {
+              currentUser = null;
+              //googleSignIn.signOut();
+            }
+          });
+          print("json id:");
+          print(json['id']);
+          //return json['id'];
         });
-        print(json['id']);
-        return json['id'];
-      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // add guard based on backend verification later
-    if (currentUser == null) {
+    print('build');
+    if (id == null) {
       return Scaffold(
           body: Container(
               color: Colors.white,
               child: Center(
                   child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  FlutterLogo(size: 150),
-                  SizedBox(height: 50),
-                  SignInButton()
-                ],
-              ))));
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      FlutterLogo(size: 150),
+                      SizedBox(height: 50),
+                      SignInButton()
+                    ],
+                  ))));
     } else {
       assert(googleSignIn.currentUser.displayName != null);
       assert(googleSignIn.currentUser.email != null);
       assert(googleSignIn.currentUser.photoUrl != null);
+      //assert(id != null);
       name = googleSignIn.currentUser.displayName;
       email = googleSignIn.currentUser.email;
       imageUrl = googleSignIn.currentUser.photoUrl;
       driverID = id;
-      return Home();
+      return Home(name, id);
     }
   }
 }

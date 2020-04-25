@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
 
 authenticationRequest(String baseUrl, String token) async {
   var endpoint = baseUrl + '/auth';
-  Response response = await post(endpoint, body: {"token": token});
+  //
+  Response response = await post(endpoint, body: {"token": token, "table": "Drivers", "email": "hxy2@cornell.edu", "clientID": "241748771473-16rt38so3hf7suh6k55f0v5hnv7166hn.apps.googleusercontent.com"});
   return response.body;
 }

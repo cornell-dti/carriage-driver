@@ -79,8 +79,8 @@ class Driver {
 }
 
 class Profile extends StatefulWidget {
-  Profile({Key key}) : super(key: key);
-
+  final String id;
+  Profile({this.id, Key key}) : super(key: key);
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -89,7 +89,7 @@ class _ProfileState extends State<Profile> {
   Future<Driver> futureDriver;
 
   Future<Driver> fetchDriver(String id) async {
-    final response = await http.get("http://192.168.1.169:3001/drivers/$id");
+    final response = await http.get("http://192.168.1.169:3001/drivers/" + widget.id);
 
     if (response.statusCode == 200) {
       print("got status code 200");
@@ -104,7 +104,9 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     //TODO: use actual ID
-    futureDriver = fetchDriver("fd3e7de0-81bb-11ea-a91e-b1e6ba850e4b");
+    //print("my id: " + widget.id);
+    futureDriver = fetchDriver(widget.id);
+    //"fd3e7de0-81bb-11ea-a91e-b1e6ba850e4b"
   }
 
   @override

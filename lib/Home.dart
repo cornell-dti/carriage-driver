@@ -35,7 +35,9 @@ class LeftSubheading extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+  Home(this.name, this.id, {Key key}) : super(key: key);
+  final String name;
+  final String id;
 
   @override
   _HomeState createState() => _HomeState();
@@ -54,7 +56,8 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     // Fetch name of user
-    _name = getName().split(' ').first;
+    //_name = widget.name.split(' ').first;
+    _name = widget.name;
     // TODO: fetch info about rides
     rides = [UpcomingRide(startTime: DateTime.now())];
   }
@@ -124,9 +127,7 @@ class _HomeState extends State<Home> {
   Widget _profilePage(BuildContext context) {
     return Column (
       children: <Widget>[
-        Profile(),
-
-
+        Profile(id: widget.id),
       ],
     );
   }
@@ -150,6 +151,7 @@ class _HomeState extends State<Home> {
           ],
         );
       case (PROFILE):
+        return _profilePage(context);
         return SingleChildScrollView(
           child: _profilePage(context)
         );
