@@ -188,6 +188,7 @@ class SignOutButton extends StatelessWidget {
       child: Text('Sign out', textAlign: TextAlign.start),
       onPressed: () {
         googleSignIn.signOut();
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Login()));
       },
     );
   }
