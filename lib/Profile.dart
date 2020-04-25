@@ -1,3 +1,4 @@
+import 'package:carriage/app_config.dart';
 import 'dart:ui';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -63,17 +64,16 @@ class Driver {
       this.breaks, this.vehicle, this.phoneNumber, this.email});
 
   factory Driver.fromJson(Map<String, dynamic> json) {
-    Map<String, dynamic> itemJson = json['Item'];
     return Driver(
-        id: itemJson['id'],
-        firstName: itemJson['firstName'],
-        lastName: itemJson['lastName'],
-        startTime: itemJson['startTime'],
-        endTime: itemJson['endTime'],
-        breaks: (itemJson['breaks'] == null) ? null : Breaks.fromJson(json['breaks']),
-        vehicle: itemJson['vehicle'],
-        phoneNumber: itemJson['phoneNumber'],
-        email: itemJson['email']
+        id: json['id'],
+        firstName: json['firstName'],
+        lastName: json['lastName'],
+        startTime: json['startTime'],
+        endTime: json['endTime'],
+        breaks: (json['breaks'] == null) ? null : Breaks.fromJson(json['breaks']),
+        vehicle: json['vehicle'],
+        phoneNumber: json['phoneNumber'],
+        email: json['email']
     );
   }
 }
@@ -89,10 +89,10 @@ class _ProfileState extends State<Profile> {
   Future<Driver> futureDriver;
 
   Future<Driver> fetchDriver(String id) async {
-    final response = await http.get("http://192.168.1.169:3001/drivers/" + widget.id);
+
+    final response = await http.get(AppConfig.of(context).baseUrl + "/drivers/" + widget.id);
 
     if (response.statusCode == 200) {
-      print("got status code 200");
       return Driver.fromJson(json.decode(response.body));
     }
     else {
@@ -103,10 +103,6 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    //TODO: use actual ID
-    //print("my id: " + widget.id);
-    futureDriver = fetchDriver(widget.id);
-    //"fd3e7de0-81bb-11ea-a91e-b1e6ba850e4b"
   }
 
   @override
@@ -119,7 +115,7 @@ class _ProfileState extends State<Profile> {
     double _picBtnDiameter = _picDiameter * 0.39;
 
     return FutureBuilder<Driver>(
-        future: futureDriver,
+        future: fetchDriver(widget.id),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
@@ -257,7 +253,9 @@ class _ProfileState extends State<Profile> {
             );
           }
           return SafeArea(
-              child: Text("doesn't have data but doesn't have error")
+              child: Center(
+                child: CircularProgressIndicator()
+              )
           );
         }
     );
