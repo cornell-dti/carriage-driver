@@ -6,11 +6,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 //import 'app_config.dart';
 import 'main_common.dart';
 
-String name;
-String email;
-String imageUrl;
-String driverID;
-
 GoogleSignIn googleSignIn = GoogleSignIn(
   scopes: [
     'email',
@@ -103,11 +98,11 @@ class _LoginState extends State<Login> {
       assert(googleSignIn.currentUser.email != null);
       assert(googleSignIn.currentUser.photoUrl != null);
       //assert(id != null);
-      name = googleSignIn.currentUser.displayName;
-      email = googleSignIn.currentUser.email;
-      imageUrl = googleSignIn.currentUser.photoUrl;
-      driverID = id;
-      return Home(name, id);
+      String name = googleSignIn.currentUser.displayName;
+      String email = googleSignIn.currentUser.email;
+      String imageUrl = googleSignIn.currentUser.photoUrl;
+      String driverID = id;
+      return Home(name, email, imageUrl, driverID);
     }
   }
 }

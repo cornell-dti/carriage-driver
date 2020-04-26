@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'Login.dart';
 import 'package:http/http.dart' as http;
 
 class Break {
@@ -79,8 +78,11 @@ class Driver {
 }
 
 class Profile extends StatefulWidget {
+  final String name;
+  final String email;
+  final String imageUrl;
   final String id;
-  Profile({this.id, Key key}) : super(key: key);
+  Profile(this.name, this.email, this.imageUrl, this.id, {Key key}) : super(key: key);
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -165,7 +167,7 @@ class _ProfileState extends State<Profile> {
                                           bottom: _picDiameter * 0.05),
                                       child: CircleAvatar(
                                         radius: _picRadius,
-                                        backgroundImage: NetworkImage(imageUrl),
+                                        backgroundImage: NetworkImage(widget.imageUrl),
                                       )
                                   ),
 
@@ -197,7 +199,7 @@ class _ProfileState extends State<Profile> {
                                 children: [
                                   Row(
                                       children: [
-                                        Text(name,
+                                        Text(widget.name,
                                             style: TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.bold,
@@ -233,7 +235,7 @@ class _ProfileState extends State<Profile> {
                 InfoGroup(
                     "Account Info",
                     [Icons.mail_outline, Icons.phone],
-                    [email, snapshot.data.phoneNumber]
+                    [widget.email, snapshot.data.phoneNumber]
                 ),
                 SizedBox(height: 6),
                 InfoGroup(

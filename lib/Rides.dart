@@ -15,8 +15,11 @@ class _RideData {
 }
 
 class Rides extends StatefulWidget {
-  // TODO: placeholder
-  final String driverId = "test";
+  // TODO: use actual ID once backend has data that we can test
+  // Rides(this.name, this.driverId, {Key key}) : super(key: key);
+  Rides(this.name, {Key key}) : super(key: key);
+  final String name;
+  final String driverId = 'test';
 
   @override
   _RidesState createState() => _RidesState();
@@ -109,11 +112,6 @@ class _RidesState extends State<Rides> {
     return res;
   }
 
-  // TODO: replace this when name is stored somewhere
-  String getNameFromSharedStateSomewhere() {
-    return "Chris";
-  }
-
   Widget _futureRide(BuildContext context, _RideData d, int index) {
     return FutureRide(d.rides[index]);
   }
@@ -172,7 +170,7 @@ class _RidesState extends State<Rides> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Greeting(getNameFromSharedStateSomewhere()),
+          Greeting(widget.name),
           Expanded(
               child: FutureBuilder<_RideData>(
                   future: _fetchRides(),

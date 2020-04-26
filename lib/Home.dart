@@ -12,7 +12,7 @@ class Greeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      child: Text('Hi $name!', style: Theme.of(context).textTheme.headline),
+      child: Text('Hi ${name.split(' ').first}!', style: Theme.of(context).textTheme.headline),
       padding: EdgeInsets.only(
           left: 24.0,
           top: 18.0 + MediaQuery.of(context).padding.top,
@@ -36,9 +36,11 @@ class LeftSubheading extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
-  Home(this.name, this.id, {Key key}) : super(key: key);
+  Home(this.name, this.email, this.imageUrl, this.driverID, {Key key}) : super(key: key);
   final String name;
-  final String id;
+  final String email;
+  final String imageUrl;
+  final String driverID;
 
   @override
   _HomeState createState() => _HomeState();
@@ -66,7 +68,7 @@ class _HomeState extends State<Home> {
   Widget _profilePage(BuildContext context) {
     return Column(
       children: <Widget>[
-        Profile(id: widget.id),
+        Profile(widget.name, widget.email, widget.imageUrl, widget.driverID),
       ],
     );
   }
@@ -74,7 +76,7 @@ class _HomeState extends State<Home> {
   Widget getPage(BuildContext context, int index) {
     switch (index) {
       case (RIDES):
-        return Rides();
+        return Rides(widget.name);
       case (HISTORY):
         return Column(
           children: <Widget>[
