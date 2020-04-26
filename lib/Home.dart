@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Rides.dart';
 import 'Upcoming.dart';
 import 'Login.dart';
 import 'Profile.dart';
@@ -6,7 +7,7 @@ import 'Profile.dart';
 class Greeting extends StatelessWidget {
   final String name;
 
-  Greeting({@required this.name});
+  Greeting(this.name);
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +50,11 @@ class _HomeState extends State<Home> {
   static const int PROFILE = 2;
 
   int _selectedIndex = RIDES;
-  List<UpcomingRide> rides;
-  String _name;
+  List<FutureRide> rides;
 
   @override
   void initState() {
     super.initState();
-    _name = widget.name.split(' ').first;
-    // TODO: fetch info about rides
-    rides = [UpcomingRide(startTime: DateTime.now())];
   }
 
   void _onItemTapped(int index) {
@@ -66,76 +63,18 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Widget _ride(BuildContext context, int index) {
-    return UpcomingRide();
-  }
-
-  Widget _ridesPage(BuildContext context) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Greeting(name: _name),
-          LeftSubheading(heading: 'Upcoming Ride'),
-          Center(
-              child: Column(
-                children: <Widget>[
-                  CurrentRide(),
-                ],
-              )),
-          SizedBox(height: 16.0),
-          LeftSubheading(heading: 'Today\'s Schedule'),
-          Flexible(
-            child: ListView.separated(
-              itemCount: 3,
-              itemBuilder: _ride,
-              separatorBuilder: (BuildContext context, int index) => Divider(),
-              padding: EdgeInsets.only(left: 24.0, right: 24.0, bottom: 5.0),
-            ),
-          ),
-        ]);
-  }
-
-  Widget _noRidesLeftPage (BuildContext context) {
-    return Column (
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Greeting(name: _name),
-        SizedBox(height: 195),
-        Center (
-            child: Column (
-              children: <Widget>[
-                Image(
-                  image: AssetImage('assets/images/steeringWheel@3x.png'),
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  height: MediaQuery.of(context).size.width * 0.2,
-                ),
-                SizedBox(height: 22),
-                Text(
-                  'Congratulations! You are done for the day. \n'
-                      'Come back tomorrow!',
-                  textAlign: TextAlign.center,
-                )
-              ],
-            )
-        ),
-      ],
-    );
-  }
-
   Widget _profilePage(BuildContext context) {
-    return Column (
+    return Column(
       children: <Widget>[
         Profile(id: widget.id),
       ],
     );
   }
+
   Widget getPage(BuildContext context, int index) {
     switch (index) {
       case (RIDES):
-        if (rides.length == 0) {
-          return _noRidesLeftPage(context);
-        }
-        return _ridesPage(context);
+        return Rides();
       case (HISTORY):
         return Column(
           children: <Widget>[
@@ -149,13 +88,12 @@ class _HomeState extends State<Home> {
           ],
         );
       case (PROFILE):
-        return SingleChildScrollView(
-          child: _profilePage(context)
-        );
+        return SingleChildScrollView(child: _profilePage(context));
       default:
         return Column();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -187,9 +125,9 @@ class SignOutButton extends StatelessWidget {
       child: Text('Sign out', textAlign: TextAlign.start),
       onPressed: () {
         googleSignIn.signOut();
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Login()));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) => Login()));
       },
     );
   }
 }
-
