@@ -6,7 +6,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 //import 'app_config.dart';
 import 'main_common.dart';
 
-
 GoogleSignIn googleSignIn = GoogleSignIn(
   scopes: [
     'email',
@@ -28,7 +27,7 @@ Future<String> tokenFromAccount(GoogleSignInAccount account) async {
     auth = await account.authentication;
     print('okay');
   } catch (error) {
-    print('error');
+    return null;
   }
   return auth.idToken;
 }
@@ -61,12 +60,12 @@ class _LoginState extends State<Login> {
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
       tokenFromAccount(currentUser).then((token) async {
-        return await authenticationRequest(AppConfig.of(context).baseUrl, token, currentUser.email);
+        return await authenticationRequest(
+            AppConfig.of(context).baseUrl, token, currentUser.email);
       }).then((response) {
         var json = jsonDecode(response);
-        print(json);
         setState(() {
-          if(!json.containsKey('id')) {
+          if (!json.containsKey('id')) {
             id = null;
             currentUser = null;
           } else {
@@ -95,7 +94,15 @@ class _LoginState extends State<Login> {
                 ],
               ))));
     } else {
-      return Home();
+      assert(googleSignIn.currentUser.displayName != null);
+      assert(googleSignIn.currentUser.email != null);
+      assert(googleSignIn.currentUser.photoUrl != null);
+      //assert(id != null);
+      String name = googleSignIn.currentUser.displayName;
+      String email = googleSignIn.currentUser.email;
+      String imageUrl = googleSignIn.currentUser.photoUrl;
+      String driverID = id;
+      return Home(name, email, imageUrl, driverID);
     }
   }
 }

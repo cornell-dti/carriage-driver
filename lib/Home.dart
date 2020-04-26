@@ -12,7 +12,7 @@ class Greeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      child: Text('Hi $name!', style: Theme.of(context).textTheme.headline),
+      child: Text('Hi ${name.split(' ').first}!', style: Theme.of(context).textTheme.headline),
       padding: EdgeInsets.only(
           left: 24.0,
           top: 18.0 + MediaQuery.of(context).padding.top,
@@ -36,7 +36,11 @@ class LeftSubheading extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+  Home(this.name, this.email, this.imageUrl, this.driverID, {Key key}) : super(key: key);
+  final String name;
+  final String email;
+  final String imageUrl;
+  final String driverID;
 
   @override
   _HomeState createState() => _HomeState();
@@ -60,22 +64,19 @@ class _HomeState extends State<Home> {
       _selectedIndex = index;
     });
   }
-  
+
   Widget _profilePage(BuildContext context) {
-    return Column (
+    return Column(
       children: <Widget>[
-        Profile(),
-        Padding (
-            padding: EdgeInsets.only(top: 6),
-            child: AccountInfo()
-        )
+        Profile(widget.name, widget.email, widget.imageUrl, widget.driverID),
       ],
     );
   }
+
   Widget getPage(BuildContext context, int index) {
     switch (index) {
       case (RIDES):
-        return Rides();
+        return Rides(widget.name);
       case (HISTORY):
         return Column(
           children: <Widget>[
@@ -89,11 +90,12 @@ class _HomeState extends State<Home> {
           ],
         );
       case (PROFILE):
-        return _profilePage(context);
+        return SingleChildScrollView(child: _profilePage(context));
       default:
         return Column();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -125,9 +127,9 @@ class SignOutButton extends StatelessWidget {
       child: Text('Sign out', textAlign: TextAlign.start),
       onPressed: () {
         googleSignIn.signOut();
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Login()));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) => Login()));
       },
     );
   }
 }
-
