@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:geolocation/geolocation.dart';
 
@@ -42,9 +41,9 @@ abstract class LocationTracker {
     if (r.isSuccessful) {
       // TODO: report position to dispatcher
       // to test:
-      double lat = r.location.latitude;
-      double lng = r.location.longitude;
-      log("position: $lat, $lng");
+      // double lat = r.location.latitude;
+      // double lng = r.location.longitude;
+      // log("position: $lat, $lng");
     } else {
       switch (r.error.type) {
         case GeolocationResultErrorType.runtime:
