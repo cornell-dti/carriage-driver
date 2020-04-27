@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'LocationTracker.dart';
 import 'Rides.dart';
 import 'Upcoming.dart';
 import 'Login.dart';
@@ -12,7 +13,8 @@ class Greeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      child: Text('Hi ${name.split(' ').first}!', style: Theme.of(context).textTheme.headline),
+      child: Text('Hi ${name.split(' ').first}!',
+          style: Theme.of(context).textTheme.headline),
       padding: EdgeInsets.only(
           left: 24.0,
           top: 18.0 + MediaQuery.of(context).padding.top,
@@ -36,7 +38,8 @@ class LeftSubheading extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
-  Home(this.name, this.email, this.imageUrl, this.driverID, {Key key}) : super(key: key);
+  Home(this.name, this.email, this.imageUrl, this.driverID, {Key key})
+      : super(key: key);
   final String name;
   final String email;
   final String imageUrl;
@@ -57,6 +60,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+
+    LocationTracker.initialize();
   }
 
   void _onItemTapped(int index) {
