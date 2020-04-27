@@ -60,6 +60,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+
+    LocationTracker.initialize();
   }
 
   void _onItemTapped(int index) {
