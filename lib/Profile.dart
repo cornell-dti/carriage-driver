@@ -44,7 +44,7 @@ class Breaks {
   }
 
   String toString() {
-    return breaks.fold("", (prev, element) => "$prev\n$element");
+    return breaks?.fold("", (prev, element) => "$prev\n$element") ?? "";
   }
 }
 
