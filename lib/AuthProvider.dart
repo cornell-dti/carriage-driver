@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 
+import 'app_config.dart';
+
 Future<String> auth(String baseUrl, String token, String email) async {
   String endpoint = baseUrl + '/auth';
   Map<String, dynamic> requestBody = {
@@ -36,7 +38,7 @@ class AuthProvider with ChangeNotifier {
   StreamSubscription _userAuthSub;
   GoogleSignIn googleSignIn;
 
-  AuthProvider() {
+  AuthProvider(BuildContext context) {
     googleSignIn = GoogleSignIn(scopes: [
       'email',
       'https://www.googleapis.com/auth/userinfo.profile',
@@ -44,9 +46,7 @@ class AuthProvider with ChangeNotifier {
     _userAuthSub = googleSignIn.onCurrentUserChanged.listen((newUser) async {
       if (newUser != null) {
         id = await tokenFromAccount(newUser).then((token) async {
-          // BuildContext inaccessible from ChangeNotifier, so no Flavors :/
-          String baseUrl = Platform.isAndroid ? "http://10.0.2.2:3001" : "http://localhost:3001";
-          return auth(baseUrl, token, newUser.email);
+          return auth(AppConfig.of(context).baseUrl, token, newUser.email);
         }).then((response) {
           Map<String, dynamic> json = jsonDecode(response);
           if (!json.containsKey('id')) {
