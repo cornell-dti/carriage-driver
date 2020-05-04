@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'AuthProvider.dart';
 import 'LocationTracker.dart';
 import 'Rides.dart';
 import 'Upcoming.dart';
@@ -128,10 +130,11 @@ class _HomeState extends State<Home> {
 class SignOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return RaisedButton(
       child: Text('Sign out', textAlign: TextAlign.start),
       onPressed: () {
-        googleSignIn.signOut();
+        authProvider.googleSignIn.signOut();
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (BuildContext context) => Login()));
       },
