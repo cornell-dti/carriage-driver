@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
   Widget _profilePage(BuildContext context) {
     return Column(
       children: <Widget>[
-        Profile(widget.name, widget.email, widget.imageUrl, widget.driverID),
+        Profile(),
       ],
     );
   }

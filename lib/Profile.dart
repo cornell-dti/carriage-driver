@@ -4,6 +4,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'AuthProvider.dart';
+
+AuthProvider authProvider;
 
 class Break {
   String day;
@@ -44,7 +48,7 @@ class Breaks {
   }
 
   String toString() {
-    return breaks?.fold("", (prev, element) => "$prev\n$element") ?? "";
+    return breaks.fold("", (prev, element) => "$prev\n$element");
   }
 }
 
@@ -60,7 +64,7 @@ class Driver {
   final String email;
 
   Driver({this.id, this.firstName, this.lastName, this.startTime, this.endTime,
-      this.breaks, this.vehicle, this.phoneNumber, this.email});
+    this.breaks, this.vehicle, this.phoneNumber, this.email});
 
   factory Driver.fromJson(Map<String, dynamic> json) {
     return Driver(
@@ -78,11 +82,7 @@ class Driver {
 }
 
 class Profile extends StatefulWidget {
-  final String name;
-  final String email;
-  final String imageUrl;
-  final String id;
-  Profile(this.name, this.email, this.imageUrl, this.id, {Key key}) : super(key: key);
+  Profile({Key key}) : super(key: key);
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -90,10 +90,8 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   Future<Driver> futureDriver;
 
-  Future<Driver> fetchDriver(String id) async {
-
-    final response = await http.get(AppConfig.of(context).baseUrl + "/drivers/" + widget.id);
-
+  Future<Driver> fetchDriver() async {
+    final response = await http.get(AppConfig.of(context).baseUrl + "/drivers/" + authProvider.id);
     if (response.statusCode == 200) {
       return Driver.fromJson(json.decode(response.body));
     }
@@ -107,8 +105,15 @@ class _ProfileState extends State<Profile> {
     super.initState();
   }
 
+  void refresh() {
+    setState(() {
+      futureDriver = fetchDriver();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    authProvider = Provider.of(context);
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
     double _picRadius = _picDiameter / 2;
@@ -117,7 +122,7 @@ class _ProfileState extends State<Profile> {
     double _picBtnDiameter = _picDiameter * 0.39;
 
     return FutureBuilder<Driver>(
-        future: fetchDriver(widget.id),
+        future: fetchDriver(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
@@ -167,7 +172,7 @@ class _ProfileState extends State<Profile> {
                                           bottom: _picDiameter * 0.05),
                                       child: CircleAvatar(
                                         radius: _picRadius,
-                                        backgroundImage: NetworkImage(widget.imageUrl),
+                                        backgroundImage: NetworkImage(authProvider.googleSignIn.currentUser.photoUrl),
                                       )
                                   ),
 
@@ -199,7 +204,7 @@ class _ProfileState extends State<Profile> {
                                 children: [
                                   Row(
                                       children: [
-                                        Text(widget.name,
+                                        Text(snapshot.data.firstName + " " + snapshot.data.lastName,
                                             style: TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.bold,
@@ -234,17 +239,19 @@ class _ProfileState extends State<Profile> {
                 SizedBox(height: 6),
                 InfoGroup(
                     "Account Info",
-                    [Icons.mail_outline, Icons.phone],
-                    [widget.email, snapshot.data.phoneNumber]
+                    [
+                      InfoRow("email", Icons.mail_outline, snapshot.data.email, true),
+                      InfoRow("phone number", Icons.phone, snapshot.data.phoneNumber, true)
+                    ],
                 ),
                 SizedBox(height: 6),
                 InfoGroup(
                     "Schedule Info",
-                    [Icons.schedule, Icons.free_breakfast, Icons.directions_car],
-                    // TODO: retrieve from backend
-                    ["${snapshot.data.startTime} to ${snapshot.data.endTime}",
-                      (snapshot.data.breaks == null) ? 'None' : snapshot.data.breaks.toString(),
-                      snapshot.data.vehicle]
+                    [
+                      InfoRow("hours", Icons.schedule, "${snapshot.data.startTime} to ${snapshot.data.endTime}", false),
+                      InfoRow("breaks", Icons.free_breakfast, (snapshot.data.breaks == null) ? 'None' : snapshot.data.breaks.toString(), false),
+                      InfoRow("vehicle", Icons.directions_car, snapshot.data.vehicle, false),
+                    ],
                 )
               ],
             );
@@ -256,7 +263,7 @@ class _ProfileState extends State<Profile> {
           }
           return SafeArea(
               child: Center(
-                child: CircularProgressIndicator()
+                  child: CircularProgressIndicator()
               )
           );
         }
@@ -264,45 +271,146 @@ class _ProfileState extends State<Profile> {
   }
 }
 
-class InfoGroup extends StatefulWidget {
 
-  InfoGroup(this.title, this.icons, this.fields);
-  final String title;
-  final List<IconData> icons;
-  final List<String> fields;
+class InfoRow extends StatefulWidget {
+
+  InfoRow(this.fieldName, this.icon, this.text, this.editable);
+  final String fieldName;
+  final IconData icon;
+  final String text;
+  final bool editable;
+
 
   @override
-  _InfoGroupState createState() => _InfoGroupState();
+  _InfoRowState createState() => _InfoRowState();
 }
 
-class _InfoGroupState extends State<InfoGroup> {
+class _InfoRowState extends State<InfoRow> {
+  TextEditingController _ctrl;
 
-  Widget infoRow(BuildContext context, IconData icon, String text) {
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = TextEditingController(text: widget.text);
+  }
+
+  void updateDriver(AuthProvider authProvider, String field, String newValue) async {
+    String backendField;
+    switch (field) {
+      case "phone number":
+        backendField = "phoneNumber";
+        break;
+      default:
+        backendField = "";
+    }
+    final response = await http.post(
+      AppConfig.of(context).baseUrl + "/drivers/" + authProvider.id,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        backendField: newValue,
+      }),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update driver');
+    }
+  }
+
+  _makeEditDialog(AuthProvider authProvider) {
+    double dialogPaddingTB = 50;
+    double dialogPaddingLR = 10;
+    showDialog(
+        context: context,
+        child: new Dialog(
+            child: Padding(
+                padding: EdgeInsets.only(left: dialogPaddingLR, right: dialogPaddingLR, top: dialogPaddingTB, bottom: dialogPaddingTB),
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Update your ${widget.fieldName}:",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 20, color: Colors.grey),
+                      ),
+                      TextField(
+                        controller: _ctrl,
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FlatButton(
+                              child: Text("Save"),
+                              onPressed: () {
+                                updateDriver(authProvider, widget.fieldName, _ctrl.text);
+                                Navigator.pop(context);
+                                //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+                              },
+                            ),
+                            FlatButton(
+                                child: Text("Cancel"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }
+                            )
+                          ]
+                      )
+                    ]
+                )
+            )
+
+        )
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     double paddingTB = 10;
+    double minIconSize = 48;
+
     return Padding(
         padding: EdgeInsets.only(top: paddingTB, bottom: paddingTB),
         child: Row(
           children: <Widget>[
-            Icon(icon),
+            Icon(widget.icon),
             SizedBox(width: 19),
             Expanded (
               child: Text(
-                text,
+                widget.text,
                 style: TextStyle(
                   fontSize: 17,
                   color: Theme.of(context).accentColor,
                 ),
               ),
             ),
+            widget.editable ?
             IconButton(
               icon: Icon(Icons.arrow_forward_ios),
-              onPressed: () {},
+              onPressed: () {
+                if (widget.editable) {
+                  _makeEditDialog(authProvider);
+                }
+              },
+            ) : Container(
+                child: SizedBox(height: minIconSize)
             )
           ],
         )
     );
   }
+}
+class InfoGroup extends StatefulWidget {
 
+  InfoGroup(this.title, this.rows);
+  final String title;
+  final List<InfoRow> rows;
+
+  @override
+  _InfoGroupState createState() => _InfoGroupState();
+}
+
+class _InfoGroupState extends State<InfoGroup> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -334,9 +442,9 @@ class _InfoGroupState extends State<InfoGroup> {
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: widget.icons.length,
+                    itemCount: widget.rows.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return infoRow(context, widget.icons[index], widget.fields[index]);
+                      return widget.rows[index];
                     },
                     separatorBuilder: (BuildContext context, int index) {
                       return Divider(
