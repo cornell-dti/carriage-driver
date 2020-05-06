@@ -59,7 +59,6 @@ class Breaks {
 }
 
 class Driver {
-  final String id;
   final String firstName;
   final String lastName;
   final String startTime;
@@ -70,25 +69,23 @@ class Driver {
   final String email;
 
   Driver(
-      {this.id,
-      this.firstName,
-      this.lastName,
-      this.startTime,
-      this.endTime,
-      this.breaks,
-      this.vehicle,
-      this.phoneNumber,
-      this.email});
+      {this.firstName,
+        this.lastName,
+        this.startTime,
+        this.endTime,
+        this.breaks,
+        this.vehicle,
+        this.phoneNumber,
+        this.email});
 
   factory Driver.fromJson(Map<String, dynamic> json) {
     return Driver(
-        id: json['id'],
         firstName: json['firstName'],
         lastName: json['lastName'],
         startTime: json['startTime'],
         endTime: json['endTime'],
         breaks:
-            (json['breaks'] == null) ? null : Breaks.fromJson(json['breaks']),
+        (json['breaks'] == null) ? null : Breaks.fromJson(json['breaks']),
         vehicle: json['vehicle'],
         phoneNumber: json['phoneNumber'],
         email: json['email']);
@@ -327,7 +324,7 @@ class _InfoGroupState extends State<InfoGroup> {
               children: <Widget>[
                 Text(widget.title,
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,
@@ -389,7 +386,7 @@ class _EditProfileState extends State<EditProfile> {
               top: 18.0 + MediaQuery.of(context).padding.top,
             ),
             child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('Edit Profile', style: Theme.of(context).textTheme.headline5),
               SizedBox(height: 20),
               Form(
