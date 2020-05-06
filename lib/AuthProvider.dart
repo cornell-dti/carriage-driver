@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
@@ -65,7 +63,7 @@ class AuthProvider with ChangeNotifier {
 
   @override
   void dispose() {
-    if(_userAuthSub != null) {
+    if (_userAuthSub != null) {
       _userAuthSub.cancel();
       _userAuthSub = null;
     }
@@ -87,5 +85,5 @@ class AuthProvider with ChangeNotifier {
   void signOut() {
     googleSignIn.signOut();
     id = null;
+  }
 }
-} 

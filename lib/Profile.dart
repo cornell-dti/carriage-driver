@@ -4,6 +4,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
+import 'AuthProvider.dart';
 
 class Break {
   String day;
@@ -78,11 +81,6 @@ class Driver {
 }
 
 class Profile extends StatefulWidget {
-  final String name;
-  final String email;
-  final String imageUrl;
-  final String id;
-  Profile(this.name, this.email, this.imageUrl, this.id, {Key key}) : super(key: key);
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -91,8 +89,7 @@ class _ProfileState extends State<Profile> {
   Future<Driver> futureDriver;
 
   Future<Driver> fetchDriver(String id) async {
-
-    final response = await http.get(AppConfig.of(context).baseUrl + "/drivers/" + widget.id);
+    final response = await http.get(AppConfig.of(context).baseUrl + "/drivers/" + id);
 
     if (response.statusCode == 200) {
       return Driver.fromJson(json.decode(response.body));
@@ -109,6 +106,8 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
     double _picRadius = _picDiameter / 2;
@@ -117,7 +116,7 @@ class _ProfileState extends State<Profile> {
     double _picBtnDiameter = _picDiameter * 0.39;
 
     return FutureBuilder<Driver>(
-        future: fetchDriver(widget.id),
+        future: fetchDriver(authProvider.id),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
@@ -167,7 +166,7 @@ class _ProfileState extends State<Profile> {
                                           bottom: _picDiameter * 0.05),
                                       child: CircleAvatar(
                                         radius: _picRadius,
-                                        backgroundImage: NetworkImage(widget.imageUrl),
+                                        backgroundImage: NetworkImage(authProvider.googleSignIn.currentUser.photoUrl),
                                       )
                                   ),
 
@@ -199,7 +198,7 @@ class _ProfileState extends State<Profile> {
                                 children: [
                                   Row(
                                       children: [
-                                        Text(widget.name,
+                                        Text(authProvider.googleSignIn.currentUser.displayName,
                                             style: TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.bold,
@@ -235,7 +234,7 @@ class _ProfileState extends State<Profile> {
                 InfoGroup(
                     "Account Info",
                     [Icons.mail_outline, Icons.phone],
-                    [widget.email, snapshot.data.phoneNumber]
+                    [authProvider.googleSignIn.currentUser.email, snapshot.data.phoneNumber]
                 ),
                 SizedBox(height: 6),
                 InfoGroup(

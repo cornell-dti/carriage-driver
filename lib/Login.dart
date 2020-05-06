@@ -4,17 +4,7 @@ import 'AuthProvider.dart';
 
 
 
-class Login extends StatefulWidget {
-  @override
-  _LoginState createState() => _LoginState();
-}
-
-class _LoginState extends State<Login> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of(context);

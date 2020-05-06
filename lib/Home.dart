@@ -40,13 +40,6 @@ class LeftSubheading extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
-  Home(this.name, this.email, this.imageUrl, this.driverID, {Key key})
-      : super(key: key);
-  final String name;
-  final String email;
-  final String imageUrl;
-  final String driverID;
-
   @override
   _HomeState createState() => _HomeState();
 }
@@ -75,7 +68,7 @@ class _HomeState extends State<Home> {
   Widget _profilePage(BuildContext context) {
     return Column(
       children: <Widget>[
-        Profile(widget.name, widget.email, widget.imageUrl, widget.driverID),
+        Profile(),
       ],
     );
   }
@@ -83,7 +76,7 @@ class _HomeState extends State<Home> {
   Widget getPage(BuildContext context, int index) {
     switch (index) {
       case (RIDES):
-        return Rides(widget.name);
+        return Rides();
       case (HISTORY):
         return Column(
           children: <Widget>[
@@ -134,7 +127,7 @@ class SignOutButton extends StatelessWidget {
     return RaisedButton(
       child: Text('Sign out', textAlign: TextAlign.start),
       onPressed: () {
-        authProvider.googleSignIn.signOut();
+        authProvider.signOut();
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (BuildContext context) => Login()));
       },
