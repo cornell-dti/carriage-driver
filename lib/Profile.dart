@@ -114,13 +114,6 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  void refresh(Future<Driver> newDriver) {
-    print("refresh");
-    setState(() {
-      futureDriver = newDriver;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     authProvider = Provider.of(context);
@@ -131,10 +124,8 @@ class _ProfileState extends State<Profile> {
     double _picMarginTB = _picDiameter / 4;
     double _picBtnDiameter = _picDiameter * 0.39;
 
-    futureDriver = fetchDriver();
-
     return FutureBuilder<Driver>(
-        future: futureDriver,
+        future: fetchDriver(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
@@ -147,7 +138,7 @@ class _ProfileState extends State<Profile> {
                         top: 18.0 + MediaQuery.of(context).padding.top,
                         bottom: 16.0),
                     child: Text('Your Profile',
-                        style: Theme.of(context).textTheme.headline),
+                        style: Theme.of(context).textTheme.headline5),
                   ),
                   Container(
                       decoration: BoxDecoration(
@@ -214,8 +205,8 @@ class _ProfileState extends State<Profile> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => EditProfile(
-                                                  snapshot.data, refresh)));
+                                              builder: (context) => EditProfile(snapshot.data))
+                                      );
                                     },
                                   )
                                 ]),
@@ -356,9 +347,8 @@ class _InfoGroupState extends State<InfoGroup> {
 }
 
 class EditProfile extends StatefulWidget {
-  EditProfile(this.driver, this.refresher);
-  final Driver driver;
-  final Function refresher;
+  EditProfile(this.driver);
+  Driver driver;
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -400,7 +390,7 @@ class _EditProfileState extends State<EditProfile> {
             ),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Edit Profile', style: Theme.of(context).textTheme.headline),
+              Text('Edit Profile', style: Theme.of(context).textTheme.headline5),
               SizedBox(height: 20),
               Form(
                   key: _formKey,
@@ -453,8 +443,7 @@ class _EditProfileState extends State<EditProfile> {
                   child: Text("Save"),
                   onPressed: () {
                     _formKey.currentState.save();
-                    widget.refresher(updateDriver(
-                        authProvider, _firstName, _lastName, _phoneNumber));
+                    updateDriver(authProvider, _firstName, _lastName, _phoneNumber);
                     Navigator.pop(context);
                   },
                 ),
