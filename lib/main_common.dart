@@ -42,20 +42,21 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class Logic extends StatelessWidget {
   Logic({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-      AuthProvider p = Provider.of<AuthProvider>(context);
-      if (p.isAuthenticated) {
-        // TODO: use name and email from backend
-        String name = p.googleSignIn.currentUser.displayName;
-        String email = p.googleSignIn.currentUser.email;
-        String imageUrl = p.googleSignIn.currentUser.photoUrl;
-        String driverID = p.id;
-        return Home(name, email, imageUrl, driverID);
-      } else
-        return Login();
+    AuthProvider p = Provider.of<AuthProvider>(context);
+    if (p.isAuthenticated) {
+      // TODO: use name and email from backend
+      String name = p.googleSignIn.currentUser.displayName;
+      String email = p.googleSignIn.currentUser.email;
+      String imageUrl = p.googleSignIn.currentUser.photoUrl;
+      String driverID = p.id;
+      return Home(name, email, imageUrl, driverID);
+    } else
+      return Login();
   }
-} 
+}
