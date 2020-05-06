@@ -394,26 +394,44 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(height: 20),
               Form(
                   key: _formKey,
+                  autovalidate: true,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Name',
+                        Text('First Name',
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold)),
                         TextFormField(
                           decoration: InputDecoration(icon: Icon(Icons.person)),
-                          initialValue: _firstName + ' ' + _lastName,
+                          initialValue: _firstName,
                           validator: (input) {
                             if (input.isEmpty) {
-                              return 'Please enter your first and last name.';
+                              return 'Please enter your first name.';
                             }
                             return null;
                           },
                           onSaved: (input) {
                             setState(() {
-                              List<String> split = input.split(' ');
-                              _firstName = split.first;
-                              _lastName = split.removeLast();
+                              _firstName = input;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        Text('Last Name',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextFormField(
+                          decoration: InputDecoration(icon: Icon(Icons.person)),
+                          initialValue: _lastName,
+                          validator: (input) {
+                            if (input.isEmpty) {
+                              return 'Please enter your last name.';
+                            }
+                            return null;
+                          },
+                          onSaved: (input) {
+                            setState(() {
+                              _lastName = input;
                             });
                           },
                         ),
@@ -424,6 +442,7 @@ class _EditProfileState extends State<EditProfile> {
                         TextFormField(
                           decoration: InputDecoration(icon: Icon(Icons.phone)),
                           initialValue: _phoneNumber,
+                          keyboardType: TextInputType.number,
                           validator: (input) {
                             if (input.isEmpty) {
                               return 'Please enter your phone number.';
@@ -442,9 +461,11 @@ class _EditProfileState extends State<EditProfile> {
                 RaisedButton(
                   child: Text("Save"),
                   onPressed: () {
-                    _formKey.currentState.save();
-                    updateDriver(authProvider, _firstName, _lastName, _phoneNumber);
-                    Navigator.pop(context);
+                    if (_formKey.currentState.validate()) {
+                      _formKey.currentState.save();
+                      updateDriver(authProvider, _firstName, _lastName, _phoneNumber);
+                      Navigator.pop(context);
+                    }
                   },
                 ),
                 SizedBox(width: 30),
