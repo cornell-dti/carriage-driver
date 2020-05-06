@@ -100,14 +100,10 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void refresh() {
+  void refresh(Future<Driver> newDriver) {
+    print("refresh");
     setState(() {
-      futureDriver = fetchDriver();
+      futureDriver = newDriver;
     });
   }
 
@@ -121,145 +117,165 @@ class _ProfileState extends State<Profile> {
     double _picMarginTB = _picDiameter / 4;
     double _picBtnDiameter = _picDiameter * 0.39;
 
-    return FutureBuilder<Driver>(
-        future: fetchDriver(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: 24.0,
-                      top: 18.0 + MediaQuery
-                          .of(context)
-                          .padding
-                          .top,
-                      bottom: 16.0
-                  ),
-                  child: Text(
-                      'Your Profile',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .headline
-                  ),
-                ),
-                Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(3),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color.fromARGB(15, 0, 0, 0),
-                            offset: Offset(0, 4.0),
-                            blurRadius: 10.0,
-                            spreadRadius: 1.0
-                        )
-                      ],
-                    ),
-                    child: Row(
-                        children: [
-                          Padding(
-                              padding: EdgeInsets.only(left: _picMarginLR,
-                                  right: _picMarginLR,
-                                  top: _picMarginTB,
-                                  bottom: _picMarginTB),
-                              child: Stack(
-                                children: [
-                                  Padding(
-                                      padding: EdgeInsets.only(
-                                          bottom: _picDiameter * 0.05),
-                                      child: CircleAvatar(
-                                        radius: _picRadius,
-                                        backgroundImage: NetworkImage(authProvider.googleSignIn.currentUser.photoUrl),
-                                      )
-                                  ),
+    futureDriver = fetchDriver();
 
-                                  Positioned(
-                                      child: Container(
-                                        height: _picBtnDiameter,
-                                        width: _picBtnDiameter,
-                                        child: FittedBox(
-                                          child: FloatingActionButton(
-                                              backgroundColor: Colors.black,
-                                              child: Icon(
-                                                  Icons.add,
-                                                  size: _picBtnDiameter
-                                              ),
-                                              onPressed: () {}
-                                          ),
-                                        ),
-                                      ),
-                                      left: _picDiameter * 0.61,
-                                      top: _picDiameter * 0.66
-                                  )
-                                ],
-                              )
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(bottom: 30),
-                              child: Stack(
-                                overflow: Overflow.visible,
-                                children: [
-                                  Row(
-                                      children: [
-                                        Text(snapshot.data.firstName + " " + snapshot.data.lastName,
-                                            style: TextStyle(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                        ),
-                                        IconButton(
-                                          icon: Icon(
-                                              Icons.edit,
-                                              size: 20
-                                          ),
-                                          onPressed: () {},
-                                        )
-                                      ]
-                                  ),
-                                  Positioned(
-                                    child: Text("Joined 03/2020",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Theme
-                                              .of(context)
-                                              .accentColor,
+    return FutureBuilder<Driver>(
+        future: futureDriver,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 24.0,
+                        top: 18.0 + MediaQuery
+                            .of(context)
+                            .padding
+                            .top,
+                        bottom: 16.0
+                    ),
+                    child: Text(
+                        'Your Profile',
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .headline
+                    ),
+                  ),
+                  Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(3),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromARGB(15, 0, 0, 0),
+                              offset: Offset(0, 4.0),
+                              blurRadius: 10.0,
+                              spreadRadius: 1.0
+                          )
+                        ],
+                      ),
+                      child: Row(
+                          children: [
+                            Padding(
+                                padding: EdgeInsets.only(left: _picMarginLR,
+                                    right: _picMarginLR,
+                                    top: _picMarginTB,
+                                    bottom: _picMarginTB),
+                                child: Stack(
+                                  children: [
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: _picDiameter * 0.05),
+                                        child: CircleAvatar(
+                                          radius: _picRadius,
+                                          backgroundImage: NetworkImage(
+                                              authProvider.googleSignIn
+                                                  .currentUser.photoUrl),
                                         )
                                     ),
-                                    top: 45,
-                                  )
-                                ],
-                              )
-                          )
-                        ]
-                    )
-                ),
-                SizedBox(height: 6),
-                InfoGroup(
+
+                                    Positioned(
+                                        child: Container(
+                                          height: _picBtnDiameter,
+                                          width: _picBtnDiameter,
+                                          child: FittedBox(
+                                            child: FloatingActionButton(
+                                                backgroundColor: Colors.black,
+                                                child: Icon(
+                                                    Icons.add,
+                                                    size: _picBtnDiameter
+                                                ),
+                                                onPressed: () {}
+                                            ),
+                                          ),
+                                        ),
+                                        left: _picDiameter * 0.61,
+                                        top: _picDiameter * 0.66
+                                    )
+                                  ],
+                                )
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(bottom: 30),
+                                child: Stack(
+                                  overflow: Overflow.visible,
+                                  children: [
+                                    Row(
+                                        children: [
+                                          Text(snapshot.data.firstName + " " +
+                                              snapshot.data.lastName,
+                                              style: TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                              )
+                                          ),
+                                          IconButton(
+                                            icon: Icon(
+                                                Icons.edit,
+                                                size: 20
+                                            ),
+                                            onPressed: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          EditProfile(
+                                                              snapshot.data,
+                                                              refresh)));
+                                            },
+                                          )
+                                        ]
+                                    ),
+                                    Positioned(
+                                      child: Text("Joined 03/2020",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Theme
+                                                .of(context)
+                                                .accentColor,
+                                          )
+                                      ),
+                                      top: 45,
+                                    )
+                                  ],
+                                )
+                            )
+                          ]
+                      )
+                  ),
+                  SizedBox(height: 6),
+                  InfoGroup(
                     "Account Info",
                     [
-                      InfoRow("email", Icons.mail_outline, snapshot.data.email, true),
-                      InfoRow("phone number", Icons.phone, snapshot.data.phoneNumber, true)
+                      InfoRow("email", Icons.mail_outline, snapshot.data.email,),
+                      InfoRow("phone number", Icons.phone,
+                          snapshot.data.phoneNumber)
                     ],
-                ),
-                SizedBox(height: 6),
-                InfoGroup(
+                  ),
+                  SizedBox(height: 6),
+                  InfoGroup(
                     "Schedule Info",
                     [
-                      InfoRow("hours", Icons.schedule, "${snapshot.data.startTime} to ${snapshot.data.endTime}", false),
-                      InfoRow("breaks", Icons.free_breakfast, (snapshot.data.breaks == null) ? 'None' : snapshot.data.breaks.toString(), false),
-                      InfoRow("vehicle", Icons.directions_car, snapshot.data.vehicle, false),
+                      InfoRow("hours", Icons.schedule,
+                          "${snapshot.data.startTime} to ${snapshot.data
+                              .endTime}"),
+                      InfoRow("breaks", Icons.free_breakfast,
+                          (snapshot.data.breaks == null) ? 'None' : snapshot
+                              .data.breaks.toString()),
+                      InfoRow("vehicle", Icons.directions_car,
+                          snapshot.data.vehicle),
                     ],
-                )
-              ],
-            );
-          }
-          else if (snapshot.hasError) {
-            return SafeArea(
-                child: Text("${snapshot.error}")
-            );
+                  )
+                ],
+              );
+            }
+            else if (snapshot.hasError) {
+              return SafeArea(
+                  child: Text("${snapshot.error}")
+              );
+            }
           }
           return SafeArea(
               child: Center(
@@ -274,100 +290,20 @@ class _ProfileState extends State<Profile> {
 
 class InfoRow extends StatefulWidget {
 
-  InfoRow(this.fieldName, this.icon, this.text, this.editable);
+  InfoRow(this.fieldName, this.icon, this.text);
   final String fieldName;
   final IconData icon;
   final String text;
-  final bool editable;
-
 
   @override
   _InfoRowState createState() => _InfoRowState();
 }
 
 class _InfoRowState extends State<InfoRow> {
-  TextEditingController _ctrl;
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = TextEditingController(text: widget.text);
-  }
-
-  void updateDriver(AuthProvider authProvider, String field, String newValue) async {
-    String backendField;
-    switch (field) {
-      case "phone number":
-        backendField = "phoneNumber";
-        break;
-      default:
-        backendField = "";
-    }
-    final response = await http.post(
-      AppConfig.of(context).baseUrl + "/drivers/" + authProvider.id,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        backendField: newValue,
-      }),
-    );
-    if (response.statusCode != 200) {
-      throw Exception('Failed to update driver');
-    }
-  }
-
-  _makeEditDialog(AuthProvider authProvider) {
-    double dialogPaddingTB = 50;
-    double dialogPaddingLR = 10;
-    showDialog(
-        context: context,
-        child: new Dialog(
-            child: Padding(
-                padding: EdgeInsets.only(left: dialogPaddingLR, right: dialogPaddingLR, top: dialogPaddingTB, bottom: dialogPaddingTB),
-                child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Update your ${widget.fieldName}:",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20, color: Colors.grey),
-                      ),
-                      TextField(
-                        controller: _ctrl,
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            FlatButton(
-                              child: Text("Save"),
-                              onPressed: () {
-                                updateDriver(authProvider, widget.fieldName, _ctrl.text);
-                                Navigator.pop(context);
-                                //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-                              },
-                            ),
-                            FlatButton(
-                                child: Text("Cancel"),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                }
-                            )
-                          ]
-                      )
-                    ]
-                )
-            )
-
-        )
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    double paddingTB = 10;
-    double minIconSize = 48;
+    double paddingTB = 16;
 
     return Padding(
         padding: EdgeInsets.only(top: paddingTB, bottom: paddingTB),
@@ -384,17 +320,6 @@ class _InfoRowState extends State<InfoRow> {
                 ),
               ),
             ),
-            widget.editable ?
-            IconButton(
-              icon: Icon(Icons.arrow_forward_ios),
-              onPressed: () {
-                if (widget.editable) {
-                  _makeEditDialog(authProvider);
-                }
-              },
-            ) : Container(
-                child: SizedBox(height: minIconSize)
-            )
           ],
         )
     );
@@ -453,6 +378,145 @@ class _InfoGroupState extends State<InfoGroup> {
                     }
                 )
               ],
+            )
+        )
+    );
+  }
+}
+
+class EditProfile extends StatefulWidget {
+  EditProfile(this.driver, this.refresher);
+  final Driver driver;
+  final Function refresher;
+  @override
+  _EditProfileState createState() => _EditProfileState();
+}
+
+class _EditProfileState extends State<EditProfile> {
+  final _formKey = GlobalKey<FormState>();
+
+  Future<Driver> updateDriver(AuthProvider authProvider, String firstName, String lastName, String phoneNumber) async {
+    final response = await http.post(
+      AppConfig.of(context).baseUrl + "/drivers/" + authProvider.id,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'firstName': firstName,
+        'lastName': lastName,
+        'phoneNumber': phoneNumber,
+      }),
+    );
+    if (response.statusCode == 200) {
+      return Driver.fromJson(json.decode(response.body));
+    }
+    else {
+      throw Exception('Failed to update driver');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String _firstName = widget.driver.firstName;
+    String _lastName = widget.driver.lastName;
+    String _phoneNumber = widget.driver.phoneNumber;
+    return Scaffold(
+        body: Padding(
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 18.0 + MediaQuery.of(context).padding.top,
+            ),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      'Edit Profile',
+                      style: Theme.of(context).textTheme.headline
+                  ),
+                  SizedBox(height: 20),
+                  Form(
+                      key: _formKey,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Name',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold
+                                )
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                  icon: Icon(Icons.person)
+                              ),
+                              initialValue: _firstName + ' ' + _lastName,
+                              validator: (input) {
+                                if (input.isEmpty) {
+                                  return 'Please enter your first and last name.';
+                                }
+                                return null;
+                              },
+                              onSaved: (input) {
+                                setState(() {
+                                  List<String> split = input.split(' ');
+                                  _firstName = split.first;
+                                  _lastName = split.removeLast();
+                                });
+                              },
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                                'Phone Number',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold
+                                )
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                  icon: Icon(Icons.phone)
+                              ),
+                              initialValue: _phoneNumber,
+                              validator: (input) {
+                                if (input.isEmpty) {
+                                  return 'Please enter your phone number.';
+                                }
+                                return null;
+                              },
+                              onSaved: (input) {
+                                setState(() {
+                                  _phoneNumber = input;
+                                });
+                              },
+                            ),
+                          ]
+                      )
+                  ),
+
+                  SizedBox(height: 20),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RaisedButton(
+                          child: Text("Save"),
+                          onPressed: () {
+                            _formKey.currentState.save();
+                            widget.refresher(updateDriver(authProvider, _firstName, _lastName, _phoneNumber));
+                            Navigator.pop(context);
+                          },
+                        ),
+                        SizedBox(width: 30),
+                        RaisedButton(
+                            child: Text("Cancel"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            }
+                        )
+                      ]
+                  )
+                ]
             )
         )
     );
