@@ -136,7 +136,7 @@ class _ProfileState extends State<Profile> {
                       style: Theme
                           .of(context)
                           .textTheme
-                          .headline
+                          .headline5
                   ),
                 ),
                 Container(

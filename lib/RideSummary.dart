@@ -127,7 +127,7 @@ class _FinishedRideState extends State<FinishedRide> {
                 left: 24.0, right: 24.0, top: 16.0, bottom: 16.0),
             child: Column(children: <Widget>[
               Text("$_startDest - $_endDest",
-                  style: Theme.of(context).textTheme.subhead),
+                  style: Theme.of(context).textTheme.subtitle1),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
@@ -140,7 +140,7 @@ class _FinishedRideState extends State<FinishedRide> {
                             "${DateFormat.jm().format(_startTime)} - ${DateFormat.jm().format(_endTime)}",
                             style: Theme.of(context)
                                 .textTheme
-                                .body1
+                                .bodyText2
                                 .copyWith(fontSize: 12)),
                         Divider(
                           height: 8.0,
@@ -151,7 +151,7 @@ class _FinishedRideState extends State<FinishedRide> {
                             "$_distance mile${_distance != 1 ? "s" : ""}, ${_riders.length} rider${_riders.length > 0 ? "s" : ""}",
                             style: Theme.of(context)
                                 .textTheme
-                                .body1
+                                .bodyText2
                                 .copyWith(fontSize: 12))
                       ],
                     ),
