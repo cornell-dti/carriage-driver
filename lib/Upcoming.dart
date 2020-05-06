@@ -133,7 +133,7 @@ class SummaryState extends State<Summary> {
           Padding(
             padding: EdgeInsets.only(left: 30.0, top: 50.0, bottom: 10.0),
             child: Text('Ride Summary',
-                style: Theme.of(context).textTheme.headline),
+                style: Theme.of(context).textTheme.headline5),
           )
         ],
       ),
@@ -404,7 +404,7 @@ class Route extends StatelessWidget {
           Container(
             margin: const EdgeInsetsDirectional.only(start: 10.0),
             child: Text(destinations[index],
-                style: Theme.of(context).textTheme.display1),
+                style: Theme.of(context).textTheme.headline4),
           ),
         ],
       ),
