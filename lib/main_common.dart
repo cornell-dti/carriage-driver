@@ -28,15 +28,15 @@ class MyApp extends StatelessWidget {
               fontFamily: 'SFPro',
               accentColor: Color.fromRGBO(60, 60, 67, 0.6),
               textTheme: TextTheme(
-                  headline:
+                  headline5:
                       TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-                  subhead:
+                  subtitle1:
                       TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
-                  display1:
+                  headline4:
                       TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
-                  display2:
+                  headline3:
                       TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal),
-                  display3: TextStyle(
+                  headline2: TextStyle(
                       fontSize: 16.0, fontWeight: FontWeight.normal))),
           home: Logic()),
     );
