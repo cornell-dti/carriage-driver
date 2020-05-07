@@ -68,14 +68,15 @@ class Driver {
   final String phoneNumber;
   final String email;
 
-  Driver({this.firstName,
-    this.lastName,
-    this.startTime,
-    this.endTime,
-    this.breaks,
-    this.vehicle,
-    this.phoneNumber,
-    this.email});
+  Driver(
+      {this.firstName,
+      this.lastName,
+      this.startTime,
+      this.endTime,
+      this.breaks,
+      this.vehicle,
+      this.phoneNumber,
+      this.email});
 
   factory Driver.fromJson(Map<String, dynamic> json) {
     return Driver(
@@ -84,7 +85,7 @@ class Driver {
         startTime: json['startTime'],
         endTime: json['endTime'],
         breaks:
-        (json['breaks'] == null) ? null : Breaks.fromJson(json['breaks']),
+            (json['breaks'] == null) ? null : Breaks.fromJson(json['breaks']),
         vehicle: json['vehicle'],
         phoneNumber: json['phoneNumber'],
         email: json['email']);
@@ -92,7 +93,6 @@ class Driver {
 }
 
 class Profile extends StatefulWidget {
-  Profile({Key key}) : super(key: key);
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -148,87 +148,75 @@ class _ProfileState extends State<Profile> {
                               spreadRadius: 1.0)
                         ],
                       ),
-                      child: Row(
-                          children: [
-                            Padding(
-                                padding: EdgeInsets.only(
-                                    left: _picMarginLR,
-                                    right: _picMarginLR,
-                                    top: _picMarginTB,
-                                    bottom: _picMarginTB),
-                                child: Stack(
-                                  children: [
-                                    Padding(
-                                        padding: EdgeInsets.only(
-                                            bottom: _picDiameter * 0.05),
-                                        child: CircleAvatar(
-                                          radius: _picRadius,
-                                          backgroundImage: NetworkImage(authProvider
-                                              .googleSignIn.currentUser.photoUrl),
-                                        )
-                                    ),
-                                    Positioned(
-                                        child: Container(
-                                          height: _picBtnDiameter,
-                                          width: _picBtnDiameter,
-                                          child: FittedBox(
-                                            child: FloatingActionButton(
-                                                backgroundColor: Colors.black,
-                                                child: Icon(Icons.add,
-                                                    size: _picBtnDiameter),
-                                                onPressed: () {}),
-                                          ),
-                                        ),
-                                        left: _picDiameter * 0.61,
-                                        top: _picDiameter * 0.66
-                                    )
-                                  ],
-                                )
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(bottom: 30),
-                                child: Stack(
-                                  overflow: Overflow.visible,
-                                  children: [
-                                    Row(
-                                        children: [
-                                          Text(
-                                              snapshot.data.firstName +
-                                                  " " +
-                                                  snapshot.data.lastName,
-                                              style: TextStyle(
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.bold,
-                                              )
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.edit, size: 20),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) => EditProfile(snapshot.data)
-                                                  )
-                                              );
-                                            },
-                                          )
-                                        ]
-                                    ),
-                                    Positioned(
-                                      child: Text("Joined 03/2020",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Theme.of(context).accentColor,
-                                          )
+                      child: Row(children: [
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: _picMarginLR,
+                                right: _picMarginLR,
+                                top: _picMarginTB,
+                                bottom: _picMarginTB),
+                            child: Stack(
+                              children: [
+                                Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: _picDiameter * 0.05),
+                                    child: CircleAvatar(
+                                      radius: _picRadius,
+                                      backgroundImage: NetworkImage(authProvider
+                                          .googleSignIn.currentUser.photoUrl),
+                                    )),
+                                Positioned(
+                                    child: Container(
+                                      height: _picBtnDiameter,
+                                      width: _picBtnDiameter,
+                                      child: FittedBox(
+                                        child: FloatingActionButton(
+                                            backgroundColor: Colors.black,
+                                            child: Icon(Icons.add,
+                                                size: _picBtnDiameter),
+                                            onPressed: () {}),
                                       ),
-                                      top: 45,
-                                    )
-                                  ],
+                                    ),
+                                    left: _picDiameter * 0.61,
+                                    top: _picDiameter * 0.66)
+                              ],
+                            )),
+                        Padding(
+                            padding: EdgeInsets.only(bottom: 30),
+                            child: Stack(
+                              overflow: Overflow.visible,
+                              children: [
+                                Row(children: [
+                                  Text(
+                                      snapshot.data.firstName +
+                                          " " +
+                                          snapshot.data.lastName,
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  IconButton(
+                                    icon: Icon(Icons.edit, size: 20),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EditProfile(snapshot.data)));
+                                    },
+                                  )
+                                ]),
+                                Positioned(
+                                  child: Text("Joined 03/2020",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context).accentColor,
+                                      )),
+                                  top: 45,
                                 )
-                            )
-                          ]
-                      )
-                  ),
+                              ],
+                            ))
+                      ])),
                   SizedBox(height: 6),
                   InfoGroup(
                     "Account Info",
@@ -265,8 +253,7 @@ class _ProfileState extends State<Profile> {
             }
           }
           return SafeArea(child: Center(child: CircularProgressIndicator()));
-        }
-    );
+        });
   }
 }
 
@@ -301,8 +288,7 @@ class _InfoRowState extends State<InfoRow> {
               ),
             ),
           ],
-        )
-    );
+        ));
   }
 }
 
@@ -337,7 +323,7 @@ class _InfoGroupState extends State<InfoGroup> {
               children: <Widget>[
                 Text(widget.title,
                     style:
-                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,
@@ -350,12 +336,9 @@ class _InfoGroupState extends State<InfoGroup> {
                       return Divider(
                         height: 0,
                       );
-                    }
-                )
+                    })
               ],
-            )
-        )
-    );
+            )));
   }
 }
 
@@ -401,105 +384,95 @@ class _EditProfileState extends State<EditProfile> {
               right: 20,
               top: 18.0 + MediaQuery.of(context).padding.top,
             ),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Edit Profile', style: Theme.of(context).textTheme.headline5),
-                  SizedBox(height: 20),
-                  Form(
-                      key: _formKey,
-                      autovalidate: true,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                'First Name',
-                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(icon: Icon(Icons.person)),
-                              initialValue: _firstName,
-                              validator: (input) {
-                                if (input.isEmpty) {
-                                  return 'Please enter your first name.';
-                                }
-                                return null;
-                              },
-                              onSaved: (input) {
-                                setState(() {
-                                  _firstName = input;
-                                });
-                              },
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                                'Last Name',
-                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(icon: Icon(Icons.person)),
-                              initialValue: _lastName,
-                              validator: (input) {
-                                if (input.isEmpty) {
-                                  return 'Please enter your last name.';
-                                }
-                                return null;
-                              },
-                              onSaved: (input) {
-                                setState(() {
-                                  _lastName = input;
-                                });
-                              },
-                            ),
-                            SizedBox(height: 10),
-                            Text('Phone Number',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold)),
-                            TextFormField(
-                              decoration: InputDecoration(icon: Icon(Icons.phone)),
-                              initialValue: _phoneNumber,
-                              keyboardType: TextInputType.number,
-                              validator: (input) {
-                                if (input.isEmpty) {
-                                  return 'Please enter your phone number.';
-                                }
-                                return null;
-                              },
-                              onSaved: (input) {
-                                setState(() {
-                                  _phoneNumber = input;
-                                });
-                              },
-                            ),
-                          ]
-                      )
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('Edit Profile',
+                  style: Theme.of(context).textTheme.headline5),
+              SizedBox(height: 20),
+              Form(
+                  key: _formKey,
+                  autovalidate: true,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        RaisedButton(
-                          child: Text("Save"),
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              _formKey.currentState.save();
-                              updateDriver(authProvider, _firstName, _lastName, _phoneNumber);
-                              Navigator.pop(context);
+                        Text('First Name',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextFormField(
+                          decoration: InputDecoration(icon: Icon(Icons.person)),
+                          initialValue: _firstName,
+                          validator: (input) {
+                            if (input.isEmpty) {
+                              return 'Please enter your first name.';
                             }
+                            return null;
+                          },
+                          onSaved: (input) {
+                            setState(() {
+                              _firstName = input;
+                            });
                           },
                         ),
-                        SizedBox(width: 30),
-                        RaisedButton(
-                            child: Text("Cancel"),
-                            onPressed: () {
-                              Navigator.pop(context);
+                        SizedBox(height: 10),
+                        Text('Last Name',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextFormField(
+                          decoration: InputDecoration(icon: Icon(Icons.person)),
+                          initialValue: _lastName,
+                          validator: (input) {
+                            if (input.isEmpty) {
+                              return 'Please enter your last name.';
                             }
-                        )
-                      ]
-                  )
-                ]
-            )
-        )
-    );
+                            return null;
+                          },
+                          onSaved: (input) {
+                            setState(() {
+                              _lastName = input;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        Text('Phone Number',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextFormField(
+                          decoration: InputDecoration(icon: Icon(Icons.phone)),
+                          initialValue: _phoneNumber,
+                          keyboardType: TextInputType.number,
+                          validator: (input) {
+                            if (input.isEmpty) {
+                              return 'Please enter your phone number.';
+                            }
+                            return null;
+                          },
+                          onSaved: (input) {
+                            setState(() {
+                              _phoneNumber = input;
+                            });
+                          },
+                        ),
+                      ])),
+              SizedBox(height: 20),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                RaisedButton(
+                  child: Text("Save"),
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      _formKey.currentState.save();
+                      updateDriver(
+                          authProvider, _firstName, _lastName, _phoneNumber);
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+                SizedBox(width: 30),
+                RaisedButton(
+                    child: Text("Cancel"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    })
+              ])
+            ])));
   }
 }
