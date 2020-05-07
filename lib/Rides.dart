@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'AuthProvider.dart';
 import 'Home.dart';
 import 'Ride.dart';
 import 'Upcoming.dart';
@@ -15,12 +17,6 @@ class _RideData {
 }
 
 class Rides extends StatefulWidget {
-  // TODO: use actual ID once backend has data that we can test
-  // Rides(this.name, this.driverId, {Key key}) : super(key: key);
-  Rides(this.name, {Key key}) : super(key: key);
-  final String name;
-  final String driverId = 'test';
-
   @override
   _RidesState createState() => _RidesState();
 }
@@ -30,7 +26,7 @@ class _RidesState extends State<Rides> {
   void initState() {
     super.initState();
   }
-  Future<_RideData> _fetchRides() async {
+  Future<_RideData> _fetchRides(String id) async {
     // TODO: temporary placeholder response for testing
     // replace when backend sends all fields
     String responseBody = '''
@@ -71,7 +67,7 @@ class _RidesState extends State<Rides> {
   ]
 }''';
     await new Future.delayed(const Duration(seconds: 1));
-    List<Ride> rides = _ridesFromJson(responseBody);
+    List<Ride> rides = _ridesFromJson(responseBody,id);
     Ride currentRide;
     if (rides.length > 0) {
       currentRide = rides[0];
@@ -102,11 +98,12 @@ class _RidesState extends State<Rides> {
     */
   }
 
-  List<Ride> _ridesFromJson(String json) {
+  List<Ride> _ridesFromJson(String json, String id) {
     var data = jsonDecode(json)["data"];
     List<Ride> res = data
         .map<Ride>((e) => Ride.fromJson(e))
-        .where((Ride e) => e.driverId.contains(widget.driverId))
+        // TOOD: remove this when id check happens on backend
+        .where((Ride e) => e.driverId.contains(id))
         .toList();
     res.sort((a, b) => a.startTime.compareTo(b.startTime));
     return res;
@@ -167,13 +164,14 @@ class _RidesState extends State<Rides> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Greeting(widget.name),
+          Greeting(authProvider.googleSignIn.currentUser.displayName),
           Expanded(
               child: FutureBuilder<_RideData>(
-                  future: _fetchRides(),
+                  future: _fetchRides(authProvider.id),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data.rides.length == 0) {

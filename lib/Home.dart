@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'AuthProvider.dart';
 import 'LocationTracker.dart';
 import 'Rides.dart';
 import 'Upcoming.dart';
@@ -38,13 +40,6 @@ class LeftSubheading extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
-  Home(this.name, this.email, this.imageUrl, this.driverID, {Key key})
-      : super(key: key);
-  final String name;
-  final String email;
-  final String imageUrl;
-  final String driverID;
-
   @override
   _HomeState createState() => _HomeState();
 }
@@ -73,7 +68,7 @@ class _HomeState extends State<Home> {
   Widget _profilePage(BuildContext context) {
     return Column(
       children: <Widget>[
-        Profile(widget.name, widget.email, widget.imageUrl, widget.driverID),
+        Profile(),
       ],
     );
   }
@@ -81,7 +76,7 @@ class _HomeState extends State<Home> {
   Widget getPage(BuildContext context, int index) {
     switch (index) {
       case (RIDES):
-        return Rides(widget.name);
+        return Rides();
       case (HISTORY):
         return Column(
           children: <Widget>[
@@ -128,10 +123,11 @@ class _HomeState extends State<Home> {
 class SignOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return RaisedButton(
       child: Text('Sign out', textAlign: TextAlign.start),
       onPressed: () {
-        googleSignIn.signOut();
+        authProvider.signOut();
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (BuildContext context) => Login()));
       },
