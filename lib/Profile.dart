@@ -16,7 +16,7 @@ class Break {
   Break(this.day, this.startTime, this.endTime);
 
   factory Break.fromJson(String day, Map<String, dynamic> json) {
-    return Break(day, json['startTime'], json['endTime']);
+    return Break(day, json['breakStart'], json['breakEnd']);
   }
 
   String toString() {
@@ -29,7 +29,7 @@ class Breaks {
   Breaks(this.breaks);
 
   factory Breaks.fromJson(Map<String, dynamic> json) {
-    List<Break> breaks;
+    List<Break> breaks = List<Break>();
     json.forEach((k, v) {
       breaks.add(Break.fromJson((abbrevToDay(k)), json[k]));
     });
@@ -54,7 +54,17 @@ class Breaks {
   }
 
   String toString() {
-    return breaks.fold("", (prev, element) => "$prev\n$element");
+    if (breaks.isEmpty) return "None";
+    else {
+      String str = "";
+      for (Break b in breaks) {
+        str += b.toString();
+        if (b != breaks.last) {
+          str += "\n";
+        }
+      }
+      return str;
+    }
   }
 }
 
@@ -68,15 +78,14 @@ class Driver {
   final String phoneNumber;
   final String email;
 
-  Driver(
-      {this.firstName,
-      this.lastName,
-      this.startTime,
-      this.endTime,
-      this.breaks,
-      this.vehicle,
-      this.phoneNumber,
-      this.email});
+  Driver({this.firstName,
+        this.lastName,
+        this.startTime,
+        this.endTime,
+        this.breaks,
+        this.vehicle,
+        this.phoneNumber,
+        this.email});
 
   factory Driver.fromJson(Map<String, dynamic> json) {
     return Driver(
@@ -84,8 +93,7 @@ class Driver {
         lastName: json['lastName'],
         startTime: json['startTime'],
         endTime: json['endTime'],
-        breaks:
-            (json['breaks'] == null) ? null : Breaks.fromJson(json['breaks']),
+        breaks: Breaks.fromJson(json['breaks']),
         vehicle: json['vehicle'],
         phoneNumber: json['phoneNumber'],
         email: json['email']);
@@ -323,7 +331,7 @@ class _InfoGroupState extends State<InfoGroup> {
               children: <Widget>[
                 Text(widget.title,
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,
@@ -385,7 +393,7 @@ class _EditProfileState extends State<EditProfile> {
               top: 18.0 + MediaQuery.of(context).padding.top,
             ),
             child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('Edit Profile',
                   style: Theme.of(context).textTheme.headline5),
               SizedBox(height: 20),
