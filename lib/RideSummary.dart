@@ -194,14 +194,12 @@ class RideSummary extends StatefulWidget {
 }
 
 class _RideSummaryState extends State<RideSummary> {
-  String _name;
   Ride _currentRide;
 
   @override
   void initState() {
     super.initState();
     // TODO: placeholder
-    _name = "Chris";
     _currentRide = new Ride(
         id: "1",
         startLocation: "Teagle Hall",
@@ -242,7 +240,7 @@ class _RideSummaryState extends State<RideSummary> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Greeting(_name),
+          Greeting(),
           Expanded(
               child: ListView(shrinkWrap: true, children: <Widget>[
             _recentRide(),

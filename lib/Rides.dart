@@ -5,7 +5,6 @@ import 'AuthProvider.dart';
 import 'Home.dart';
 import 'Ride.dart';
 import 'Upcoming.dart';
-import 'UserInfoProvider.dart';
 // import 'dart:io';
 // import 'package:intl/intl.dart';
 // import 'package:http/http.dart' as http;
@@ -27,6 +26,7 @@ class _RidesState extends State<Rides> {
   void initState() {
     super.initState();
   }
+
   Future<_RideData> _fetchRides(String id) async {
     // TODO: temporary placeholder response for testing
     // replace when backend sends all fields
@@ -68,7 +68,7 @@ class _RidesState extends State<Rides> {
   ]
 }''';
     await new Future.delayed(const Duration(seconds: 1));
-    List<Ride> rides = _ridesFromJson(responseBody,id);
+    List<Ride> rides = _ridesFromJson(responseBody, id);
     Ride currentRide;
     if (rides.length > 0) {
       currentRide = rides[0];
@@ -140,8 +140,7 @@ class _RidesState extends State<Rides> {
   }
 
   Widget _mainPage(BuildContext context, _RideData data) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(crossAxisAlignment: CrossAxisAlignment.start,
         // height: 20,
         children: <Widget>[
           LeftSubheading(heading: 'Upcoming Ride'),
@@ -166,11 +165,10 @@ class _RidesState extends State<Rides> {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    UserInfoProvider userInfo = Provider.of<UserInfoProvider>(context);
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Greeting(userInfo.firstName),
+          Greeting(),
           Expanded(
               child: FutureBuilder<_RideData>(
                   future: _fetchRides(authProvider.id),
