@@ -12,7 +12,7 @@ class Break {
   Break(this.day, this.startTime, this.endTime);
 
   factory Break.fromJson(String day, Map<String, dynamic> json) {
-    return Break(day, json['startTime'], json['endTime']);
+    return Break(day, json['breakStart'], json['breakEnd']);
   }
 
   String toString() {
@@ -50,7 +50,17 @@ class Breaks {
   }
 
   String toString() {
-    return breaks.fold("", (prev, element) => "$prev\n$element");
+    if (breaks.isEmpty) return "None";
+    else {
+      String str = "";
+      for (Break b in breaks) {
+        str += b.toString();
+        if (b != breaks.last) {
+          str += "\n";
+        }
+      }
+      return str;
+    }
   }
 }
 
@@ -83,8 +93,7 @@ class UserInfo {
         lastName: json['lastName'],
         startTime: json['startTime'],
         endTime: json['endTime'],
-        breaks:
-            (json['breaks'] == null) ? null : Breaks.fromJson(json['breaks']),
+        breaks: Breaks.fromJson(json['breaks']),
         vehicle: json['vehicle'],
         phoneNumber: json['phoneNumber'],
         email: json['email'],
