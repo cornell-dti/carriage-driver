@@ -144,7 +144,7 @@ class UserInfoProvider with ChangeNotifier {
       _setInfo(UserInfo.fromJson(
           json, authProvider.googleSignIn.currentUser.photoUrl));
     } else {
-      throw Exception('Failed to update driver');
+      throw Exception('Failed to update driver.');
     }
   }
 }
