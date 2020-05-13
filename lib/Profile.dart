@@ -216,7 +216,7 @@ class _InfoGroupState extends State<InfoGroup> {
               children: <Widget>[
                 Text(widget.title,
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,
@@ -260,7 +260,7 @@ class _EditProfileState extends State<EditProfile> {
               top: 18.0 + MediaQuery.of(context).padding.top,
             ),
             child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('Edit Profile',
                   style: Theme.of(context).textTheme.headline5),
               SizedBox(height: 20),
