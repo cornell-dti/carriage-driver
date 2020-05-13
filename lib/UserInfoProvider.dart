@@ -121,7 +121,9 @@ class UserInfoProvider with ChangeNotifier {
         _setInfo(UserInfo.fromJson(
             json, authProvider.googleSignIn.currentUser.photoUrl));
       } else {
-        throw Exception("Failed to get driver info.");
+        // TODO: retry only in certain circumstances
+        await Future.delayed(retryDelay);
+        requestInfo(config,authProvider);
       }
     });
   }
