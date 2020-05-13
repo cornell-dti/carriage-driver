@@ -6,8 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'AuthProvider.dart';
-
-AuthProvider authProvider;
+import 'UserInfoProvider.dart';
 
 class Break {
   String day;
@@ -101,6 +100,7 @@ class _ProfileState extends State<Profile> {
   Future<Driver> futureDriver;
 
   Future<Driver> fetchDriver() async {
+    var authProvider = Provider.of<AuthProvider>(context);
     final response = await http
         .get(AppConfig.of(context).baseUrl + "/drivers/" + authProvider.id);
     if (response.statusCode == 200) {
@@ -112,7 +112,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    authProvider = Provider.of(context);
+    var userInfoProvider = Provider.of<UserInfoProvider>(context);
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
     double _picRadius = _picDiameter / 2;
@@ -162,8 +162,7 @@ class _ProfileState extends State<Profile> {
                                         bottom: _picDiameter * 0.05),
                                     child: CircleAvatar(
                                       radius: _picRadius,
-                                      backgroundImage: NetworkImage(authProvider
-                                          .googleSignIn.currentUser.photoUrl),
+                                      backgroundImage: NetworkImage(userInfoProvider.photoUrl),
                                     )),
                                 Positioned(
                                     child: Container(

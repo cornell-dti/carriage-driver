@@ -5,6 +5,7 @@ import 'AuthProvider.dart';
 import 'Home.dart';
 import 'Ride.dart';
 import 'Upcoming.dart';
+import 'UserInfoProvider.dart';
 // import 'dart:io';
 // import 'package:intl/intl.dart';
 // import 'package:http/http.dart' as http;
@@ -165,10 +166,11 @@ class _RidesState extends State<Rides> {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    UserInfoProvider userInfo = Provider.of<UserInfoProvider>(context);
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Greeting(authProvider.googleSignIn.currentUser.displayName),
+          Greeting(userInfo.firstName),
           Expanded(
               child: FutureBuilder<_RideData>(
                   future: _fetchRides(authProvider.id),
