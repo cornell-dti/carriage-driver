@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'AuthProvider.dart';
 import 'Home.dart';
+import 'UserInfoProvider.dart';
 import 'app_config.dart';
 import 'Login.dart';
 
@@ -15,30 +16,37 @@ class MyApp extends StatelessWidget {
   }
 
   Widget _buildApp(BuildContext context, String baseUrl) {
+    AppConfig config = AppConfig.of(context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthProvider>(create: (BuildContext context) {
           return AuthProvider(context);
         })
       ],
-      child: MaterialApp(
-          title: 'Carriage',
-          theme: ThemeData(
-              primarySwatch: Colors.red,
-              fontFamily: 'SFPro',
-              accentColor: Color.fromRGBO(60, 60, 67, 0.6),
-              textTheme: TextTheme(
-                  headline5:
-                      TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-                  subtitle1:
-                      TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
-                  headline4:
-                      TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
-                  headline3:
-                      TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal),
-                  headline2: TextStyle(
-                      fontSize: 16.0, fontWeight: FontWeight.normal))),
-          home: HomeOrLogin()),
+      // UserInfoProvider is in a child widget because it uses AuthProvider
+      child: ChangeNotifierProvider<UserInfoProvider>(
+        create: (BuildContext context) {
+          return UserInfoProvider(config, Provider.of<AuthProvider>(context, listen: false));
+        },
+        child: MaterialApp(
+            title: 'Carriage',
+            theme: ThemeData(
+                primarySwatch: Colors.red,
+                fontFamily: 'SFPro',
+                accentColor: Color.fromRGBO(60, 60, 67, 0.6),
+                textTheme: TextTheme(
+                    headline5:
+                        TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                    subtitle1:
+                        TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
+                    headline4:
+                        TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+                    headline3: TextStyle(
+                        fontSize: 12.0, fontWeight: FontWeight.normal),
+                    headline2: TextStyle(
+                        fontSize: 16.0, fontWeight: FontWeight.normal))),
+            home: HomeOrLogin()),
+      ),
     );
   }
 }

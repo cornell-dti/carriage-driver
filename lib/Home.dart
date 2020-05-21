@@ -6,22 +6,23 @@ import 'Rides.dart';
 import 'Upcoming.dart';
 import 'Login.dart';
 import 'Profile.dart';
+import 'UserInfoProvider.dart';
 
 class Greeting extends StatelessWidget {
-  final String name;
-
-  Greeting(this.name);
-
   @override
   Widget build(BuildContext context) {
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
     return Padding(
-      child: Text('Hi ${name.split(' ').first}!',
-          style: Theme.of(context).textTheme.headline5),
-      padding: EdgeInsets.only(
-          left: 24.0,
-          top: 18.0 + MediaQuery.of(context).padding.top,
-          bottom: 16.0),
-    );
+        child: Container(
+            height: 46,
+            child: userInfoProvider.hasInfo()
+                ? Text('Hi ${userInfoProvider.info.firstName}!',
+                    style: Theme.of(context).textTheme.headline5)
+                : Container()),
+        padding: EdgeInsets.only(
+            left: 24.0,
+            top: 18.0 + MediaQuery.of(context).padding.top,
+            bottom: 16.0));
   }
 }
 

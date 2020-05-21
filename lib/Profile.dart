@@ -1,104 +1,10 @@
 import 'package:carriage/app_config.dart';
 import 'dart:ui';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'AuthProvider.dart';
-
-AuthProvider authProvider;
-
-class Break {
-  String day;
-  String startTime;
-  String endTime;
-  Break(this.day, this.startTime, this.endTime);
-
-  factory Break.fromJson(String day, Map<String, dynamic> json) {
-    return Break(day, json['breakStart'], json['breakEnd']);
-  }
-
-  String toString() {
-    return "$day: $startTime to $endTime";
-  }
-}
-
-class Breaks {
-  List<Break> breaks;
-  Breaks(this.breaks);
-
-  factory Breaks.fromJson(Map<String, dynamic> json) {
-    List<Break> breaks = List<Break>();
-    json.forEach((k, v) {
-      breaks.add(Break.fromJson((abbrevToDay(k)), json[k]));
-    });
-    return Breaks(breaks);
-  }
-
-  static String abbrevToDay(String abbrev) {
-    switch (abbrev) {
-      case ("Mon"):
-        return "Monday";
-      case ("Tue"):
-        return "Tuesday";
-      case ("Wed"):
-        return "Wednesday";
-      case ("Thu"):
-        return "Thursday";
-      case ("Fri"):
-        return "Friday";
-      default:
-        return "INVALID DAY";
-    }
-  }
-
-  String toString() {
-    if (breaks.isEmpty) return "None";
-    else {
-      String str = "";
-      for (Break b in breaks) {
-        str += b.toString();
-        if (b != breaks.last) {
-          str += "\n";
-        }
-      }
-      return str;
-    }
-  }
-}
-
-class Driver {
-  final String firstName;
-  final String lastName;
-  final String startTime;
-  final String endTime;
-  final Breaks breaks;
-  final String vehicle;
-  final String phoneNumber;
-  final String email;
-
-  Driver({this.firstName,
-        this.lastName,
-        this.startTime,
-        this.endTime,
-        this.breaks,
-        this.vehicle,
-        this.phoneNumber,
-        this.email});
-
-  factory Driver.fromJson(Map<String, dynamic> json) {
-    return Driver(
-        firstName: json['firstName'],
-        lastName: json['lastName'],
-        startTime: json['startTime'],
-        endTime: json['endTime'],
-        breaks: Breaks.fromJson(json['breaks']),
-        vehicle: json['vehicle'],
-        phoneNumber: json['phoneNumber'],
-        email: json['email']);
-  }
-}
+import 'UserInfoProvider.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -106,21 +12,9 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  Future<Driver> futureDriver;
-
-  Future<Driver> fetchDriver() async {
-    final response = await http
-        .get(AppConfig.of(context).baseUrl + "/drivers/" + authProvider.id);
-    if (response.statusCode == 200) {
-      return Driver.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to retrieve driver');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    authProvider = Provider.of(context);
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
     double _picRadius = _picDiameter / 2;
@@ -128,140 +22,131 @@ class _ProfileState extends State<Profile> {
     double _picMarginTB = _picDiameter / 4;
     double _picBtnDiameter = _picDiameter * 0.39;
 
-    return FutureBuilder<Driver>(
-        future: fetchDriver(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: 24.0,
-                        top: 18.0 + MediaQuery.of(context).padding.top,
-                        bottom: 16.0),
-                    child: Text('Your Profile',
-                        style: Theme.of(context).textTheme.headline5),
-                  ),
-                  Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(3),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Color.fromARGB(15, 0, 0, 0),
-                              offset: Offset(0, 4.0),
-                              blurRadius: 10.0,
-                              spreadRadius: 1.0)
-                        ],
-                      ),
-                      child: Row(children: [
-                        Padding(
-                            padding: EdgeInsets.only(
-                                left: _picMarginLR,
-                                right: _picMarginLR,
-                                top: _picMarginTB,
-                                bottom: _picMarginTB),
-                            child: Stack(
-                              children: [
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: _picDiameter * 0.05),
-                                    child: CircleAvatar(
-                                      radius: _picRadius,
-                                      backgroundImage: NetworkImage(authProvider
-                                          .googleSignIn.currentUser.photoUrl),
-                                    )),
-                                Positioned(
-                                    child: Container(
-                                      height: _picBtnDiameter,
-                                      width: _picBtnDiameter,
-                                      child: FittedBox(
-                                        child: FloatingActionButton(
-                                            backgroundColor: Colors.black,
-                                            child: Icon(Icons.add,
-                                                size: _picBtnDiameter),
-                                            onPressed: () {}),
-                                      ),
-                                    ),
-                                    left: _picDiameter * 0.61,
-                                    top: _picDiameter * 0.66)
-                              ],
-                            )),
-                        Padding(
-                            padding: EdgeInsets.only(bottom: 30),
-                            child: Stack(
-                              overflow: Overflow.visible,
-                              children: [
-                                Row(children: [
-                                  Text(
-                                      snapshot.data.firstName +
-                                          " " +
-                                          snapshot.data.lastName,
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  IconButton(
-                                    icon: Icon(Icons.edit, size: 20),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EditProfile(snapshot.data)));
-                                    },
-                                  )
-                                ]),
-                                Positioned(
-                                  child: Text("Joined 03/2020",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context).accentColor,
-                                      )),
-                                  top: 45,
-                                )
-                              ],
-                            ))
-                      ])),
-                  SizedBox(height: 6),
-                  InfoGroup(
-                    "Account Info",
-                    [
-                      InfoRow(
-                        "email",
-                        Icons.mail_outline,
-                        snapshot.data.email,
-                      ),
-                      InfoRow("phone number", Icons.phone,
-                          snapshot.data.phoneNumber)
-                    ],
-                  ),
-                  SizedBox(height: 6),
-                  InfoGroup(
-                    "Schedule Info",
-                    [
-                      InfoRow("hours", Icons.schedule,
-                          "${snapshot.data.startTime} to ${snapshot.data.endTime}"),
-                      InfoRow(
-                          "breaks",
-                          Icons.free_breakfast,
-                          (snapshot.data.breaks == null)
-                              ? 'None'
-                              : snapshot.data.breaks.toString()),
-                      InfoRow("vehicle", Icons.directions_car,
-                          snapshot.data.vehicle),
-                    ],
-                  )
+    if (userInfoProvider.hasInfo()) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+                left: 24.0,
+                top: 18.0 + MediaQuery.of(context).padding.top,
+                bottom: 16.0),
+            child: Text('Your Profile',
+                style: Theme.of(context).textTheme.headline5),
+          ),
+          Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(3),
+                boxShadow: [
+                  BoxShadow(
+                      color: Color.fromARGB(15, 0, 0, 0),
+                      offset: Offset(0, 4.0),
+                      blurRadius: 10.0,
+                      spreadRadius: 1.0)
                 ],
-              );
-            } else if (snapshot.hasError) {
-              return SafeArea(child: Text("${snapshot.error}"));
-            }
-          }
-          return SafeArea(child: Center(child: CircularProgressIndicator()));
-        });
+              ),
+              child: Row(children: [
+                Padding(
+                    padding: EdgeInsets.only(
+                        left: _picMarginLR,
+                        right: _picMarginLR,
+                        top: _picMarginTB,
+                        bottom: _picMarginTB),
+                    child: Stack(
+                      children: [
+                        Padding(
+                            padding:
+                                EdgeInsets.only(bottom: _picDiameter * 0.05),
+                            child: CircleAvatar(
+                              radius: _picRadius,
+                              backgroundImage:
+                                  NetworkImage(userInfoProvider.info.photoUrl),
+                            )),
+                        Positioned(
+                            child: Container(
+                              height: _picBtnDiameter,
+                              width: _picBtnDiameter,
+                              child: FittedBox(
+                                child: FloatingActionButton(
+                                    backgroundColor: Colors.black,
+                                    child:
+                                        Icon(Icons.add, size: _picBtnDiameter),
+                                    onPressed: () {}),
+                              ),
+                            ),
+                            left: _picDiameter * 0.61,
+                            top: _picDiameter * 0.66)
+                      ],
+                    )),
+                Padding(
+                    padding: EdgeInsets.only(bottom: 30),
+                    child: Stack(
+                      overflow: Overflow.visible,
+                      children: [
+                        Row(children: [
+                          Text(
+                              userInfoProvider.info.firstName +
+                                  " " +
+                                  userInfoProvider.info.lastName,
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              )),
+                          IconButton(
+                            icon: Icon(Icons.edit, size: 20),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          EditProfile(userInfoProvider.info)));
+                            },
+                          )
+                        ]),
+                        Positioned(
+                          child: Text("Joined 03/2020",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).accentColor,
+                              )),
+                          top: 45,
+                        )
+                      ],
+                    ))
+              ])),
+          SizedBox(height: 6),
+          InfoGroup(
+            "Account Info",
+            [
+              InfoRow(
+                "email",
+                Icons.mail_outline,
+                userInfoProvider.info.email,
+              ),
+              InfoRow("phone number", Icons.phone, userInfoProvider.info.phoneNumber)
+            ],
+          ),
+          SizedBox(height: 6),
+          InfoGroup(
+            "Schedule Info",
+            [
+              InfoRow("hours", Icons.schedule,
+                  "${userInfoProvider.info.startTime} to ${userInfoProvider.info.endTime}"),
+              InfoRow(
+                  "breaks",
+                  Icons.free_breakfast,
+                  (userInfoProvider.info.breaks == null)
+                      ? 'None'
+                      : userInfoProvider.info.breaks.toString()),
+              InfoRow("vehicle", Icons.directions_car, userInfoProvider.info.vehicle),
+            ],
+          )
+        ],
+      );
+    } else {
+      return SafeArea(child: Center(child: CircularProgressIndicator()));
+    }
   }
 }
 
@@ -352,7 +237,7 @@ class _InfoGroupState extends State<InfoGroup> {
 
 class EditProfile extends StatefulWidget {
   EditProfile(this.driver);
-  final Driver driver;
+  final UserInfo driver;
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -360,28 +245,10 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   final _formKey = GlobalKey<FormState>();
 
-  Future<Driver> updateDriver(AuthProvider authProvider, String firstName,
-      String lastName, String phoneNumber) async {
-    final response = await http.post(
-      AppConfig.of(context).baseUrl + "/drivers/" + authProvider.id,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'firstName': firstName,
-        'lastName': lastName,
-        'phoneNumber': phoneNumber,
-      }),
-    );
-    if (response.statusCode == 200) {
-      return Driver.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to update driver');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     String _firstName = widget.driver.firstName;
     String _lastName = widget.driver.lastName;
     String _phoneNumber = widget.driver.phoneNumber;
@@ -468,7 +335,7 @@ class _EditProfileState extends State<EditProfile> {
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
-                      updateDriver(
+                      userInfoProvider.updateDriver(AppConfig.of(context),
                           authProvider, _firstName, _lastName, _phoneNumber);
                       Navigator.pop(context);
                     }
