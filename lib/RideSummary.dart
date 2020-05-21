@@ -92,7 +92,7 @@ class _FinishedRideState extends State<FinishedRide> {
     ];
     _startDest = "414 Stewart Ave";
     _endDest = "Kennedy Hall";
-    var now = DateTime.now();
+    DateTime now = DateTime.now();
     _startTime = DateTime(now.year, now.month, now.day, 13);
     _endTime = DateTime(now.year, now.month, now.day, 13, 10);
     _distance = 0.9;

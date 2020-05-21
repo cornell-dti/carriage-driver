@@ -14,7 +14,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
-    var userInfoProvider = Provider.of<UserInfoProvider>(context);
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
     double _picRadius = _picDiameter / 2;
@@ -247,8 +247,8 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    var userInfoProvider = Provider.of<UserInfoProvider>(context);
-    var authProvider = Provider.of<AuthProvider>(context);
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     String _firstName = widget.driver.firstName;
     String _lastName = widget.driver.lastName;
     String _phoneNumber = widget.driver.phoneNumber;

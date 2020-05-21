@@ -126,7 +126,7 @@ class UserInfoProvider with ChangeNotifier {
         .get("${config.baseUrl}/drivers/${authProvider.id}")
         .then((response) async {
       if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
+        Map<String,dynamic> json = jsonDecode(response.body);
         _setInfo(UserInfo.fromJson(
             json, authProvider.googleSignIn.currentUser.photoUrl));
       } else {
@@ -151,7 +151,7 @@ class UserInfoProvider with ChangeNotifier {
       }),
     );
     if (response.statusCode == 200) {
-      var json = jsonDecode(response.body);
+      Map<String,dynamic> json = jsonDecode(response.body);
       _setInfo(UserInfo.fromJson(
           json, authProvider.googleSignIn.currentUser.photoUrl));
     } else {
