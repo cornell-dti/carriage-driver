@@ -4,7 +4,7 @@ import 'AuthProvider.dart';
 import 'LocationTracker.dart';
 import 'Rides.dart';
 import 'Upcoming.dart';
-import 'Login.dart';
+import 'main_common.dart';
 import 'Profile.dart';
 import 'UserInfoProvider.dart';
 
@@ -130,7 +130,7 @@ class SignOutButton extends StatelessWidget {
       onPressed: () {
         authProvider.signOut();
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => Login()));
+            MaterialPageRoute(builder: (BuildContext context) => HomeOrLogin()));
       },
     );
   }
