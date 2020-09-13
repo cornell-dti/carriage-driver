@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock/wakelock.dart';
 import 'AuthProvider.dart';
 import 'Home.dart';
 import 'UserInfoProvider.dart';
 import 'app_config.dart';
 import 'Login.dart';
 
-void mainCommon() {}
+void mainCommon() async {
+  // Prevent screen from sleeping
+  Wakelock.enable();
+}
 
 class MyApp extends StatelessWidget {
   @override
