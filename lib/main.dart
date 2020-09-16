@@ -8,7 +8,7 @@ void main() {
     child: MyApp(),
   );
 
-  mainCommon();
-
   runApp(configuredApp);
+
+  mainCommon();
 }
