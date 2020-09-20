@@ -12,8 +12,7 @@ import 'Upcoming.dart';
 // Data for Rides page
 class _RideData {
   List<Ride> rides;
-  Ride currentRide;
-  _RideData(this.rides, this.currentRide);
+  _RideData(this.rides);
 }
 
 class Rides extends StatefulWidget {
@@ -69,13 +68,7 @@ class _RidesState extends State<Rides> {
 }''';
     await new Future.delayed(const Duration(seconds: 1));
     List<Ride> rides = _ridesFromJson(responseBody, id);
-    Ride currentRide;
-    if (rides.length > 0) {
-      currentRide = rides[0];
-      rides.removeAt(0);
-    }
-    var d = _RideData(rides, currentRide);
-    return d;
+    return _RideData(rides);
 
     /*
     AppConfig config = AppConfig.of(context);
@@ -101,17 +94,13 @@ class _RidesState extends State<Rides> {
 
   List<Ride> _ridesFromJson(String json, String id) {
     var data = jsonDecode(json)["data"];
-    List<Ride> res = data
-        .map<Ride>((e) => Ride.fromJson(e))
-        // TOOD: remove this when id check happens on backend
-        .where((Ride e) => e.driverId.contains(id))
-        .toList();
+    List<Ride> res = data.map<Ride>((e) => Ride.fromJson(e)).toList();
     res.sort((a, b) => a.startTime.compareTo(b.startTime));
     return res;
   }
 
-  Widget _futureRide(BuildContext context, _RideData d, int index) {
-    return FutureRide(d.rides[index]);
+  Widget _futureRide(BuildContext context, List<Ride> rides, int index) {
+    return FutureRide(rides[index]);
   }
 
   Widget _emptyPage(BuildContext context) {
@@ -139,21 +128,26 @@ class _RidesState extends State<Rides> {
     );
   }
 
+  // assumes data has at least one ride
   Widget _mainPage(BuildContext context, _RideData data) {
+    assert(data.rides.length > 0);
+    var currentRide = data.rides[0];
+    var rides = data.rides.sublist(1, data.rides.length);
+
     return Column(crossAxisAlignment: CrossAxisAlignment.start,
         // height: 20,
         children: <Widget>[
           LeftSubheading(heading: 'Upcoming Ride'),
           Center(
-            child: CurrentRide(data.currentRide),
+            child: CurrentRide(currentRide),
           ),
           SizedBox(height: 16.0),
           LeftSubheading(heading: 'Today\'s Schedule'),
           Expanded(
             child: ListView.separated(
-              itemCount: data.rides.length,
+              itemCount: rides.length,
               itemBuilder: (BuildContext c, int index) =>
-                  _futureRide(c, data, index),
+                  _futureRide(c, rides, index),
               separatorBuilder: (BuildContext context, int index) => Divider(),
               padding: EdgeInsets.only(left: 24.0, right: 24.0, bottom: 5.0),
               shrinkWrap: true,
