@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:widget_arrows/widget_arrows.dart';
 
+import 'Rider.dart';
+
 class Ride {
   final String id;
   final String type;
@@ -32,8 +34,8 @@ class Ride {
       endLocation: json['endLocation'],
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
-      riderId: json['riderID'],
-      driverId: json['driverID'],
+      riderId: json['riderId'],
+      driverId: json['driverId'],
     );
   }
 }
@@ -44,15 +46,10 @@ T getOrNull<T>(Map<String,dynamic> map, String key, {T parse(dynamic s)}) {
   return parse(x);
 }
 
-class RideCard extends StatefulWidget {
+class RideCard extends StatelessWidget {
   RideCard(this.ride);
   final Ride ride;
   static const double imageRadius = 24;
-  @override
-  RideCardState createState() => RideCardState();
-}
-
-class RideCardState extends State<RideCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -65,7 +62,7 @@ class RideCardState extends State<RideCard> {
                     children: [
                       Text('Pickup', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       SizedBox(width: 5),
-                      Text(DateFormat.jm().format(widget.ride.startTime), style: TextStyle(fontSize: 20))
+                      Text(DateFormat.jm().format(ride.startTime), style: TextStyle(fontSize: 20))
                     ]
                 ),
                 SizedBox(height: 9),
@@ -89,7 +86,7 @@ class RideCardState extends State<RideCard> {
                                       style: TextStyle(fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))
                                   ),
                                   Text(
-                                      widget.ride.startLocation,
+                                      ride.startLocation,
                                       style: TextStyle(fontSize: 17)
                                   )
                                 ]
@@ -106,7 +103,7 @@ class RideCardState extends State<RideCard> {
                                   style: TextStyle(fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))
                               ),
                               Text(
-                                  widget.ride.endLocation,
+                                  ride.endLocation,
                                   style: TextStyle(fontSize: 17)
                               )
                             ],
@@ -116,35 +113,45 @@ class RideCardState extends State<RideCard> {
                   ),
                 ),
                 SizedBox(height: 16),
-                Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 24,
-                        //TODO: replace with rider's image
-                        backgroundImage: AssetImage('assets/images/terry.jpg'),
-                      ),
-                      SizedBox(width: 16),
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                FutureBuilder(
+                    future: Rider.retrieveRider(context, ride.riderId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        print('error when retrieving a rider for RideCard: ' + snapshot.error.toString());
+                      }
+                      if (!snapshot.hasData) {
+                        return Container();
+                      }
+                      Rider rider = snapshot.data;
+                      return Row(
                           children: [
-                            //TODO: replace with rider's name
-                            Text('Terry Cruz',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                )
+                            CircleAvatar(
+                              radius: 24,
+                              //TODO: replace with rider's image
+                              backgroundImage: AssetImage('assets/images/terry.jpg'),
                             ),
-                            SizedBox(height: 4),
-                            //TODO: replace with rider's accessibility needs
-                            Text('Wheelchair',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontStyle: FontStyle.italic,
-                                  color: Color.fromRGBO(132, 132, 132, 1.0)
-                              ),
+                            SizedBox(width: 16),
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(rider.firstName,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      )
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(rider.accessibilityString(),
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontStyle: FontStyle.italic,
+                                        color: Color.fromRGBO(132, 132, 132, 1.0)
+                                    ),
+                                  )
+                                ]
                             )
                           ]
-                      )
-                    ]
+                      );
+                    }
                 )
               ]
           ),

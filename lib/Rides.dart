@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:carriage/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'AuthProvider.dart';
-import 'Home.dart';
 import 'Ride.dart';
-import 'Upcoming.dart';
+import 'package:http/http.dart' as http;
+
 // import 'dart:io';
 // import 'package:intl/intl.dart';
 // import 'package:http/http.dart' as http;
@@ -24,7 +25,7 @@ class _RidesState extends State<Rides> {
   Future<List<Ride>> _fetchRides(String id) async {
     // TODO: temporary placeholder response for testing
     // replace when backend sends all fields
-    String responseBody = '''
+    /*String responseBody = '''
 {
   "data": [
     {
@@ -34,8 +35,8 @@ class _RidesState extends State<Rides> {
         "endLocation": "Rhodes",
         "startTime": "2020-01-02T14:00:00.000Z",
         "endTime": "2020-01-02T16:00:00.000Z",
-        "riderID": "123",
-        "driverID": "321"
+        "riderID": "c9ecff72-bdca-41e8-8d2b-caba7bf6c015",
+        "driverID": "fd7348f0-8b10-11ea-8a3b-1365ac031d4f"
     },
     {
         "type": "active",
@@ -44,8 +45,8 @@ class _RidesState extends State<Rides> {
         "endLocation": "Risley",
         "startTime": "2020-01-02T05:00:00.000Z",
         "endTime": "2020-01-02T00:00:00.000Z",
-        "riderID": "abc",
-        "driverID": "cba"
+        "riderID": "257c3eb0-9142-11ea-b82b-ebf7c42b03f1",
+        "driverID": "fd7348f0-8b10-11ea-8a3b-1365ac031d4f"
     },
     {
         "type": "active",
@@ -54,21 +55,19 @@ class _RidesState extends State<Rides> {
         "endLocation": "Morrill Hall",
         "startTime": "2020-01-02T05:00:00.000Z",
         "endTime": "2020-01-02T00:00:00.000Z",
-        "riderID": "123",
-        "driverID": "543"
+        "riderID": "d89b2690-90ad-11ea-b6d8-07a4730c8cc0",
+        "driverID": "fd7348f0-8b10-11ea-8a3b-1365ac031d4f"
     }
   ]
-}''';
-    await new Future.delayed(const Duration(seconds: 1));
+}''';*/
+    /*await new Future.delayed(const Duration(seconds: 1));
     List<Ride> rides = _ridesFromJson(responseBody, id);
-    return rides;
+    return rides;*/
 
-    /*
-    AppConfig config = AppConfig.of(context);
+
     final dateFormat = DateFormat("yyyy-MM-dd");
-    var now = DateTime.now();
-    final response = await http
-        .get(new Uri.http(config.baseUrl,'/active-rides',{"date":dateFormat.format(now)}));
+    DateTime now = DateTime.now();
+    final response = await http.get(AppConfig.of(context).baseUrl + '/rides?date=${dateFormat.format(now)}&driverId=${Provider.of<AuthProvider>(context).id}');
     if (response.statusCode == 200) {
       String responseBody = response.body;
       List<Ride> rides = _ridesFromJson(responseBody);
@@ -77,20 +76,17 @@ class _RidesState extends State<Rides> {
         currentRide = rides[0];
         rides.removeAt(0);
       }
-      var d = _RideData(rides,currentRide);
-      return d;
+      return rides;
     } else {
       throw Exception('Failed to load rides.');
     }
-    */
+
   }
 
-  List<Ride> _ridesFromJson(String json, String id) {
+  List<Ride> _ridesFromJson(String json) {
     var data = jsonDecode(json)["data"];
     List<Ride> res = data
         .map<Ride>((e) => Ride.fromJson(e))
-    // TODO: remove this when id check happens on backend
-    //.where((Ride e) => e.driverId.contains(id))
         .toList();
     res.sort((a, b) => a.startTime.compareTo(b.startTime));
     return res;
