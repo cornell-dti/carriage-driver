@@ -7,10 +7,6 @@ import 'AuthProvider.dart';
 import 'Ride.dart';
 import 'package:http/http.dart' as http;
 
-// import 'dart:io';
-// import 'package:intl/intl.dart';
-// import 'package:http/http.dart' as http;
-
 class Rides extends StatefulWidget {
   @override
   _RidesState createState() => _RidesState();
@@ -23,64 +19,16 @@ class _RidesState extends State<Rides> {
   }
 
   Future<List<Ride>> _fetchRides(String id) async {
-    // TODO: temporary placeholder response for testing
-    // replace when backend sends all fields
-    /*String responseBody = '''
-{
-  "data": [
-    {
-        "type": "active",
-        "id": "6c5e8b60-819f-11ea-8b9d-c3580ef31720",
-        "startLocation": "Cascadilla",
-        "endLocation": "Rhodes",
-        "startTime": "2020-01-02T14:00:00.000Z",
-        "endTime": "2020-01-02T16:00:00.000Z",
-        "riderID": "c9ecff72-bdca-41e8-8d2b-caba7bf6c015",
-        "driverID": "fd7348f0-8b10-11ea-8a3b-1365ac031d4f"
-    },
-    {
-        "type": "active",
-        "id": "95eda1a0-788a-11ea-951d-ebcedc63b5e1",
-        "startLocation": "Baker",
-        "endLocation": "Risley",
-        "startTime": "2020-01-02T05:00:00.000Z",
-        "endTime": "2020-01-02T00:00:00.000Z",
-        "riderID": "257c3eb0-9142-11ea-b82b-ebf7c42b03f1",
-        "driverID": "fd7348f0-8b10-11ea-8a3b-1365ac031d4f"
-    },
-    {
-        "type": "active",
-        "id": "95eda1a0-788a-11ea-951d-ebcedc63b5e1",
-        "startLocation": "Gates Hall",
-        "endLocation": "Morrill Hall",
-        "startTime": "2020-01-02T05:00:00.000Z",
-        "endTime": "2020-01-02T00:00:00.000Z",
-        "riderID": "d89b2690-90ad-11ea-b6d8-07a4730c8cc0",
-        "driverID": "fd7348f0-8b10-11ea-8a3b-1365ac031d4f"
-    }
-  ]
-}''';*/
-    /*await new Future.delayed(const Duration(seconds: 1));
-    List<Ride> rides = _ridesFromJson(responseBody, id);
-    return rides;*/
-
-
     final dateFormat = DateFormat("yyyy-MM-dd");
     DateTime now = DateTime.now();
-    final response = await http.get(AppConfig.of(context).baseUrl + '/rides?date=${dateFormat.format(now)}&driverId=${Provider.of<AuthProvider>(context).id}');
+    final response = await http.get(AppConfig.of(context).baseUrl + '/rides/active?date=${dateFormat.format(now)}&driverId=${Provider.of<AuthProvider>(context).id}');
     if (response.statusCode == 200) {
       String responseBody = response.body;
       List<Ride> rides = _ridesFromJson(responseBody);
-      Ride currentRide;
-      if(rides.length > 0) {
-        currentRide = rides[0];
-        rides.removeAt(0);
-      }
       return rides;
     } else {
       throw Exception('Failed to load rides.');
     }
-
   }
 
   List<Ride> _ridesFromJson(String json) {

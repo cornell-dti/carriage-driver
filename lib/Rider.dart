@@ -34,7 +34,7 @@ class Rider {
       str = 'None';
     }
     else {
-      // remove trailing oomma
+      // remove trailing comma
       str = str.substring(0, str.length - 2);
     }
     return str;
