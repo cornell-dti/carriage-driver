@@ -45,7 +45,7 @@ class RideDestPickupCard extends StatelessWidget {
                 ),
                 Text(
                     "${_dropoff ? "Drop off time" : "Pick up time"}: ${DateFormat.jm().format(_time)}",
-                    style: Theme.of(context).textTheme.caption)
+                    style: TextStyle(fontSize: 13))
               ]),
         ),
       ),
