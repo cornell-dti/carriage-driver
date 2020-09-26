@@ -202,11 +202,12 @@ class _RideSummaryState extends State<RideSummary> {
     // TODO: placeholder
     _currentRide = new Ride(
         id: "1",
+        type: "past",
         startLocation: "Teagle Hall",
         endLocation: "RPCC",
         startTime: new DateTime(2020,11,14),
         endTime: new DateTime(2020,11,14),
-        riderId: [ "Terry Cruz", "Chris Hansen" ],
+        riderId: "Terry Cruz",
       );
   }
 
