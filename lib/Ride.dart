@@ -55,7 +55,7 @@ class ArrowPainter extends CustomPainter {
     Paint paint = Paint()
       ..strokeWidth = 2
       ..color = Colors.black;
-    canvas.drawLine(Offset(0, 0), Offset(length, 0), paint);
+    canvas.drawLine(Offset(0, 0), Offset(length-5, 0), paint);
     paint.style = PaintingStyle.fill;
     Path trianglePath = Path();
     trianglePath.moveTo(length-5, 5);
