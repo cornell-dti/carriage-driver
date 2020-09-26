@@ -1,8 +1,8 @@
 import 'dart:core';
+import 'package:carriage/MeasureSize.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-import 'package:widget_arrows/widget_arrows.dart';
-
 import 'Rider.dart';
 
 class Ride {
@@ -46,75 +46,151 @@ T getOrNull<T>(Map<String,dynamic> map, String key, {T parse(dynamic s)}) {
   return parse(x);
 }
 
-class RideCard extends StatelessWidget {
-  RideCard(this.ride);
+class ArrowPainter extends CustomPainter {
+  ArrowPainter(this.length);
+  double length;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()
+      ..strokeWidth = 2
+      ..color = Colors.black;
+    canvas.drawLine(Offset(0, 0), Offset(length, 0), paint);
+    paint.style = PaintingStyle.fill;
+    Path trianglePath = Path();
+    trianglePath.moveTo(length-5, 5);
+    trianglePath.lineTo(length-5, -5);
+    trianglePath.lineTo(length, 0);
+    trianglePath.close();
+    canvas.drawPath(trianglePath, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+class RideCard extends StatefulWidget {
+  RideCard(this.ride, this.pagePadding);
   final Ride ride;
-  static const double imageRadius = 24;
+  final double pagePadding;
+
+  @override
+  _RideCardState createState() => _RideCardState();
+}
+
+class _RideCardState extends State<RideCard> {
+  final imageRadius = 24;
+  Size spacerSize;
+  GlobalKey dropoffKey = GlobalKey();
+  Size pickupTextSize;
+
   @override
   Widget build(BuildContext context) {
+    Widget pickup = Expanded(
+      flex: 4,
+      child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                  'From',
+                  style: TextStyle(fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))
+              ),
+              Container(
+                child: MeasureSize(
+                  child: Text(
+                    widget.ride.startLocation,
+                    style: TextStyle(fontSize: 17),
+                    textWidthBasis: TextWidthBasis.longestLine,
+                  ),
+                  onChange: (size) {
+                    pickupTextSize = size;
+                  },
+                ),
+              )
+            ]
+        )
+    );
+
+    Widget dropOff = Expanded(
+      flex: 4,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              'To',
+              style: TextStyle(fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))
+          ),
+          Text(
+              widget.ride.endLocation,
+              key: dropoffKey,
+              style: TextStyle(fontSize: 17)
+          )
+        ],
+      ),
+    );
+
+    double getDropoffX() {
+      RenderBox box = dropoffKey.currentContext.findRenderObject();
+      double x = box.localToGlobal(Offset.zero).dx;
+      return x;
+    }
+
+    double cardPadding = 16;
+    double arrowPadding = 24;
+    double calculateArrowStart() {
+      return pickupTextSize.width + arrowPadding;
+    }
+    double calculateArrowLength() {
+      double idealLength = getDropoffX() - cardPadding - widget.pagePadding - pickupTextSize.width - (arrowPadding*2);
+      return idealLength;
+    }
+
     return Card(
         elevation: 3.0,
         child: Padding(
-          padding: EdgeInsets.only(top: 24, bottom: 24, left: 16, right: 16),
+          padding: EdgeInsets.only(top: 24, bottom: 24, left: cardPadding, right: cardPadding),
           child: Column(
               children: [
                 Row(
                     children: [
                       Text('Pickup', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       SizedBox(width: 5),
-                      Text(DateFormat.jm().format(ride.startTime), style: TextStyle(fontSize: 20))
+                      Text(DateFormat.jm().format(widget.ride.startTime), style: TextStyle(fontSize: 20))
                     ]
                 ),
                 SizedBox(height: 9),
-                ArrowContainer(
-                  child: Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: ArrowElement(
-                            show: false,
-                            color: Colors.black,
-                            id: 'pickup',
-                            targetId: 'dropoff',
-                            sourceAnchor: Alignment.centerRight,
-                            targetAnchor: Alignment.centerLeft,
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      'From',
-                                      style: TextStyle(fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))
-                                  ),
-                                  Text(
-                                      ride.startLocation,
-                                      style: TextStyle(fontSize: 17)
-                                  )
-                                ]
-                            ),
+                Stack(
+                  children: [
+                    pickupTextSize != null && spacerSize != null && getDropoffX() != null ?
+                    Positioned(
+                      left: calculateArrowStart(),
+                      top: 20,
+                      child: CustomPaint(
+                          painter: ArrowPainter(calculateArrowLength())
+                      )
+                    ) : Container(),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          pickup,
+                          MeasureSize(
+                            child: Expanded(flex: 2, child: SizedBox()),
+                            onChange: (size) {
+                              setState(() {
+                                spacerSize = size;
+                              });
+                            },
                           ),
-                        ),
-                        ArrowElement(
-                          id: 'dropoff',
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  'To',
-                                  style: TextStyle(fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))
-                              ),
-                              Text(
-                                  ride.endLocation,
-                                  style: TextStyle(fontSize: 17)
-                              )
-                            ],
-                          ),
-                        )
-                      ]
-                  ),
+                          dropOff
+                        ]
+                    ),
+                  ],
                 ),
                 SizedBox(height: 16),
                 FutureBuilder(
-                    future: Rider.retrieveRider(context, ride.riderId),
+                    future: Rider.retrieveRider(context, widget.ride.riderId),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         print('error when retrieving a rider for RideCard: ' + snapshot.error.toString());

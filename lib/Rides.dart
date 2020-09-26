@@ -21,7 +21,7 @@ class _RidesState extends State<Rides> {
   Future<List<Ride>> _fetchRides(String id) async {
     final dateFormat = DateFormat("yyyy-MM-dd");
     DateTime now = DateTime.now();
-    final response = await http.get(AppConfig.of(context).baseUrl + '/rides/active?date=${dateFormat.format(now)}&driverId=${Provider.of<AuthProvider>(context).id}');
+    final response = await http.get(AppConfig.of(context).baseUrl + '/rides/unscheduled?date=${dateFormat.format(now)}&driverId=${Provider.of<AuthProvider>(context).id}');
     if (response.statusCode == 200) {
       String responseBody = response.body;
       List<Ride> rides = _ridesFromJson(responseBody);
@@ -66,6 +66,7 @@ class _RidesState extends State<Rides> {
   }
 
   Widget _mainPage(BuildContext context, List<Ride> rides) {
+    double padding = 16;
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -73,8 +74,8 @@ class _RidesState extends State<Rides> {
             child: ListView.builder(
               itemCount: rides.length,
               itemBuilder: (BuildContext c, int index) =>
-                  RideCard(rides[index]),
-              padding: EdgeInsets.only(left: 16, right: 16),
+                  RideCard(rides[index], padding),
+              padding: EdgeInsets.only(left: padding, right: padding),
               shrinkWrap: true,
             ),
           )
