@@ -83,6 +83,7 @@ class RideCard extends StatefulWidget {
 class _RideCardState extends State<RideCard> {
   final imageRadius = 24;
   Size spacerSize;
+  GlobalKey stackKey = GlobalKey();
   GlobalKey dropoffKey = GlobalKey();
   Size pickupTextSize;
 
@@ -137,17 +138,36 @@ class _RideCardState extends State<RideCard> {
       return x;
     }
 
+    double getDropoffY() {
+      RenderBox child = dropoffKey.currentContext.findRenderObject();
+      Offset childOffset = child.localToGlobal(Offset.zero);
+      //convert
+      RenderBox parent = stackKey.currentContext.findRenderObject();
+      Offset childRelativeToParent = parent.globalToLocal(childOffset);
+      return childRelativeToParent.dy;
+    }
+
     double cardPadding = 16;
     double arrowPadding = 24;
+
     double calculateArrowStart() {
       return pickupTextSize.width + arrowPadding;
     }
     double calculateArrowLength() {
-      double idealLength = getDropoffX() - cardPadding - widget.pagePadding - pickupTextSize.width - (arrowPadding*2);
+      double idealLength = getDropoffX() - cardPadding - widget.pagePadding - pickupTextSize.width - (arrowPadding * 2);
       return idealLength;
     }
 
-    return Card(
+    Widget arrow = pickupTextSize != null && spacerSize != null ?
+    Positioned(
+        left: calculateArrowStart(),
+        top: getDropoffY(),
+        child: CustomPaint(
+            painter: ArrowPainter(calculateArrowLength())
+        )
+    ) : Container();
+
+    Widget card = Card(
         elevation: 3.0,
         child: Padding(
           padding: EdgeInsets.only(top: 24, bottom: 24, left: cardPadding, right: cardPadding),
@@ -162,17 +182,11 @@ class _RideCardState extends State<RideCard> {
                 ),
                 SizedBox(height: 9),
                 Stack(
+                  key: stackKey,
                   children: [
-                    pickupTextSize != null && spacerSize != null && getDropoffX() != null ?
-                    Positioned(
-                      left: calculateArrowStart(),
-                      top: 20,
-                      child: CustomPaint(
-                          painter: ArrowPainter(calculateArrowLength())
-                      )
-                    ) : Container(),
+                    arrow,
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           pickup,
                           MeasureSize(
@@ -233,5 +247,7 @@ class _RideCardState extends State<RideCard> {
           ),
         )
     );
+
+    return card;
   }
 }
