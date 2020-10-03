@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'AuthProvider.dart';
 import 'LocationTracker.dart';
+import 'Ride.dart';
 import 'Rides.dart';
 import 'Upcoming.dart';
 import 'main_common.dart';
 import 'Profile.dart';
 import 'UserInfoProvider.dart';
+import 'RidesInProgress.dart';
 
 class Greeting extends StatelessWidget {
   @override
@@ -75,9 +77,20 @@ class _HomeState extends State<Home> {
   }
 
   Widget getPage(BuildContext context, int index) {
+    Ride r = Ride(
+        id: 'temp',
+        type: 'active',
+        startLocation: 'Upson',
+        endLocation: 'Upson',
+        riderId: '257c3eb0-9142-11ea-b82b-ebf7c42b03f1',
+        driverId: 'fd7348f0-8b10-11ea-8a3b-1365ac031d4f',
+        endTime: DateTime.now(),
+        startTime: DateTime.now()
+    );
     switch (index) {
       case (RIDES):
-        return Rides();
+        return RidesInProgressPage([r, r, r], [r, r, r, r]);
+        //return Rides();
       case (HISTORY):
         return Column(
           children: <Widget>[

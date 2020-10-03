@@ -35,16 +35,17 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
             title: 'Carriage',
             theme: ThemeData(
+                scaffoldBackgroundColor: Colors.white,
                 primarySwatch: Colors.red,
                 fontFamily: 'SFPro',
                 accentColor: Color.fromRGBO(60, 60, 67, 0.6),
                 textTheme: TextTheme(
                     headline5:
-                        TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                    TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                     subtitle1:
-                        TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
+                    TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
                     headline4:
-                        TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+                    TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
                     headline3: TextStyle(
                         fontSize: 12.0, fontWeight: FontWeight.normal),
                     headline2: TextStyle(

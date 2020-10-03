@@ -9,15 +9,15 @@ class Rider {
   String phoneNumber;
   String firstName;
   String lastName;
-  Map<String, dynamic> accessibilityNeeds;
+  //Map<String, dynamic> accessibilityNeeds;
 
-  Rider(this.id, this.email, this.phoneNumber, this.firstName, this.lastName, this.accessibilityNeeds);
+  Rider(this.id, this.email, this.phoneNumber, this.firstName, this.lastName);
 
   factory Rider.fromJson(Map<String, dynamic> json) {
-    return Rider(json['id'], json['email'], json['phoneNumber'], json['firstName'], json['lastName'], Map<String, dynamic>.from(json['accessibilityNeeds']));
+    return Rider(json['id'], json['email'], json['phoneNumber'], json['firstName'], json['lastName']);
   }
 
-  String accessibilityString() {
+  /*String accessibilityString() {
     Map<String, String> needs = {
       'needsWheelchair': 'Wheelchair',
       'hasCrutches': 'Crutches',
@@ -38,7 +38,7 @@ class Rider {
       str = str.substring(0, str.length - 2);
     }
     return str;
-  }
+  }*/
 
   static Future<Rider> retrieveRider(BuildContext context, String id) async {
     final response = await http.get(AppConfig.of(context).baseUrl + '/riders/$id');

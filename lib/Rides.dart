@@ -21,7 +21,7 @@ class _RidesState extends State<Rides> {
   Future<List<Ride>> _fetchRides(String id) async {
     final dateFormat = DateFormat("yyyy-MM-dd");
     DateTime now = DateTime.now();
-    final response = await http.get(AppConfig.of(context).baseUrl + '/rides/active?date=${dateFormat.format(now)}&driverId=${Provider.of<AuthProvider>(context).id}');
+    final response = await http.get(AppConfig.of(context).baseUrl + '/rides/unscheduled?date=${dateFormat.format(now)}&driverId=${Provider.of<AuthProvider>(context).id}');
     if (response.statusCode == 200) {
       String responseBody = response.body;
       List<Ride> rides = _ridesFromJson(responseBody);

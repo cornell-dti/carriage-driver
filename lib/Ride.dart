@@ -38,6 +38,11 @@ class Ride {
       driverId: json['driverId'],
     );
   }
+
+  Future<String> retrieveRiderName(BuildContext context) async {
+    Rider rider = await Rider.retrieveRider(context, riderId);
+    return rider.firstName;
+  }
 }
 T getOrNull<T>(Map<String,dynamic> map, String key, {T parse(dynamic s)}) {
   var x = map.containsKey(key) ? map[key] : null;
@@ -230,13 +235,13 @@ class _RideCardState extends State<RideCard> {
                                       )
                                   ),
                                   SizedBox(height: 4),
-                                  Text(rider.accessibilityString(),
+                                  /*Text(rider.accessibilityString(),
                                     style: TextStyle(
                                         fontSize: 15,
                                         fontStyle: FontStyle.italic,
                                         color: Color.fromRGBO(132, 132, 132, 1.0)
                                     ),
-                                  )
+                                  )*/
                                 ]
                             )
                           ]
