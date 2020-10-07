@@ -21,11 +21,10 @@ class RideDestPickupCard extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(10)),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 3,
-                blurRadius: 7,
-                offset: Offset(0, 3), // changes position of shadow
-              ),
+                  color: Colors.black.withOpacity(0.05),
+                  spreadRadius: 3,
+                  blurRadius: 10,
+                  offset: Offset(0, 9)),
             ]),
         child: Padding(
           padding: EdgeInsets.all(15),
