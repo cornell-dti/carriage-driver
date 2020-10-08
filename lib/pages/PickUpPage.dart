@@ -16,7 +16,7 @@ class _TempPageData {
   _TempPageData(this.firstName, this.photo, this.time, this.stop, this.address);
 }
 
-class OnTheWayPage extends StatelessWidget {
+class PickUpPage extends StatelessWidget {
   final _TempPageData data = _TempPageData(
       "Alex",
       NetworkImage(
@@ -36,20 +36,20 @@ class OnTheWayPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text("On your way to...",
+              Text("Is ${data.firstName} here?",
                   style: Theme.of(context).textTheme.headline5),
               SizedBox(height: 59),
               RideInfoCard(data.firstName, data.photo, false, data.stop,
                   data.address, data.time),
               Expanded(child: SizedBox()),
               CButton(
-                  text: "Arrive",
+                  text: "Pick up",
                   onPressed: () {
                     // TODO: arrive functionality
                     // TODO: push next page in flow
                   }),
               DangerButton(
-                  text: "Notify Delay",
+                  text: "Report No Show",
                   onPressed: () {
                     showDialog(
                         context: context,
@@ -59,7 +59,7 @@ class OnTheWayPage extends StatelessWidget {
                                 // TODO: notify delay functionality
                               },
                               content: Text(
-                                  "Do you want to notify the rider about your delay?"),
+                                  "Do you want to notify the dispatcher of a No Show?"),
                             ),
                         barrierDismissible: true);
                   })

@@ -5,7 +5,7 @@ class CButton extends StatelessWidget {
   final String text;
   final void Function() onPressed;
 
-  CButton(this.text, {this.onPressed});
+  CButton({@required this.text, @required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -20,5 +20,21 @@ class CButton extends StatelessWidget {
           )),
       onPressed: onPressed,
     );
+  }
+}
+
+// red text button
+class DangerButton extends StatelessWidget {
+  final String text;
+  final void Function() onPressed;
+  DangerButton({@required this.text, @required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: FlatButton(
+            textColor: Color(0xFFF08686),
+            child: Text(text, style: TextStyle(fontWeight: FontWeight.bold)),
+            onPressed: onPressed));
   }
 }
