@@ -13,7 +13,6 @@ class RideDestPickupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 295,
       height: 110,
       child: DecoratedBox(
         decoration: BoxDecoration(
