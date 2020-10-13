@@ -163,15 +163,7 @@ class _SmallRideInProgressCardState extends State<SmallRideInProgressCard> {
                   ),
                   SizedBox(height: 8),
                   Center(
-                      child: FutureBuilder<String>(
-                          future: widget.ride.retrieveRiderName(context),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return SizedBox(width: 20, height: 20, child: CircularProgressIndicator());
-                            }
-                            return Text(snapshot.data, style: Theme.of(context).textTheme.subtitle1);
-                          }
-                      )
+                      child: Text(widget.ride.rider.firstName, style: Theme.of(context).textTheme.subtitle1)
                   ),
                   SizedBox(height: 8),
                   RichText(
@@ -228,15 +220,7 @@ class OtherRideCard extends StatelessWidget {
                         backgroundImage: AssetImage('assets/images/terry.jpg'),
                       ),
                       SizedBox(width: 16),
-                      FutureBuilder<String>(
-                          future: ride.retrieveRiderName(context),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return SizedBox(width: 20, height: 20, child: CircularProgressIndicator());
-                            }
-                            return Text(snapshot.data, style: Theme.of(context).textTheme.subtitle1);
-                          }
-                      )
+                      Text(ride.rider.firstName, style: Theme.of(context).textTheme.subtitle1)
                     ],
                   ),
                   SizedBox(height: 16),
@@ -341,18 +325,9 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                           width: double.infinity,
                           child: FlatButton(
                             padding: EdgeInsets.all(16),
-                            //TODO: change rider ID to rider name
                             color: Colors.black,
-                            child: FutureBuilder<String>(
-                                future: selectedRides[0].retrieveRiderName(context),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return SizedBox(width: 20, height: 20, child: CircularProgressIndicator());
-                                  }
-                                  return Text('Drop off ' + (selectedRides.length == 1 ? snapshot.data : 'Multiple Passengers'),
-                                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)
-                                  );
-                                }
+                            child: Text('Drop off ' + (selectedRides.length == 1 ? selectedRides[0].rider.firstName : 'Multiple Passengers'),
+                                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)
                             ),
                             onPressed: () {
                               //TODO: add action when press drop off

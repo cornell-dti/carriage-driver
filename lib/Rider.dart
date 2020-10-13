@@ -9,12 +9,12 @@ class Rider {
   String phoneNumber;
   String firstName;
   String lastName;
-  //Map<String, dynamic> accessibilityNeeds;
+  List<String> accessibilityNeeds;
 
-  Rider(this.id, this.email, this.phoneNumber, this.firstName, this.lastName);
+  Rider(this.id, this.email, this.phoneNumber, this.firstName, this.lastName, this.accessibilityNeeds);
 
   factory Rider.fromJson(Map<String, dynamic> json) {
-    return Rider(json['id'], json['email'], json['phoneNumber'], json['firstName'], json['lastName']);
+    return Rider(json['id'], json['email'], json['phoneNumber'], json['firstName'], json['lastName'], List.from(json['accessibility']));
   }
 
   /*String accessibilityString() {

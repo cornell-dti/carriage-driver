@@ -12,17 +12,14 @@ class Ride {
   final String endLocation;
   final DateTime startTime;
   final DateTime endTime;
-  final String riderId;
-  // can be null
-  final String driverId;
+  final Rider rider;
 
   Ride({
     this.id,
     this.type,
     this.startLocation,
     this.endLocation,
-    this.riderId,
-    this.driverId,
+    this.rider,
     this.endTime,
     this.startTime});
 
@@ -30,20 +27,15 @@ class Ride {
     return Ride(
       id: json['id'],
       type: json['type'],
-      startLocation: json['startLocation'],
-      endLocation: json['endLocation'],
+      startLocation: json['startLocation']['name'],
+      endLocation: json['endLocation']['name'],
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
-      riderId: json['riderId'],
-      driverId: json['driverId'],
+      rider: Rider.fromJson(json['rider']),
     );
   }
-
-  Future<String> retrieveRiderName(BuildContext context) async {
-    Rider rider = await Rider.retrieveRider(context, riderId);
-    return rider.firstName;
-  }
 }
+
 T getOrNull<T>(Map<String,dynamic> map, String key, {T parse(dynamic s)}) {
   var x = map.containsKey(key) ? map[key] : null;
   if(x == null) return null;
@@ -95,8 +87,8 @@ class _RideCardState extends State<RideCard> {
   @override
   Widget build(BuildContext context) {
     Widget pickup = Expanded(
-      flex: 4,
-      child: Column(
+        flex: 4,
+        child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -177,6 +169,7 @@ class _RideCardState extends State<RideCard> {
         child: Padding(
           padding: EdgeInsets.only(top: 24, bottom: 24, left: cardPadding, right: cardPadding),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                     children: [
@@ -208,46 +201,33 @@ class _RideCardState extends State<RideCard> {
                   ],
                 ),
                 SizedBox(height: 16),
-                FutureBuilder(
-                    future: Rider.retrieveRider(context, widget.ride.riderId),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        print('error when retrieving a rider for RideCard: ' + snapshot.error.toString());
-                      }
-                      if (!snapshot.hasData) {
-                        return Container();
-                      }
-                      Rider rider = snapshot.data;
-                      return Row(
+                Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 24,
+                        //TODO: replace with rider's image
+                        backgroundImage: AssetImage('assets/images/terry.jpg'),
+                      ),
+                      SizedBox(width: 16),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CircleAvatar(
-                              radius: 24,
-                              //TODO: replace with rider's image
-                              backgroundImage: AssetImage('assets/images/terry.jpg'),
+                            Text(widget.ride.rider.firstName,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                )
                             ),
-                            SizedBox(width: 16),
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(rider.firstName,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                      )
-                                  ),
-                                  SizedBox(height: 4),
-                                  /*Text(rider.accessibilityString(),
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontStyle: FontStyle.italic,
-                                        color: Color.fromRGBO(132, 132, 132, 1.0)
-                                    ),
-                                  )*/
-                                ]
+                            SizedBox(height: 4),
+                            Text(widget.ride.rider.accessibilityNeeds.join(', '),
+                                style: TextStyle(
+                                    color: Color(0xFF848484),
+                                    fontStyle: FontStyle.italic,
+                                fontSize: 15)
                             )
                           ]
-                      );
-                    }
-                )
+                      ),
+                    ]
+                ),
               ]
           ),
         )
