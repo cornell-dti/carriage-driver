@@ -9,35 +9,12 @@ class Rider {
   String phoneNumber;
   String firstName;
   String lastName;
-  Map<String, dynamic> accessibilityNeeds;
+  List<String> accessibilityNeeds;
 
   Rider(this.id, this.email, this.phoneNumber, this.firstName, this.lastName, this.accessibilityNeeds);
 
   factory Rider.fromJson(Map<String, dynamic> json) {
-    return Rider(json['id'], json['email'], json['phoneNumber'], json['firstName'], json['lastName'], Map<String, dynamic>.from(json['accessibilityNeeds']));
-  }
-
-  String accessibilityString() {
-    Map<String, String> needs = {
-      'needsWheelchair': 'Wheelchair',
-      'hasCrutches': 'Crutches',
-      'needsAssistant': 'Assistant'
-    };
-    String str = '';
-    needs.forEach((need, name) {
-      if (accessibilityNeeds[need]) {
-        str += name;
-        str += ', ';
-      }
-    });
-    if (str.isEmpty) {
-      str = 'None';
-    }
-    else {
-      // remove trailing comma
-      str = str.substring(0, str.length - 2);
-    }
-    return str;
+    return Rider(json['id'], json['email'], json['phoneNumber'], json['firstName'], json['lastName'], List.from(json['accessibility']));
   }
 
   static Future<Rider> retrieveRider(BuildContext context, String id) async {

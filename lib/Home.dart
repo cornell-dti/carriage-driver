@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'AuthProvider.dart';
 import 'LocationTracker.dart';
 import 'Rides.dart';
-import 'Upcoming.dart';
 import 'main_common.dart';
 import 'Profile.dart';
 import 'UserInfoProvider.dart';
@@ -51,7 +50,6 @@ class _HomeState extends State<Home> {
   static const int PROFILE = 2;
 
   int _selectedIndex = RIDES;
-  List<FutureRide> rides;
 
   @override
   void initState() {
@@ -107,11 +105,11 @@ class _HomeState extends State<Home> {
           selectedItemColor: Colors.blue,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.star), title: Text('Rides')),
+                icon: Icon(Icons.star), label: 'Rides'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.history), title: Text('History')),
+                icon: Icon(Icons.history), label: 'History'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle), title: Text('Profile'))
+                icon: Icon(Icons.account_circle), label: 'Profile')
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
