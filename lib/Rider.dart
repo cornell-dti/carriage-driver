@@ -17,29 +17,6 @@ class Rider {
     return Rider(json['id'], json['email'], json['phoneNumber'], json['firstName'], json['lastName'], List.from(json['accessibility']));
   }
 
-  /*String accessibilityString() {
-    Map<String, String> needs = {
-      'needsWheelchair': 'Wheelchair',
-      'hasCrutches': 'Crutches',
-      'needsAssistant': 'Assistant'
-    };
-    String str = '';
-    needs.forEach((need, name) {
-      if (accessibilityNeeds[need]) {
-        str += name;
-        str += ', ';
-      }
-    });
-    if (str.isEmpty) {
-      str = 'None';
-    }
-    else {
-      // remove trailing comma
-      str = str.substring(0, str.length - 2);
-    }
-    return str;
-  }*/
-
   static Future<Rider> retrieveRider(BuildContext context, String id) async {
     final response = await http.get(AppConfig.of(context).baseUrl + '/riders/$id');
     if (response.statusCode == 200) {
