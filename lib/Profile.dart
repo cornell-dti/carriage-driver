@@ -266,7 +266,7 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(height: 20),
               Form(
                   key: _formKey,
-                  autovalidate: true,
+                  autovalidateMode: AutovalidateMode.always,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

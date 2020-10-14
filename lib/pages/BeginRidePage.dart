@@ -1,9 +1,7 @@
 import 'package:carriage/MeasureSize.dart';
 import 'package:carriage/widgets/AppBars.dart';
 import 'package:carriage/widgets/Buttons.dart';
-import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideDestPickupCard.dart';
-import 'package:carriage/widgets/RideInfoCard.dart';
 import 'package:flutter/material.dart';
 
 class _StopCircle extends StatelessWidget {
