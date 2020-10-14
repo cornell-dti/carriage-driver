@@ -1,3 +1,4 @@
+import 'package:carriage/MeasureSize.dart';
 import 'package:carriage/widgets/AppBars.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/Dialogs.dart';
@@ -38,6 +39,69 @@ class _StopData {
   final String address;
 
   _StopData(this.dropoff, this.time, this.stop, this.address);
+}
+
+class Stops extends StatefulWidget {
+  final List<_StopData> stops;
+
+  const Stops({Key key, @required this.stops}) : super(key: key);
+
+  @override
+  StopsState createState() {
+    return StopsState();
+  }
+}
+
+class StopsState extends State<Stops> {
+  double _height = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Stack(children: [
+        Container(
+          width: 52,
+          height: _height,
+          alignment: Alignment.topCenter,
+          child: Container(
+            width: 4,
+            decoration: new BoxDecoration(
+                color: const Color(0xFFECEBED),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          ),
+        ),
+        MeasureSize(
+          onChange: (size) {
+            setState(() {
+              _height = size.height;
+            });
+          },
+          child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: widget.stops.length,
+              separatorBuilder: (context, index) {
+                return SizedBox(height: 32);
+              },
+              itemBuilder: (context, index) {
+                final stop = widget.stops[index];
+                return Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Row(
+                    children: [
+                      Container(width: 52, child: _StopCircle(stop.dropoff)),
+                      Expanded(
+                        child: RideDestPickupCard(
+                            stop.dropoff, stop.time, stop.stop, stop.address),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+        ),
+      ]),
+    );
+  }
 }
 
 // TODO: replace with real model later
@@ -86,44 +150,6 @@ class WaitingForPickupPage extends StatelessWidget {
     );
   }
 
-  Widget _stops(BuildContext context) {
-    return Expanded(
-      child: IntrinsicHeight(
-        child: Stack(children: [
-          Container(
-            width: 52,
-            alignment: Alignment.topCenter,
-            child: Container(
-              width: 4,
-              decoration: new BoxDecoration(
-                  color: const Color(0xFFECEBED),
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(8.0))),
-            ),
-          ),
-          ListView.builder(
-              shrinkWrap: true,
-              itemCount: data.stops.length,
-              itemBuilder: (context, index) {
-                final stop = data.stops[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 32, right: 10),
-                  child: Row(
-                    children: [
-                      Container(width: 52, child: _StopCircle(stop.dropoff)),
-                      Expanded(
-                        child: RideDestPickupCard(
-                            stop.dropoff, stop.time, stop.stop, stop.address),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-        ]),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,7 +163,7 @@ class WaitingForPickupPage extends StatelessWidget {
             children: [
               _picAndName(context),
               SizedBox(height: 48),
-              _stops(context),
+              Stops(stops: data.stops),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: CButton(
