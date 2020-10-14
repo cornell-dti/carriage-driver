@@ -17,6 +17,7 @@ dependencies:
   geolocation: ^1.1.2
   provider: ^4.0.5+1
   wakelock: ^0.1.4+2
+  loading_overlay: ^0.2.1
 
 dev_dependencies:
   flutter_test:
