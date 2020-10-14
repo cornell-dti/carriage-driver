@@ -107,11 +107,11 @@ class _HomeState extends State<Home> {
           selectedItemColor: Colors.blue,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.star), title: Text('Rides')),
+              icon: Icon(Icons.star), label: 'Rides'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.history), title: Text('History')),
+                icon: Icon(Icons.history), label: 'History'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle), title: Text('Profile'))
+                icon: Icon(Icons.account_circle), label: 'Profile')
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
@@ -129,8 +129,8 @@ class SignOutButton extends StatelessWidget {
       child: Text('Sign out', textAlign: TextAlign.start),
       onPressed: () {
         authProvider.signOut();
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => HomeOrLogin()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => HomeOrLogin()));
       },
     );
   }

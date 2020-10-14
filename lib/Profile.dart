@@ -124,7 +124,8 @@ class _ProfileState extends State<Profile> {
                 Icons.mail_outline,
                 userInfoProvider.info.email,
               ),
-              InfoRow("phone number", Icons.phone, userInfoProvider.info.phoneNumber)
+              InfoRow("phone number", Icons.phone,
+                  userInfoProvider.info.phoneNumber)
             ],
           ),
           SizedBox(height: 6),
@@ -139,7 +140,8 @@ class _ProfileState extends State<Profile> {
                   (userInfoProvider.info.breaks == null)
                       ? 'None'
                       : userInfoProvider.info.breaks.toString()),
-              InfoRow("vehicle", Icons.directions_car, userInfoProvider.info.vehicle),
+              InfoRow("vehicle", Icons.directions_car,
+                  userInfoProvider.info.vehicle),
             ],
           )
         ],
@@ -216,7 +218,7 @@ class _InfoGroupState extends State<InfoGroup> {
               children: <Widget>[
                 Text(widget.title,
                     style:
-                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,
@@ -260,13 +262,13 @@ class _EditProfileState extends State<EditProfile> {
               top: 18.0 + MediaQuery.of(context).padding.top,
             ),
             child:
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('Edit Profile',
                   style: Theme.of(context).textTheme.headline5),
               SizedBox(height: 20),
               Form(
                   key: _formKey,
-                  autovalidate: true,
+                  autovalidateMode: AutovalidateMode.always,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
