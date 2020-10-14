@@ -118,7 +118,7 @@ class _TempPageData {
       this.stops);
 }
 
-class WaitingForPickupPage extends StatelessWidget {
+class BeginRidePage extends StatelessWidget {
   final _TempPageData data = _TempPageData(
       "Alex",
       NetworkImage(
