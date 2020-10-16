@@ -29,9 +29,7 @@ class Ride {
   final String endLocation;
   final DateTime startTime;
   final DateTime endTime;
-  final String riderId;
-  // can be null
-  final String driverId;
+  final Rider rider;
 
   Ride(
       {this.id,
@@ -39,8 +37,7 @@ class Ride {
       this.status,
       this.startLocation,
       this.endLocation,
-      this.riderId,
-      this.driverId,
+      this.rider,
       this.endTime,
       this.startTime});
 
@@ -53,8 +50,7 @@ class Ride {
       endLocation: json['endLocation'],
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
-      riderId: json['riderId'],
-      driverId: json['driverId'],
+      rider: Rider.fromJson(json['rider']),
     );
   }
 }
@@ -83,11 +79,11 @@ class ArrowPainter extends CustomPainter {
     Paint paint = Paint()
       ..strokeWidth = 2
       ..color = Colors.black;
-    canvas.drawLine(Offset(0, 0), Offset(length - 5, 0), paint);
+    canvas.drawLine(Offset(0, 0), Offset(length-5, 0), paint);
     paint.style = PaintingStyle.fill;
     Path trianglePath = Path();
-    trianglePath.moveTo(length - 5, 5);
-    trianglePath.lineTo(length - 5, -5);
+    trianglePath.moveTo(length-5, 5);
+    trianglePath.lineTo(length-5, -5);
     trianglePath.lineTo(length, 0);
     trianglePath.close();
     canvas.drawPath(trianglePath, paint);
@@ -119,34 +115,43 @@ class _RideCardState extends State<RideCard> {
   Widget build(BuildContext context) {
     Widget pickup = Expanded(
         flex: 4,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('From',
-              style: TextStyle(
-                  fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))),
-          Container(
-            child: MeasureSize(
-              child: Text(
-                widget.ride.startLocation,
-                style: TextStyle(fontSize: 17),
-                textWidthBasis: TextWidthBasis.longestLine,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                  'From',
+                  style: TextStyle(fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))
               ),
-              onChange: (size) {
-                pickupTextSize = size;
-              },
-            ),
-          )
-        ]));
+              Container(
+                child: MeasureSize(
+                  child: Text(
+                    widget.ride.startLocation,
+                    style: TextStyle(fontSize: 17),
+                    textWidthBasis: TextWidthBasis.longestLine,
+                  ),
+                  onChange: (size) {
+                    pickupTextSize = size;
+                  },
+                ),
+              )
+            ]
+        )
+    );
 
     Widget dropOff = Expanded(
       flex: 4,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('To',
-              style: TextStyle(
-                  fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))),
-          Text(widget.ride.endLocation,
-              key: dropoffKey, style: TextStyle(fontSize: 17))
+          Text(
+              'To',
+              style: TextStyle(fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))
+          ),
+          Text(
+              widget.ride.endLocation,
+              key: dropoffKey,
+              style: TextStyle(fontSize: 17)
+          )
         ],
       ),
     );
@@ -172,94 +177,88 @@ class _RideCardState extends State<RideCard> {
     double calculateArrowStart() {
       return pickupTextSize.width + arrowPadding;
     }
-
     double calculateArrowLength() {
-      double idealLength = getDropoffX() -
-          cardPadding -
-          widget.pagePadding -
-          pickupTextSize.width -
-          (arrowPadding * 2);
+      double idealLength = getDropoffX() - cardPadding - widget.pagePadding - pickupTextSize.width - (arrowPadding * 2);
       return idealLength;
     }
 
-    Widget arrow = pickupTextSize != null && spacerSize != null
-        ? Positioned(
-            left: calculateArrowStart(),
-            top: getDropoffY(),
-            child: CustomPaint(painter: ArrowPainter(calculateArrowLength())))
-        : Container();
+    Widget arrow = pickupTextSize != null && spacerSize != null ?
+    Positioned(
+        left: calculateArrowStart(),
+        top: getDropoffY(),
+        child: CustomPaint(
+            painter: ArrowPainter(calculateArrowLength())
+        )
+    ) : Container();
 
     Widget card = Card(
         elevation: 3.0,
         child: Padding(
-          padding: EdgeInsets.only(
-              top: 24, bottom: 24, left: cardPadding, right: cardPadding),
-          child: Column(children: [
-            Row(children: [
-              Text('Pickup',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              SizedBox(width: 5),
-              Text(DateFormat.jm().format(widget.ride.startTime),
-                  style: TextStyle(fontSize: 20))
-            ]),
-            SizedBox(height: 9),
-            Stack(
-              key: stackKey,
+          padding: EdgeInsets.only(top: 24, bottom: 24, left: cardPadding, right: cardPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                arrow,
-                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  pickup,
-                  MeasureSize(
-                    child: Expanded(flex: 2, child: SizedBox()),
-                    onChange: (size) {
-                      setState(() {
-                        spacerSize = size;
-                      });
-                    },
-                  ),
-                  dropOff
-                ]),
-              ],
-            ),
-            SizedBox(height: 16),
-            FutureBuilder(
-                future: Rider.retrieveRider(context, widget.ride.riderId),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    print('error when retrieving a rider for RideCard: ' +
-                        snapshot.error.toString());
-                  }
-                  if (!snapshot.hasData) {
-                    return Container();
-                  }
-                  Rider rider = snapshot.data;
-                  return Row(children: [
-                    CircleAvatar(
-                      radius: 24,
-                      //TODO: replace with rider's image
-                      backgroundImage: AssetImage('assets/images/terry.jpg'),
-                    ),
-                    SizedBox(width: 16),
-                    Column(
+                Row(
+                    children: [
+                      Text('Pickup', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      SizedBox(width: 5),
+                      Text(DateFormat.jm().format(widget.ride.startTime), style: TextStyle(fontSize: 20))
+                    ]
+                ),
+                SizedBox(height: 9),
+                Stack(
+                  key: stackKey,
+                  children: [
+                    arrow,
+                    Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(rider.firstName,
-                              style: TextStyle(
-                                fontSize: 15,
-                              )),
-                          SizedBox(height: 4),
-                          Text(
-                            rider.accessibilityString(),
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontStyle: FontStyle.italic,
-                                color: Color.fromRGBO(132, 132, 132, 1.0)),
-                          )
-                        ])
-                  ]);
-                })
-          ]),
-        ));
+                          pickup,
+                          MeasureSize(
+                            child: Expanded(flex: 2, child: SizedBox()),
+                            onChange: (size) {
+                              setState(() {
+                                spacerSize = size;
+                              });
+                            },
+                          ),
+                          dropOff
+                        ]
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 24,
+                        //TODO: replace with rider's image
+                        backgroundImage: AssetImage('assets/images/terry.jpg'),
+                      ),
+                      SizedBox(width: 16),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.ride.rider.firstName,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                )
+                            ),
+                            SizedBox(height: 4),
+                            Text(widget.ride.rider.accessibilityNeeds.join(', '),
+                                style: TextStyle(
+                                    color: Color(0xFF848484),
+                                    fontStyle: FontStyle.italic,
+                                fontSize: 15)
+                            )
+                          ]
+                      ),
+                    ]
+                ),
+              ]
+          ),
+        )
+    );
 
     return card;
   }

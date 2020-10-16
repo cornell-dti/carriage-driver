@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'AuthProvider.dart';
 import 'LocationTracker.dart';
 import 'Rides.dart';
-import 'Upcoming.dart';
 import 'main_common.dart';
 import 'Profile.dart';
 import 'UserInfoProvider.dart';
@@ -51,7 +50,6 @@ class _HomeState extends State<Home> {
   static const int PROFILE = 2;
 
   int _selectedIndex = RIDES;
-  List<FutureRide> rides;
 
   @override
   void initState() {

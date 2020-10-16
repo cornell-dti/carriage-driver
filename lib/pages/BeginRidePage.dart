@@ -33,17 +33,17 @@ class _StopCircle extends StatelessWidget {
   }
 }
 
-class _StopData {
+class StopData {
   final bool dropoff;
   final DateTime time;
   final String stop;
   final String address;
 
-  _StopData(this.dropoff, this.time, this.stop, this.address);
+  StopData(this.dropoff, this.time, this.stop, this.address);
 }
 
 class Stops extends StatefulWidget {
-  final List<_StopData> stops;
+  final List<StopData> stops;
 
   const Stops({Key key, @required this.stops}) : super(key: key);
 
@@ -106,18 +106,17 @@ class StopsState extends State<Stops> {
 }
 
 // TODO: replace with real model later
-class _TempPageData {
+class TempPageData {
   final String firstName;
   final ImageProvider<dynamic> photo;
   final DateTime time;
   final String stop;
   final String address;
   final String rideId;
+  final List<StopData> stops;
 
-  final List<_StopData> stops;
-
-  _TempPageData(this.firstName, this.photo, this.time, this.stop, this.address,
-      this.stops, this.rideId);
+  TempPageData(this.firstName, this.photo, this.time, this.stop, this.address,
+      this.rideId, this.stops);
 }
 
 class BeginRidePage extends StatefulWidget {
@@ -126,18 +125,18 @@ class BeginRidePage extends StatefulWidget {
 }
 
 class _BeginRidePageState extends State<BeginRidePage> {
-  final _TempPageData data = _TempPageData(
+  final TempPageData data = TempPageData(
       "Alex",
       NetworkImage(
           "https://www.acouplecooks.com/wp-content/uploads/2019/05/Chopped-Salad-001_1-225x225.jpg"),
       DateTime.now(),
       "Upson Hall",
       "124",
+      "d38dab88-ace5-42b6-ae60-ca1d1dc8cde7",
       [
-        _StopData(false, DateTime.now(), "Upson Hall", "124 Hoy Rd"),
-        _StopData(true, DateTime.now(), "Uris Hall", "109 Tower Rd")
-      ],
-      "d38dab88-ace5-42b6-ae60-ca1d1dc8cde7");
+        StopData(false, DateTime.now(), "Upson Hall", "124 Hoy Rd"),
+        StopData(true, DateTime.now(), "Uris Hall", "109 Tower Rd")
+      ]);
 
   bool _requestedContinue = false;
 

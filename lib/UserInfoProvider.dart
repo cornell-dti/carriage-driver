@@ -94,7 +94,7 @@ class UserInfo {
         startTime: json['startTime'],
         endTime: json['endTime'],
         breaks: Breaks.fromJson(json['breaks']),
-        vehicle: json['vehicle'],
+        vehicle: json['vehicle']['name'],
         phoneNumber: json['phoneNumber'],
         email: json['email'],
         photoUrl: photoUrl);

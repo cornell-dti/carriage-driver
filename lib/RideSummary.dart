@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Ride.dart';
+import 'Rider.dart' as rider;
 import 'Upcoming.dart';
 import 'Home.dart';
 import 'package:intl/intl.dart';
@@ -201,14 +202,14 @@ class _RideSummaryState extends State<RideSummary> {
     super.initState();
     // TODO: placeholder
     _currentRide = new Ride(
-        id: "1",
-        type: "past",
-        startLocation: "Teagle Hall",
-        endLocation: "RPCC",
-        startTime: new DateTime(2020,11,14),
-        endTime: new DateTime(2020,11,14),
-        riderId: "Terry Cruz",
-      );
+      id: "1",
+      type: "past",
+      startLocation: "Teagle Hall",
+      endLocation: "RPCC",
+      startTime: new DateTime(2020,11,14),
+      endTime: new DateTime(2020,11,14),
+      rider: rider.Rider('id', 'tc@gmail.com', '111-222-3333', 'Terry', 'Cruz', ['Crutches']),
+    );
   }
 
 // TODO: ignore recent finished ride if it was too long ago
@@ -244,13 +245,13 @@ class _RideSummaryState extends State<RideSummary> {
           Greeting(),
           Expanded(
               child: ListView(shrinkWrap: true, children: <Widget>[
-            _recentRide(),
-            LeftSubheading(heading: 'Upcoming Ride'),
-            Center(child: CurrentRide(_currentRide)),
-            Padding(
-                padding: EdgeInsets.only(top: 36.0, bottom: 24.0),
-                child: DriverStats())
-          ]))
+                _recentRide(),
+                LeftSubheading(heading: 'Upcoming Ride'),
+                Center(child: CurrentRide(_currentRide)),
+                Padding(
+                    padding: EdgeInsets.only(top: 36.0, bottom: 24.0),
+                    child: DriverStats())
+              ]))
         ]);
   }
 
