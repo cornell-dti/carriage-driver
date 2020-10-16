@@ -1,28 +1,22 @@
+import 'package:carriage/pages/BeginRidePage.dart';
 import 'package:carriage/widgets/AppBars.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideInfoCard.dart';
 import 'package:flutter/material.dart';
 
-// TODO: replace with real model later
-class _TempPageData {
-  final String firstName;
-  final ImageProvider<dynamic> photo;
-  final DateTime time;
-  final String stop;
-  final String address;
-
-  _TempPageData(this.firstName, this.photo, this.time, this.stop, this.address);
-}
-
 class PickUpPage extends StatelessWidget {
-  final _TempPageData data = _TempPageData(
+  final TempPageData data = TempPageData(
       "Alex",
       NetworkImage(
           "https://www.acouplecooks.com/wp-content/uploads/2019/05/Chopped-Salad-001_1-225x225.jpg"),
       DateTime.now(),
       "Upson Hall",
-      "124");
+      "124",
+      [
+        StopData(false, DateTime.now(), "Upson Hall", "124 Hoy Rd"),
+        StopData(true, DateTime.now(), "Uris Hall", "109 Tower Rd")
+      ]);
 
   @override
   Widget build(BuildContext context) {

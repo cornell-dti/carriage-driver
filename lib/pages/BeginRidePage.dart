@@ -30,17 +30,17 @@ class _StopCircle extends StatelessWidget {
   }
 }
 
-class _StopData {
+class StopData {
   final bool dropoff;
   final DateTime time;
   final String stop;
   final String address;
 
-  _StopData(this.dropoff, this.time, this.stop, this.address);
+  StopData(this.dropoff, this.time, this.stop, this.address);
 }
 
 class Stops extends StatefulWidget {
-  final List<_StopData> stops;
+  final List<StopData> stops;
 
   const Stops({Key key, @required this.stops}) : super(key: key);
 
@@ -103,21 +103,21 @@ class StopsState extends State<Stops> {
 }
 
 // TODO: replace with real model later
-class _TempPageData {
+class TempPageData {
   final String firstName;
   final ImageProvider<dynamic> photo;
   final DateTime time;
   final String stop;
   final String address;
 
-  final List<_StopData> stops;
+  final List<StopData> stops;
 
-  _TempPageData(this.firstName, this.photo, this.time, this.stop, this.address,
+  TempPageData(this.firstName, this.photo, this.time, this.stop, this.address,
       this.stops);
 }
 
 class BeginRidePage extends StatelessWidget {
-  final _TempPageData data = _TempPageData(
+  final TempPageData data = TempPageData(
       "Alex",
       NetworkImage(
           "https://www.acouplecooks.com/wp-content/uploads/2019/05/Chopped-Salad-001_1-225x225.jpg"),
@@ -125,8 +125,8 @@ class BeginRidePage extends StatelessWidget {
       "Upson Hall",
       "124",
       [
-        _StopData(false, DateTime.now(), "Upson Hall", "124 Hoy Rd"),
-        _StopData(true, DateTime.now(), "Uris Hall", "109 Tower Rd")
+        StopData(false, DateTime.now(), "Upson Hall", "124 Hoy Rd"),
+        StopData(true, DateTime.now(), "Uris Hall", "109 Tower Rd")
       ]);
 
   Widget _picAndName(BuildContext context) {
