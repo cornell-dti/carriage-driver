@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'RideDestPickupCard.dart';
 
 class RideInfoCard extends StatelessWidget {
-  // otherwise pickup
   final String _firstName;
   final ImageProvider<dynamic> _photo;
+  // otherwise pickup
   final bool _dropoff;
   final DateTime _time;
   final String _stop;
@@ -33,18 +33,13 @@ class RideInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      // TODO: don't use hard values
-      width: 237,
-      child: Padding(
-        padding: EdgeInsets.all(40),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _picAndName(context),
-              RideDestPickupCard(_dropoff, _time, _stop, _address)
-            ]),
-      ),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            _picAndName(context),
+            RideDestPickupCard(_dropoff, _time, _stop, _address)
+          ]),
     );
   }
 }
