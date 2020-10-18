@@ -1,34 +1,53 @@
+import 'dart:convert';
 import 'dart:core';
 import 'package:carriage/MeasureSize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'Rider.dart';
+import 'app_config.dart';
+
+enum RideStatus { NOT_STARTED, ON_THE_WAY, ARRIVED, PICKED_UP, COMPLETED }
+
+String toString(RideStatus status) {
+  const mapping = <RideStatus, String>{
+    RideStatus.NOT_STARTED: "not_started",
+    RideStatus.ON_THE_WAY: "on_the_way",
+    RideStatus.ARRIVED: "arrived",
+    RideStatus.PICKED_UP: "picked_up",
+    RideStatus.COMPLETED: "completed",
+  };
+  return mapping[status];
+}
 
 class Ride {
   final String id;
   final String type;
+  final RideStatus status;
   final String startLocation;
   final String endLocation;
   final DateTime startTime;
   final DateTime endTime;
   final Rider rider;
 
-  Ride({
-    this.id,
-    this.type,
-    this.startLocation,
-    this.endLocation,
-    this.rider,
-    this.endTime,
-    this.startTime});
+  Ride(
+      {this.id,
+      this.type,
+      this.status,
+      this.startLocation,
+      this.endLocation,
+      this.rider,
+      this.endTime,
+      this.startTime});
 
-  factory Ride.fromJson(Map<String,dynamic> json) {
+  factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
       id: json['id'],
       type: json['type'],
-      startLocation: json['startLocation']['name'],
-      endLocation: json['endLocation']['name'],
+      status: json['status'],
+      startLocation: json['startLocation'],
+      endLocation: json['endLocation'],
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
       rider: Rider.fromJson(json['rider']),
@@ -36,10 +55,18 @@ class Ride {
   }
 }
 
-T getOrNull<T>(Map<String,dynamic> map, String key, {T parse(dynamic s)}) {
+Future<http.Response> updateRideStatus(
+    BuildContext context, String id, RideStatus status) async {
+  final body = jsonEncode(<String, String>{"status": toString(status)});
+  return http.put(AppConfig.of(context).baseUrl + '/rides/$id',
+      body: body,
+      headers: <String, String>{"Content-Type": "application/json"});
+}
+
+T getOrNull<T>(Map<String, dynamic> map, String key, {T parse(dynamic s)}) {
   var x = map.containsKey(key) ? map[key] : null;
-  if(x == null) return null;
-  if(parse == null) return x;
+  if (x == null) return null;
+  if (parse == null) return x;
   return parse(x);
 }
 
