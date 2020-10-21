@@ -63,8 +63,9 @@ class PickupTime extends StatelessWidget {
   }
 }
 class BigRideInProgressCard extends StatelessWidget {
-  BigRideInProgressCard(this.ride);
+  BigRideInProgressCard(this.ride, this.finishRide);
   final Ride ride;
+  final Function finishRide;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -84,7 +85,7 @@ class BigRideInProgressCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8),
-                    Center(child: Text('Terry', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                    Center(child: Text(ride.rider.firstName, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
                     SizedBox(height: 16),
                     Locations(ride.startLocation, ride.endLocation),
                     SizedBox(height: 16),
@@ -97,7 +98,7 @@ class BigRideInProgressCard extends StatelessWidget {
                         color: Colors.black,
                         child: Text('Drop off', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                         onPressed: () {
-                          //TODO: add action when press drop off
+                          finishRide(ride);
                         },
                       ),
                     )
@@ -200,54 +201,68 @@ class _SmallRideInProgressCardState extends State<SmallRideInProgressCard> {
 }
 
 class OtherRideCard extends StatelessWidget {
-  OtherRideCard(this.ride);
+  OtherRideCard(this.ride, this.startRide);
   final Ride ride;
+  final Function startRide;
+
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 4, right: 4, top: 16, bottom: 32),
-      constraints: BoxConstraints(minWidth: 200),
-      child: DecoratedBox(
-          decoration: dropShadow,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 25,
-                        backgroundImage: AssetImage('assets/images/terry.jpg'),
-                      ),
-                      SizedBox(width: 16),
-                      Text(ride.rider.firstName, style: Theme.of(context).textTheme.subtitle1)
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  SizedBox(
-                      width: 200,
-                      child: Locations(ride.startLocation, ride.endLocation)
-                  ),
-                  SizedBox(height: 16),
-                  PickupTime(ride.endTime)
-                ]
-            ),
-          )
+    return GestureDetector(
+      onTap: () {
+        startRide(ride);
+      },
+      child: Container(
+        margin: EdgeInsets.only(left: 4, right: 4, top: 16, bottom: 32),
+        constraints: BoxConstraints(minWidth: 200),
+        child: DecoratedBox(
+            decoration: dropShadow,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 25,
+                          backgroundImage: AssetImage('assets/images/terry.jpg'),
+                        ),
+                        SizedBox(width: 16),
+                        Text(ride.rider.firstName, style: Theme.of(context).textTheme.subtitle1)
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    SizedBox(
+                        width: 200,
+                        child: Locations(ride.startLocation, ride.endLocation)
+                    ),
+                    SizedBox(height: 16),
+                    PickupTime(ride.endTime)
+                  ]
+              ),
+            )
+        ),
       ),
     );
   }
 }
 
 class RidesInProgressPage extends StatefulWidget {
-  RidesInProgressPage(this.currentRides, this.otherRides);
-  final List<Ride> currentRides;
+  RidesInProgressPage(this.initCurrentRides, this.otherRides, this.startRide);
+  final List<Ride> initCurrentRides;
   final List<Ride> otherRides;
+  final Function startRide;
   _RidesInProgressPageState createState() => _RidesInProgressPageState();
 }
 
 class _RidesInProgressPageState extends State<RidesInProgressPage> {
+  List<Ride> currentRides;
   List<Ride> selectedRides = [];
 
+  @override
+  void initState() {
+    super.initState();
+    currentRides = widget.initCurrentRides;
+  }
   void selectRide(Ride ride, bool select) {
     setState(() {
       if (select)
@@ -257,87 +272,108 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
     });
   }
 
+  void finishRide(Ride ride) {
+    setState(() {
+      currentRides.remove(ride);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-            child: SingleChildScrollView(
+            child: currentRides.isEmpty ? GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
               child: Column(
                 children: [
-                  Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 16),
-                        GestureDetector(
-                          child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.keyboard_arrow_left, size: 30),
-                                Text('Home', style: TextStyle(fontSize: 17))
-                              ]
-                          ),
-                          onTap: () {
-                            //TODO: add navigation when home button pressed
-                          },
-                        ),
-                        SizedBox(height: 24),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Container(
-                            width: 24,
-                            height: 24,
-                            child: Center(child: Text(widget.currentRides.length.toString(), style: TextStyle(color: Colors.white))),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.black),
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Text('Ride(s) In Progress', style: Theme.of(context).textTheme.headline5),
-                        ),
-                        widget.currentRides.length == 1 ?
-                        BigRideInProgressCard(widget.currentRides[0]) :
-                        GridView.count(
-                          padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                          physics: NeverScrollableScrollPhysics(),
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.8,
-                          shrinkWrap: true,
-                          children: widget.currentRides.map((ride) => SmallRideInProgressCard(ride, selectRide)).toList(),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Text('Do you also want to pick up...', style: Theme.of(context).textTheme.subtitle1),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                              children: [SizedBox(width: 16), SizedBox(width: 16)]..insertAll(1, widget.otherRides.map((ride) => OtherRideCard(ride)).toList())
-                          ),
-                        ),
-                        selectedRides.isNotEmpty ? SizedBox(
-                          width: double.infinity,
-                          child: FlatButton(
-                            padding: EdgeInsets.all(16),
-                            color: Colors.black,
-                            child: Text('Drop off ' + (selectedRides.length == 1 ? selectedRides[0].rider.firstName : 'Multiple Passengers'),
-                                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)
-                            ),
-                            onPressed: () {
-                              //TODO: add action when press drop off
-                            },
-                          ),
-                        ) : Container(),
-                      ]
-                  ),
-                ],
+                  SizedBox(height: 90),
+                  Text('Rides Completed', style: Theme.of(context).textTheme.headline5),
+                  SizedBox(height: 120),
+                  Image.asset('assets/images/townCar.png')
+                ]
               ),
+            ) : Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 16),
+                  GestureDetector(
+                    child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.keyboard_arrow_left, size: 30),
+                          Text('Home', style: TextStyle(fontSize: 17))
+                        ]
+                    ),
+                    onTap: () {
+                      //TODO: add navigation when home button pressed
+                    },
+                  ),
+                  SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Container(
+                      width: 24,
+                      height: 24,
+                      child: Center(child: Text(currentRides.length.toString(), style: TextStyle(color: Colors.white))),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black),
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Text('Ride(s) In Progress', style: Theme.of(context).textTheme.headline5),
+                  ),
+                  SizedBox(height: 24),
+                  currentRides.length == 1 ?
+                  BigRideInProgressCard(currentRides[0], finishRide) :
+                  GridView.count(
+                    padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.8,
+                    shrinkWrap: true,
+                    children: currentRides.map((ride) => SmallRideInProgressCard(ride, selectRide)).toList(),
+                  ),
+                  SizedBox(height: 32),
+                  widget.otherRides.isNotEmpty ? Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Text('Do you also want to pick up...', style: Theme.of(context).textTheme.subtitle1),
+                  ) : Container(),
+                  widget.otherRides.isNotEmpty ? SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                        children: [SizedBox(width: 16), SizedBox(width: 16)]..insertAll(1, widget.otherRides.map((ride) => OtherRideCard(ride, widget.startRide)).toList())
+                    ),
+                  ) : Container(),
+                  Spacer(),
+                  selectedRides.isNotEmpty ? SizedBox(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 34, right: 34, bottom: 32),
+                      child: FlatButton(
+                        padding: EdgeInsets.all(16),
+                        color: Colors.black,
+                        child: Text('Drop off ' + (selectedRides.length == 1 ? selectedRides[0].rider.firstName : 'Multiple Passengers'),
+                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selectedRides.forEach((Ride r) => finishRide(r));
+                            selectedRides = [];
+                          });
+                        },
+                      ),
+                    ),
+                  ) : Container(),
+                ]
             )
         )
     );

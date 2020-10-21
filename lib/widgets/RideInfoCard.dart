@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
+import '../Ride.dart';
 import 'RideDestPickupCard.dart';
 
 class RideInfoCard extends StatelessWidget {
-  final String _firstName;
-  final ImageProvider<dynamic> _photo;
-  // otherwise pickup
-  final bool _dropoff;
-  final DateTime _time;
-  final String _stop;
-  final String _address;
+  final Ride ride;
+  final bool dropoff;
 
-  RideInfoCard(this._firstName, this._photo, this._dropoff, this._stop,
-      this._address, this._time);
+  RideInfoCard(this.ride, this.dropoff);
 
   Widget _picAndName(BuildContext context) {
     return Padding(
@@ -20,10 +15,11 @@ class RideInfoCard extends StatelessWidget {
         child: Column(children: <Widget>[
           CircleAvatar(
             radius: 60.5,
-            backgroundImage: _photo,
+            //TODO: replace with rider image
+            backgroundImage: AssetImage('assets/images/terry.jpg'),
           ),
           SizedBox(height: 14),
-          Text(_firstName,
+          Text(ride.rider.firstName,
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold))
         ]),
       ),
@@ -38,7 +34,11 @@ class RideInfoCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             _picAndName(context),
-            RideDestPickupCard(_dropoff, _time, _stop, _address)
+            RideDestPickupCard(
+                dropoff, dropoff ? ride.endTime : ride.startTime,
+                dropoff ? ride.endLocation : ride.startLocation,
+                dropoff ? ride.endAddress : ride.startAddress
+            )
           ]),
     );
   }
