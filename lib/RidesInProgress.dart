@@ -1,6 +1,7 @@
 import 'package:carriage/Ride.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 BoxDecoration dropShadow = BoxDecoration(
     color: Colors.white,
@@ -98,7 +99,7 @@ class BigRideInProgressCard extends StatelessWidget {
                         color: Colors.black,
                         child: Text('Drop off', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                         onPressed: () {
-                          finishRide(ride);
+                          finishRide(context, ride);
                         },
                       ),
                     )
@@ -272,10 +273,16 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
     });
   }
 
-  void finishRide(Ride ride) {
-    setState(() {
-      currentRides.remove(ride);
-    });
+  void finishRide(BuildContext context, Ride ride) async {
+    http.Response response = await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
+    if (response.statusCode == 200) {
+      setState(() {
+        currentRides.remove(ride);
+      });
+    }
+    else {
+      throw Exception('Error setting ride status to completed');
+    }
   }
 
   @override
@@ -366,7 +373,7 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                         ),
                         onPressed: () {
                           setState(() {
-                            selectedRides.forEach((Ride r) => finishRide(r));
+                            selectedRides.forEach((Ride r) => finishRide(context, r));
                             selectedRides = [];
                           });
                         },
