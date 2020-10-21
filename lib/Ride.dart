@@ -111,6 +111,14 @@ Future<http.Response> updateRideStatus(
       headers: <String, String>{"Content-Type": "application/json"});
 }
 
+Future<http.Response> setRideToPast(
+    BuildContext context, String id) async {
+  final body = jsonEncode(<String, String>{"type": "past"});
+  return http.put(AppConfig.of(context).baseUrl + '/rides/$id',
+      body: body,
+      headers: <String, String>{"Content-Type": "application/json"});
+}
+
 T getOrNull<T>(Map<String, dynamic> map, String key, {T parse(dynamic s)}) {
   var x = map.containsKey(key) ? map[key] : null;
   if (x == null) return null;

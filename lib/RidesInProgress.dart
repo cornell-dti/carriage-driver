@@ -274,14 +274,20 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
   }
 
   void finishRide(BuildContext context, Ride ride) async {
-    http.Response response = await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
-    if (response.statusCode == 200) {
-      setState(() {
-        currentRides.remove(ride);
-      });
+    http.Response statusResponse = await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
+    if (statusResponse.statusCode == 200) {
+      http.Response typeResponse = await setRideToPast(context, ride.id);
+      if (typeResponse.statusCode == 200) {
+        setState(() {
+          currentRides.remove(ride);
+        });
+      }
+      else {
+        throw Exception('Error setting ride type to past');
+      }
     }
     else {
-      throw Exception('Error setting ride status to completed');
+      throw Exception('Error setting ride status to ${toString(RideStatus.COMPLETED)}');
     }
   }
 
