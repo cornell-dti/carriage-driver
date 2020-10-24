@@ -248,10 +248,11 @@ class OtherRideCard extends StatelessWidget {
 }
 
 class RidesInProgressPage extends StatefulWidget {
-  RidesInProgressPage(this.initCurrentRides, this.otherRides, this.startRide);
+  RidesInProgressPage(this.initCurrentRides, this.otherRides, this.startRide, this.refreshHome);
   final List<Ride> initCurrentRides;
   final List<Ride> otherRides;
   final Function startRide;
+  final Function refreshHome;
   _RidesInProgressPageState createState() => _RidesInProgressPageState();
 }
 
@@ -298,6 +299,7 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
         body: SafeArea(
             child: currentRides.isEmpty ? GestureDetector(
               onTap: () {
+                widget.refreshHome();
                 Navigator.of(context).pop();
               },
               child: Column(
@@ -308,69 +310,78 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                   Image.asset('assets/images/townCar.png')
                 ]
               ),
-            ) : Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 16),
-                  GestureDetector(
-                    child: Row(
-                        mainAxisSize: MainAxisSize.min,
+            ) : Stack(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.keyboard_arrow_left, size: 30),
-                          Text('Home', style: TextStyle(fontSize: 17))
+                          SizedBox(height: 16),
+                          GestureDetector(
+                            child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.keyboard_arrow_left, size: 30),
+                                  Text('Home', style: TextStyle(fontSize: 17))
+                                ]
+                            ),
+                            onTap: () {
+                              //TODO: add navigation when home button pressed
+                            },
+                          ),
+                          SizedBox(height: 24),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: Container(
+                              width: 24,
+                              height: 24,
+                              child: Center(child: Text(currentRides.length.toString(), style: TextStyle(color: Colors.white))),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.black),
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: Text('Ride(s) In Progress', style: Theme.of(context).textTheme.headline5),
+                          ),
+                          SizedBox(height: 24),
+                          currentRides.length == 1 ?
+                          BigRideInProgressCard(currentRides[0], finishRide) :
+                          GridView.count(
+                            padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            physics: NeverScrollableScrollPhysics(),
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.8,
+                            shrinkWrap: true,
+                            children: currentRides.map((ride) => SmallRideInProgressCard(ride, selectRide)).toList(),
+                          ),
+                          SizedBox(height: 32),
+                          widget.otherRides.isNotEmpty ? Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: Text('Do you also want to pick up...', style: Theme.of(context).textTheme.subtitle1),
+                          ) : Container(),
+                          widget.otherRides.isNotEmpty ? SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                                children: [SizedBox(width: 16), SizedBox(width: 16)]..insertAll(1, widget.otherRides.map((ride) => OtherRideCard(ride, widget.startRide)).toList())
+                            ),
+                          ) : Container()
                         ]
                     ),
-                    onTap: () {
-                      //TODO: add navigation when home button pressed
-                    },
                   ),
-                  SizedBox(height: 24),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Container(
-                      width: 24,
-                      height: 24,
-                      child: Center(child: Text(currentRides.length.toString(), style: TextStyle(color: Colors.white))),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.black),
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Text('Ride(s) In Progress', style: Theme.of(context).textTheme.headline5),
-                  ),
-                  SizedBox(height: 24),
-                  currentRides.length == 1 ?
-                  BigRideInProgressCard(currentRides[0], finishRide) :
-                  GridView.count(
-                    padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    physics: NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.8,
-                    shrinkWrap: true,
-                    children: currentRides.map((ride) => SmallRideInProgressCard(ride, selectRide)).toList(),
-                  ),
-                  SizedBox(height: 32),
-                  widget.otherRides.isNotEmpty ? Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Text('Do you also want to pick up...', style: Theme.of(context).textTheme.subtitle1),
-                  ) : Container(),
-                  widget.otherRides.isNotEmpty ? SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                        children: [SizedBox(width: 16), SizedBox(width: 16)]..insertAll(1, widget.otherRides.map((ride) => OtherRideCard(ride, widget.startRide)).toList())
-                    ),
-                  ) : Container(),
-                  Spacer(),
-                  selectedRides.isNotEmpty ? SizedBox(
-                    width: double.infinity,
+                ),
+                Positioned(
+                  bottom: 16,
+                  child: selectedRides.isNotEmpty ? SizedBox(
+                    width: MediaQuery.of(context).size.width,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 34, right: 34, bottom: 32),
+                      padding: const EdgeInsets.only(left: 34, right: 34),
                       child: FlatButton(
                         padding: EdgeInsets.all(16),
                         color: Colors.black,
@@ -385,8 +396,9 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                         },
                       ),
                     ),
-                  ) : Container(),
-                ]
+                  ) : Container()
+                )
+              ],
             )
         )
     );

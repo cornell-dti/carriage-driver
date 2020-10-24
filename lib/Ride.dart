@@ -83,9 +83,7 @@ RideStatus getStatusEnum(String status) {
 Future<List<Ride>> fetchRides(BuildContext context, String id) async {
   final dateFormat = DateFormat("yyyy-MM-dd");
   DateTime now = DateTime.now();
-  final response = await http.get(AppConfig.of(context).baseUrl + '/rides?date=${dateFormat.format(now)}&driver=${Provider.of<AuthProvider>(context).id}');
-
-  //final response = await http.get(AppConfig.of(context).baseUrl + '/rides?date=${dateFormat.format(now)}&type=active&driver=${Provider.of<AuthProvider>(context).id}');
+  final response = await http.get(AppConfig.of(context).baseUrl + '/rides?type=active&date=${dateFormat.format(now)}&driver=${Provider.of<AuthProvider>(context).id}');
   if (response.statusCode == 200) {
     String responseBody = response.body;
     List<Ride> rides = _ridesFromJson(responseBody);
