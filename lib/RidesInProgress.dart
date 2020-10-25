@@ -1,4 +1,5 @@
 import 'package:carriage/Ride.dart';
+import 'package:carriage/pages/BeginRidePage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -202,14 +203,16 @@ class _SmallRideInProgressCardState extends State<SmallRideInProgressCard> {
 }
 
 class OtherRideCard extends StatelessWidget {
-  OtherRideCard(this.ride, this.startRide);
+  OtherRideCard(this.ride);
   final Ride ride;
-  final Function startRide;
 
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        startRide(ride);
+      onTap: ()  {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) =>
+                BeginRidePage(ride))
+        );
       },
       child: Container(
         margin: EdgeInsets.only(left: 4, right: 4, top: 16, bottom: 32),
@@ -248,23 +251,14 @@ class OtherRideCard extends StatelessWidget {
 }
 
 class RidesInProgressPage extends StatefulWidget {
-  RidesInProgressPage(this.initCurrentRides, this.otherRides, this.startRide, this.refreshHome);
-  final List<Ride> initCurrentRides;
-  final List<Ride> otherRides;
-  final Function startRide;
-  final Function refreshHome;
+  final List<Ride> currentRides;
+  final List<Ride> remainingRides;
+  RidesInProgressPage(this.currentRides, this.remainingRides);
   _RidesInProgressPageState createState() => _RidesInProgressPageState();
 }
 
 class _RidesInProgressPageState extends State<RidesInProgressPage> {
-  List<Ride> currentRides;
   List<Ride> selectedRides = [];
-
-  @override
-  void initState() {
-    super.initState();
-    currentRides = widget.initCurrentRides;
-  }
   void selectRide(Ride ride, bool select) {
     setState(() {
       if (select)
@@ -280,7 +274,7 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
       http.Response typeResponse = await setRideToPast(context, ride.id);
       if (typeResponse.statusCode == 200) {
         setState(() {
-          currentRides.remove(ride);
+          widget.currentRides.remove(ride);
         });
       }
       else {
@@ -297,9 +291,8 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-            child: currentRides.isEmpty ? GestureDetector(
+            child: widget.currentRides.isEmpty ? GestureDetector(
               onTap: () {
-                widget.refreshHome();
                 Navigator.of(context).pop();
               },
               child: Column(
@@ -337,7 +330,7 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                             child: Container(
                               width: 24,
                               height: 24,
-                              child: Center(child: Text(currentRides.length.toString(), style: TextStyle(color: Colors.white))),
+                              child: Center(child: Text(widget.currentRides.length.toString(), style: TextStyle(color: Colors.white))),
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Colors.black),
@@ -349,8 +342,8 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                             child: Text('Ride(s) In Progress', style: Theme.of(context).textTheme.headline5),
                           ),
                           SizedBox(height: 24),
-                          currentRides.length == 1 ?
-                          BigRideInProgressCard(currentRides[0], finishRide) :
+                          widget.currentRides.length == 1 ?
+                          BigRideInProgressCard(widget.currentRides[0], finishRide) :
                           GridView.count(
                             padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
                             mainAxisSpacing: 16,
@@ -359,17 +352,17 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                             crossAxisCount: 2,
                             childAspectRatio: 0.8,
                             shrinkWrap: true,
-                            children: currentRides.map((ride) => SmallRideInProgressCard(ride, selectRide)).toList(),
+                            children: widget.currentRides.map((ride) => SmallRideInProgressCard(ride, selectRide)).toList(),
                           ),
                           SizedBox(height: 32),
-                          widget.otherRides.isNotEmpty ? Padding(
+                          widget.remainingRides.isNotEmpty ? Padding(
                             padding: const EdgeInsets.only(left: 16),
                             child: Text('Do you also want to pick up...', style: Theme.of(context).textTheme.subtitle1),
                           ) : Container(),
-                          widget.otherRides.isNotEmpty ? SingleChildScrollView(
+                          widget.remainingRides.isNotEmpty ? SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
-                                children: [SizedBox(width: 16), SizedBox(width: 16)]..insertAll(1, widget.otherRides.map((ride) => OtherRideCard(ride, widget.startRide)).toList())
+                                children: [SizedBox(width: 16), SizedBox(width: 16)]..insertAll(1, widget.remainingRides.map((ride) => OtherRideCard(ride)).toList())
                             ),
                           ) : Container()
                         ]

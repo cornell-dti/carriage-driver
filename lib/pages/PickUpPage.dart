@@ -5,11 +5,14 @@ import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideInfoCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:provider/provider.dart';
+
+import '../RidesInProgress.dart';
+import '../RidesProvider.dart';
 
 class PickUpPage extends StatefulWidget {
-  PickUpPage(this.ride, this.nextPage);
+  PickUpPage(this.ride);
   final Ride ride;
-  final Function nextPage;
   @override
   _PickUpPageState createState() => _PickUpPageState();
 }
@@ -46,13 +49,14 @@ class _PickUpPageState extends State<PickUpPage> {
                           context, widget.ride.id, RideStatus.PICKED_UP);
                       if (!mounted) return;
                       if (response.statusCode == 200) {
-                        widget.nextPage(widget.ride);
                         // TEMP: cancel loading circle
                         setState(() => _requestedContinue = false);
-                        // Navigator.pushReplacement(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (BuildContext context) => ???()));
+                        widget.ride.status = RideStatus.PICKED_UP;
+                        RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (BuildContext context) =>
+                                RidesInProgressPage(ridesProvider.currentRides, ridesProvider.remainingRides))
+                        );
                       } else {
                         setState(() => _requestedContinue = false);
                         throw Exception('Failed to update ride status');

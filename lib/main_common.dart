@@ -6,6 +6,7 @@ import 'Home.dart';
 import 'UserInfoProvider.dart';
 import 'app_config.dart';
 import 'Login.dart';
+import 'RidesProvider.dart';
 
 void mainCommon() async {
   // Prevent screen from sleeping
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AuthProvider>(create: (BuildContext context) {
           return AuthProvider(context);
+        }),
+        ChangeNotifierProvider<RidesProvider>(create: (BuildContext context) {
+          return RidesProvider();
         })
       ],
       // UserInfoProvider is in a child widget because it uses AuthProvider

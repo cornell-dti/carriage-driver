@@ -1,4 +1,5 @@
 import 'package:carriage/Ride.dart';
+import 'package:carriage/pages/PickUpPage.dart';
 import 'package:carriage/widgets/AppBars.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/Dialogs.dart';
@@ -8,9 +9,8 @@ import 'package:loading_overlay/loading_overlay.dart';
 
 
 class OnTheWayPage extends StatefulWidget {
-  OnTheWayPage(this.ride, this.nextPage);
+  OnTheWayPage(this.ride);
   final Ride ride;
-  final Function nextPage;
   @override
   _OnTheWayPageState createState() => _OnTheWayPageState();
 }
@@ -46,7 +46,11 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                           context, widget.ride.id, RideStatus.ARRIVED);
                       if (!mounted) return;
                       if (response.statusCode == 200) {
-                        widget.nextPage(widget.ride);
+                        widget.ride.status = RideStatus.ARRIVED;
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (BuildContext context) =>
+                                PickUpPage(widget.ride))
+                        );
                       } else {
                         setState(() => _requestedContinue = false);
                         throw Exception('Failed to update ride status');

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:core';
 import 'package:carriage/MeasureSize.dart';
+import 'package:carriage/pages/BeginRidePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
@@ -25,8 +26,8 @@ String toString(RideStatus status) {
 
 class Ride {
   final String id;
-  final String type;
-  final RideStatus status;
+  String type;
+  RideStatus status;
   final String startLocation;
   final String endLocation;
   final String startAddress;
@@ -48,6 +49,7 @@ class Ride {
         this.startTime});
 
   factory Ride.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Ride(
       id: json['id'],
       type: json['type'],
@@ -86,14 +88,14 @@ Future<List<Ride>> fetchRides(BuildContext context, String id) async {
   final response = await http.get(AppConfig.of(context).baseUrl + '/rides?type=active&date=${dateFormat.format(now)}&driver=${Provider.of<AuthProvider>(context).id}');
   if (response.statusCode == 200) {
     String responseBody = response.body;
-    List<Ride> rides = _ridesFromJson(responseBody);
+    List<Ride> rides = ridesFromJson(responseBody);
     return rides;
   } else {
     throw Exception('Failed to load rides.');
   }
 }
 
-List<Ride> _ridesFromJson(String json) {
+List<Ride> ridesFromJson(String json) {
   var data = jsonDecode(json)["data"];
   List<Ride> res = data
       .map<Ride>((e) => Ride.fromJson(e))
@@ -150,10 +152,9 @@ class ArrowPainter extends CustomPainter {
 }
 
 class RideCard extends StatefulWidget {
-  RideCard(this.ride, this.pagePadding, this.startFlow);
+  RideCard(this.ride, this.pagePadding);
   final Ride ride;
   final double pagePadding;
-  final Function startFlow;
 
   @override
   _RideCardState createState() => _RideCardState();
@@ -248,7 +249,10 @@ class _RideCardState extends State<RideCard> {
 
     Widget card = GestureDetector(
         onTap: () {
-          widget.startFlow(widget.ride);
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (BuildContext context) =>
+                  BeginRidePage(widget.ride))
+          );
         },
         child: Card(
             elevation: 3.0,

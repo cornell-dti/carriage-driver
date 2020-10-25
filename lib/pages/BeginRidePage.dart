@@ -6,6 +6,8 @@ import 'package:carriage/widgets/RideDestPickupCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
+import 'OnTheWayPage.dart';
+
 class _StopCircle extends StatelessWidget {
   final bool _dropoff;
 
@@ -103,9 +105,8 @@ class StopsState extends State<Stops> {
 }
 
 class BeginRidePage extends StatefulWidget {
-  BeginRidePage(this.ride, this.nextPage);
+  BeginRidePage(this.ride);
   final Ride ride;
-  final Function nextPage;
   @override
   _BeginRidePageState createState() => _BeginRidePageState();
 }
@@ -164,7 +165,11 @@ class _BeginRidePageState extends State<BeginRidePage> {
                             context, widget.ride.id, RideStatus.ON_THE_WAY);
                         if (!mounted) return;
                         if (response.statusCode == 200) {
-                          widget.nextPage(widget.ride);
+                          widget.ride.status = RideStatus.ON_THE_WAY;
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (BuildContext context) =>
+                                  OnTheWayPage(widget.ride))
+                          );
                         } else {
                           setState(() => _requestedContinue = false);
                           throw Exception('Failed to update ride status');
