@@ -46,6 +46,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                           context, widget.ride.id, RideStatus.ARRIVED);
                       if (!mounted) return;
                       if (response.statusCode == 200) {
+                        setState(() => _requestedContinue = false);
                         widget.ride.status = RideStatus.ARRIVED;
                         Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (BuildContext context) =>

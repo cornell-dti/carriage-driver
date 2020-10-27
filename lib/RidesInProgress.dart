@@ -1,8 +1,13 @@
 import 'package:carriage/Ride.dart';
 import 'package:carriage/pages/BeginRidePage.dart';
+import 'package:carriage/widgets/AppBars.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
+import 'Home.dart';
+import 'RidesProvider.dart';
 
 BoxDecoration dropShadow = BoxDecoration(
     color: Colors.white,
@@ -240,7 +245,7 @@ class OtherRideCard extends StatelessWidget {
                         child: Locations(ride.startLocation, ride.endLocation)
                     ),
                     SizedBox(height: 16),
-                    PickupTime(ride.endTime)
+                    PickupTime(ride.startTime)
                   ]
               ),
             )
@@ -251,13 +256,11 @@ class OtherRideCard extends StatelessWidget {
 }
 
 class RidesInProgressPage extends StatefulWidget {
-  final List<Ride> currentRides;
-  final List<Ride> remainingRides;
-  RidesInProgressPage(this.currentRides, this.remainingRides);
   _RidesInProgressPageState createState() => _RidesInProgressPageState();
 }
 
 class _RidesInProgressPageState extends State<RidesInProgressPage> {
+
   List<Ride> selectedRides = [];
   void selectRide(Ride ride, bool select) {
     setState(() {
@@ -273,9 +276,7 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
     if (statusResponse.statusCode == 200) {
       http.Response typeResponse = await setRideToPast(context, ride.id);
       if (typeResponse.statusCode == 200) {
-        setState(() {
-          widget.currentRides.remove(ride);
-        });
+        Provider.of<RidesProvider>(context, listen: false).finishCurrentRide(ride);
       }
       else {
         throw Exception('Error setting ride type to past');
@@ -288,12 +289,17 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
 
   @override
   Widget build(BuildContext context) {
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+
     return Scaffold(
+        appBar: ReturnHomeBar(),
         backgroundColor: Colors.white,
         body: SafeArea(
-            child: widget.currentRides.isEmpty ? GestureDetector(
+            child: ridesProvider.currentRides.isEmpty ? GestureDetector(
               onTap: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (BuildContext context) => Home())
+                );
               },
               child: Column(
                 children: [
@@ -311,26 +317,15 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 16),
-                          GestureDetector(
-                            child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.keyboard_arrow_left, size: 30),
-                                  Text('Home', style: TextStyle(fontSize: 17))
-                                ]
-                            ),
-                            onTap: () {
-                              //TODO: add navigation when home button pressed
-                            },
-                          ),
                           SizedBox(height: 24),
                           Padding(
                             padding: const EdgeInsets.only(left: 16),
                             child: Container(
                               width: 24,
                               height: 24,
-                              child: Center(child: Text(widget.currentRides.length.toString(), style: TextStyle(color: Colors.white))),
+                              child: Center(
+                                  child: Text(ridesProvider.currentRides.length.toString(), style: TextStyle(color: Colors.white))
+                              ),
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Colors.black),
@@ -342,8 +337,8 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                             child: Text('Ride(s) In Progress', style: Theme.of(context).textTheme.headline5),
                           ),
                           SizedBox(height: 24),
-                          widget.currentRides.length == 1 ?
-                          BigRideInProgressCard(widget.currentRides[0], finishRide) :
+                          ridesProvider.currentRides.length == 1 ?
+                          BigRideInProgressCard(ridesProvider.currentRides[0], finishRide) :
                           GridView.count(
                             padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
                             mainAxisSpacing: 16,
@@ -352,17 +347,17 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                             crossAxisCount: 2,
                             childAspectRatio: 0.8,
                             shrinkWrap: true,
-                            children: widget.currentRides.map((ride) => SmallRideInProgressCard(ride, selectRide)).toList(),
+                            children: ridesProvider.currentRides.map((ride) => SmallRideInProgressCard(ride, selectRide)).toList(),
                           ),
                           SizedBox(height: 32),
-                          widget.remainingRides.isNotEmpty ? Padding(
+                          ridesProvider.remainingRides.isNotEmpty ? Padding(
                             padding: const EdgeInsets.only(left: 16),
                             child: Text('Do you also want to pick up...', style: Theme.of(context).textTheme.subtitle1),
                           ) : Container(),
-                          widget.remainingRides.isNotEmpty ? SingleChildScrollView(
+                          ridesProvider.remainingRides.isNotEmpty ? SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
-                                children: [SizedBox(width: 16), SizedBox(width: 16)]..insertAll(1, widget.remainingRides.map((ride) => OtherRideCard(ride)).toList())
+                                children: [SizedBox(width: 16), SizedBox(width: 16)]..insertAll(1, ridesProvider.remainingRides.map((ride) => OtherRideCard(ride)).toList())
                             ),
                           ) : Container()
                         ]

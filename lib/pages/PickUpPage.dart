@@ -5,10 +5,7 @@ import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideInfoCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:provider/provider.dart';
-
 import '../RidesInProgress.dart';
-import '../RidesProvider.dart';
 
 class PickUpPage extends StatefulWidget {
   PickUpPage(this.ride);
@@ -49,13 +46,12 @@ class _PickUpPageState extends State<PickUpPage> {
                           context, widget.ride.id, RideStatus.PICKED_UP);
                       if (!mounted) return;
                       if (response.statusCode == 200) {
-                        // TEMP: cancel loading circle
                         setState(() => _requestedContinue = false);
                         widget.ride.status = RideStatus.PICKED_UP;
-                        RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
                         Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (BuildContext context) =>
-                                RidesInProgressPage(ridesProvider.currentRides, ridesProvider.remainingRides))
+                                RidesInProgressPage()
+                            )
                         );
                       } else {
                         setState(() => _requestedContinue = false);

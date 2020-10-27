@@ -5,7 +5,8 @@ import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/RideDestPickupCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-
+import 'package:provider/provider.dart';
+import '../RidesProvider.dart';
 import 'OnTheWayPage.dart';
 
 class _StopCircle extends StatelessWidget {
@@ -166,6 +167,8 @@ class _BeginRidePageState extends State<BeginRidePage> {
                         if (!mounted) return;
                         if (response.statusCode == 200) {
                           widget.ride.status = RideStatus.ON_THE_WAY;
+                          RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+                          ridesProvider.changeRideToCurrent(widget.ride);
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(builder: (BuildContext context) =>
                                   OnTheWayPage(widget.ride))

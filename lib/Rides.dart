@@ -1,7 +1,7 @@
+import 'package:carriage/RidesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'AuthProvider.dart';
 import 'Ride.dart';
 
 class Rides extends StatefulWidget {
@@ -10,9 +10,6 @@ class Rides extends StatefulWidget {
 }
 
 class _RidesState extends State<Rides> {
-  // this is for passing the retrieved rides from the FutureBuilder to the ride flow rather than needing another request to retrieve the same data
-  List<Ride> rides;
-
   Widget _emptyPage(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,8 +20,14 @@ class _RidesState extends State<Rides> {
               children: <Widget>[
                 Image(
                   image: AssetImage('assets/images/steeringWheel@3x.png'),
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  height: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.2,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.2,
                 ),
                 SizedBox(height: 22),
                 Text(
@@ -58,37 +61,39 @@ class _RidesState extends State<Rides> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
-    return SafeArea(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32, top: 32),
-                child: Text(DateFormat('yMMMM').format(DateTime.now()), style: Theme.of(context).textTheme.headline5),
-              ),
-              Expanded(
-                  child: FutureBuilder<List<Ride>>(
-                      future: fetchRides(context, authProvider.id),
-                      builder: (context, snapshot) {
-                        rides = snapshot.data;
-                        if (snapshot.hasData) {
-                          if (snapshot.data.length == 0) {
-                            return _emptyPage(context);
-                          } else {
-                            return _mainPage(context, snapshot.data);
-                          }
-                        } else if (snapshot.hasError) {
-                          // TODO: placeholder error response
-                          return Text("${snapshot.error}");
-                        }
-                        return Center(child: CircularProgressIndicator());
-                      }
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    return FutureBuilder(
+      future: ridesProvider.requestActiveRides(context),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return SafeArea(
+            child: Center(
+                child: CircularProgressIndicator()
+            ),
+          );
+        }
+        return SafeArea(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 16, right: 16, bottom: 32, top: 32),
+                    child: Text(
+                        DateFormat('yMMMM').format(DateTime.now()), style: Theme
+                        .of(context)
+                        .textTheme
+                        .headline5),
+                  ),
+                  Expanded(
+                      child: ridesProvider.remainingRides.length == 0 ? _emptyPage(context) : _mainPage(context, ridesProvider.remainingRides)
                   )
-              )
-            ]
-        )
+                ]
+            )
+        );
+      }
     );
+
   }
 }
+

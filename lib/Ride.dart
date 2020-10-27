@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'AuthProvider.dart';
 import 'Rider.dart';
 import 'app_config.dart';
 
@@ -49,7 +47,6 @@ class Ride {
         this.startTime});
 
   factory Ride.fromJson(Map<String, dynamic> json) {
-    print(json);
     return Ride(
       id: json['id'],
       type: json['type'],
@@ -82,27 +79,6 @@ RideStatus getStatusEnum(String status) {
   }
 }
 
-Future<List<Ride>> fetchRides(BuildContext context, String id) async {
-  final dateFormat = DateFormat("yyyy-MM-dd");
-  DateTime now = DateTime.now();
-  final response = await http.get(AppConfig.of(context).baseUrl + '/rides?type=active&date=${dateFormat.format(now)}&driver=${Provider.of<AuthProvider>(context).id}');
-  if (response.statusCode == 200) {
-    String responseBody = response.body;
-    List<Ride> rides = ridesFromJson(responseBody);
-    return rides;
-  } else {
-    throw Exception('Failed to load rides.');
-  }
-}
-
-List<Ride> ridesFromJson(String json) {
-  var data = jsonDecode(json)["data"];
-  List<Ride> res = data
-      .map<Ride>((e) => Ride.fromJson(e))
-      .toList();
-  res.sort((a, b) => a.startTime.compareTo(b.startTime));
-  return res;
-}
 Future<http.Response> updateRideStatus(
     BuildContext context, String id, RideStatus status) async {
   final body = jsonEncode(<String, String>{"status": toString(status)});
