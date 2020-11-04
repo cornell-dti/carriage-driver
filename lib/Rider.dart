@@ -11,7 +11,7 @@ class Rider {
   ///The rider's email.
   String email;
 
-  ///The rider's phone number in format #########.
+  ///The rider's phone number in format ##########.
   String phoneNumber;
 
   ///The rider's first name.

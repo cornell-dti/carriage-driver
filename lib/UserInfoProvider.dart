@@ -96,7 +96,7 @@ class UserInfo {
   ///Name of the vehicle the driver uses.
   final String vehicle;
 
-  ///The rider's phone number in format #########.
+  ///The rider's phone number in format ##########.
   final String phoneNumber;
 
   ///The driver's email.
