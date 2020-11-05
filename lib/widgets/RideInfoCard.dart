@@ -4,7 +4,7 @@ import 'RideDestPickupCard.dart';
 class RideInfoCard extends StatelessWidget {
   final String _firstName;
   final ImageProvider<dynamic> _photo;
-  // otherwise pickup
+  ///Whether this card shows a ride dropoff
   final bool _dropoff;
   final DateTime _time;
   final String _stop;

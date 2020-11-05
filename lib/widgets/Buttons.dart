@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// black button with white text
+/// Black button with white text
 class CButton extends StatelessWidget {
   final String text;
   final void Function() onPressed;
@@ -23,7 +23,7 @@ class CButton extends StatelessWidget {
   }
 }
 
-// red text button
+/// Button with red text, no background
 class DangerButton extends StatelessWidget {
   final String text;
   final void Function() onPressed;
