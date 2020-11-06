@@ -9,8 +9,10 @@ import 'package:intl/intl.dart';
 import 'Rider.dart';
 import 'app_config.dart';
 
+///A ride's status.
 enum RideStatus { NOT_STARTED, ON_THE_WAY, ARRIVED, PICKED_UP, COMPLETED }
 
+///Converts [status] to a string.
 String toString(RideStatus status) {
   const mapping = <RideStatus, String>{
     RideStatus.NOT_STARTED: "not_started",
@@ -22,16 +24,36 @@ String toString(RideStatus status) {
   return mapping[status];
 }
 
+///Model for a ride. Matches the schema in the backend.
 class Ride {
+  ///The ride's id in the backend.
   final String id;
+  
+  ///The ride type. Can only be 'active', 'past', or 'unscheduled'.
   String type;
+  
+  ///The ride status.
   RideStatus status;
+  
+  ///The starting location of the ride.
   final String startLocation;
+
+  ///The ending location of the ride.
   final String endLocation;
+  
+  ///The starting address of the ride.
   final String startAddress;
+  
+  ///The ending address of the ride.
   final String endAddress;
+
+  ///The start time of the ride.
   final DateTime startTime;
+
+  ///The end time of the ride.
   final DateTime endTime;
+
+  ///The rider associated with this ride.
   final Rider rider;
 
   Ride(
@@ -46,6 +68,7 @@ class Ride {
         this.endTime,
         this.startTime});
 
+  ///Creates a ride from JSON representation.
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
       id: json['id'],
@@ -79,6 +102,7 @@ RideStatus getStatusEnum(String status) {
   }
 }
 
+///Modifies the ride with [id] to have status [status].
 Future<http.Response> updateRideStatus(
     BuildContext context, String id, RideStatus status) async {
   final body = jsonEncode(<String, String>{"status": toString(status)});
@@ -111,11 +135,11 @@ class ArrowPainter extends CustomPainter {
     Paint paint = Paint()
       ..strokeWidth = 2
       ..color = Colors.black;
-    canvas.drawLine(Offset(0, 0), Offset(length-5, 0), paint);
+    canvas.drawLine(Offset(0, 0), Offset(length - 5, 0), paint);
     paint.style = PaintingStyle.fill;
     Path trianglePath = Path();
-    trianglePath.moveTo(length-5, 5);
-    trianglePath.lineTo(length-5, -5);
+    trianglePath.moveTo(length - 5, 5);
+    trianglePath.lineTo(length - 5, -5);
     trianglePath.lineTo(length, 0);
     trianglePath.close();
     canvas.drawPath(trianglePath, paint);
@@ -147,43 +171,34 @@ class _RideCardState extends State<RideCard> {
   Widget build(BuildContext context) {
     Widget pickup = Expanded(
         flex: 4,
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                  'From',
-                  style: TextStyle(fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('From',
+              style: TextStyle(
+                  fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))),
+          Container(
+            child: MeasureSize(
+              child: Text(
+                widget.ride.startLocation,
+                style: TextStyle(fontSize: 17),
+                textWidthBasis: TextWidthBasis.longestLine,
               ),
-              Container(
-                child: MeasureSize(
-                  child: Text(
-                    widget.ride.startLocation,
-                    style: TextStyle(fontSize: 17),
-                    textWidthBasis: TextWidthBasis.longestLine,
-                  ),
-                  onChange: (size) {
-                    pickupTextSize = size;
-                  },
-                ),
-              )
-            ]
-        )
-    );
+              onChange: (size) {
+                pickupTextSize = size;
+              },
+            ),
+          )
+        ]));
 
     Widget dropOff = Expanded(
       flex: 4,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-              'To',
-              style: TextStyle(fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))
-          ),
-          Text(
-              widget.ride.endLocation,
-              key: dropoffKey,
-              style: TextStyle(fontSize: 17)
-          )
+          Text('To',
+              style: TextStyle(
+                  fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))),
+          Text(widget.ride.endLocation,
+              key: dropoffKey, style: TextStyle(fontSize: 17))
         ],
       ),
     );
@@ -209,19 +224,23 @@ class _RideCardState extends State<RideCard> {
     double calculateArrowStart() {
       return pickupTextSize.width + arrowPadding;
     }
+
     double calculateArrowLength() {
-      double idealLength = getDropoffX() - cardPadding - widget.pagePadding - pickupTextSize.width - (arrowPadding * 2);
+      double idealLength = getDropoffX() -
+          cardPadding -
+          widget.pagePadding -
+          pickupTextSize.width -
+          (arrowPadding * 2);
       return idealLength;
     }
 
-    Widget arrow = pickupTextSize != null && spacerSize != null ?
-    Positioned(
-        left: calculateArrowStart(),
-        top: getDropoffY(),
-        child: CustomPaint(
-            painter: ArrowPainter(calculateArrowLength())
-        )
-    ) : Container();
+    Widget arrow = pickupTextSize != null && spacerSize != null
+        ? Positioned(
+            left: calculateArrowStart(),
+            top: getDropoffY(),
+            child: CustomPaint(painter: ArrowPainter(calculateArrowLength())))
+        : Container();
+
 
     Widget card = GestureDetector(
         onTap: () {
@@ -299,7 +318,6 @@ class _RideCardState extends State<RideCard> {
             )
         )
     );
-
     return card;
   }
 }

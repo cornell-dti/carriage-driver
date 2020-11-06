@@ -4,6 +4,7 @@ import 'RideDestPickupCard.dart';
 
 class RideInfoCard extends StatelessWidget {
   final Ride ride;
+  ///Whether this card shows a ride dropoff
   final bool dropoff;
 
   RideInfoCard(this.ride, this.dropoff);
