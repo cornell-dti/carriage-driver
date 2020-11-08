@@ -74,11 +74,16 @@ class TryItBubble extends StatelessWidget {
 }
 
 class CarProgressBar extends StatelessWidget {
+  final double progress;
+
+  const CarProgressBar({Key key, this.progress}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 10,
-      color: Colors.black,
+    return LinearProgressIndicator(
+      value: progress,
+      backgroundColor: Color(0xFFDCDCDC),
+      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
     );
   }
 }
@@ -130,7 +135,7 @@ class OnboardingSheet extends StatelessWidget {
                 CButton(
                     text: "Continue",
                     onPressed: () => state.nextStage(context)),
-                CarProgressBar()
+                CarProgressBar(progress: 0.44)
               ]),
         ));
   }
