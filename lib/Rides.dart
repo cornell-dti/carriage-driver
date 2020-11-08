@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:carriage/MeasureRect.dart';
 import 'package:carriage/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +11,12 @@ import 'package:http/http.dart' as http;
 class RidesStateless extends StatelessWidget {
   final List<Ride> rides;
 
-  const RidesStateless({Key key, this.rides}) : super(key: key);
+  final OnWidgetRectChange onFirstRideRectChange;
+  static void onChangeDefault(Rect s) {}
+
+  const RidesStateless(
+      {Key key, this.rides, this.onFirstRideRectChange = onChangeDefault})
+      : super(key: key);
 
   Widget _emptyPage(BuildContext context) {
     return Column(
@@ -45,8 +51,13 @@ class RidesStateless extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemCount: rides.length,
-              itemBuilder: (BuildContext c, int index) =>
-                  RideCard(rides[index], padding),
+              itemBuilder: (BuildContext c, int index) {
+                Widget card = RideCard(rides[index], padding);
+                if (index == 0)
+                  return MeasureRect(
+                      child: card, onChange: onFirstRideRectChange);
+                return card;
+              },
               padding: EdgeInsets.only(left: padding, right: padding),
               shrinkWrap: true,
             ),
