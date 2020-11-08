@@ -166,23 +166,6 @@ class Overlay extends StatelessWidget {
   }
 }
 
-class InvertedClipper extends CustomClipper<Path> {
-  final Rect rect;
-
-  InvertedClipper(this.rect);
-
-  @override
-  Path getClip(Size size) {
-    return Path()
-      ..addRect(Rect.fromLTWH(0, 0, size.width, size.height))
-      ..addRect(rect)
-      ..fillType = PathFillType.evenOdd;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
-}
-
 class OverlayWithHighlight extends StatefulWidget {
   final Widget child;
   final Widget Function(BuildContext context, Rect highlightRect)
@@ -283,7 +266,9 @@ final List<Rider> _sampleRiders = [
       firstName: "Alex",
       lastName: "Mcgregor",
       accessibilityNeeds: ["Crutches"]),
-  Rider(firstName: "James", lastName: "Lee", accessibilityNeeds: ["Wheelchair"])
+  Rider(
+      firstName: "James", lastName: "Lee", accessibilityNeeds: ["Wheelchair"]),
+  Rider(firstName: "Alex", lastName: "Mcgregor", accessibilityNeeds: [])
 ];
 
 final List<Ride> _sampleRides = [
@@ -298,7 +283,13 @@ final List<Ride> _sampleRides = [
       endLocation: "Teagle Hall",
       status: RideStatus.NOT_STARTED,
       startTime: DateTime(2020, 1, 1, 21, 30),
-      rider: _sampleRiders[0]),
+      rider: _sampleRiders[1]),
+  Ride(
+      startLocation: "RPCC",
+      endLocation: "Upson Hall",
+      status: RideStatus.NOT_STARTED,
+      startTime: DateTime(2020, 1, 1, 21, 50),
+      rider: _sampleRiders[2]),
 ];
 
 Widget _sampleRidesPage(
