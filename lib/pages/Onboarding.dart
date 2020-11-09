@@ -1,18 +1,15 @@
+import 'dart:math';
+
 import 'package:bubble/bubble.dart';
 import 'package:carriage/Ride.dart';
 import 'package:carriage/Rider.dart';
 import 'package:carriage/Rides.dart';
+import 'package:carriage/pages/BeginRidePage.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 
 final Color _highlightColor = Color(0xFF1AA0EB);
-
-class Onboarding extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return OnboardingState();
-  }
-}
+final Color _overlayColor = Colors.transparent;
 
 class RectPositioned extends StatelessWidget {
   final Rect rect;
@@ -52,7 +49,7 @@ class TryItBubble extends StatelessWidget {
             color: _highlightColor,
             nip: BubbleNip.no,
             child: Padding(
-              padding: const EdgeInsets.only(left: 13, right: 13, top: 11),
+              padding: const EdgeInsets.only(left: 10, right: 8, top: 11),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -135,7 +132,7 @@ class OnboardingSheet extends StatelessWidget {
                 CButton(
                     text: "Continue",
                     onPressed: () => state.nextStage(context)),
-                CarProgressBar(progress: 0.44)
+                CarProgressBar(progress: progress)
               ]),
         ));
   }
@@ -161,7 +158,7 @@ class Overlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.bottomCenter,
-      children: [child, Container(color: Colors.black54), overlay],
+      children: [child, Container(color: _overlayColor), overlay],
     );
   }
 }
@@ -187,7 +184,7 @@ class OverlayWithHighlight extends StatefulWidget {
 }
 
 class OverlayWithHighlightState extends State<OverlayWithHighlight> {
-  Rect highlightRect = Rect.zero;
+  Rect highlightRect = Rect.largest;
 
   void setRect(Rect s) {
     setState(() {
@@ -197,7 +194,7 @@ class OverlayWithHighlightState extends State<OverlayWithHighlight> {
 
   Widget _overlay() {
     return ColorFiltered(
-        colorFilter: ColorFilter.mode(Colors.black54, BlendMode.srcOut),
+        colorFilter: ColorFilter.mode(_overlayColor, BlendMode.srcOut),
         child: Stack(children: [
           Container(decoration: BoxDecoration(color: Colors.transparent)),
           Positioned(
@@ -230,6 +227,8 @@ class OverlayWithHighlightState extends State<OverlayWithHighlight> {
     );
   }
 }
+
+/* ONBOARDING PAGES */
 
 Widget _startPage(OnboardingState state, BuildContext context) {
   return Padding(
@@ -274,21 +273,26 @@ final List<Rider> _sampleRiders = [
 final List<Ride> _sampleRides = [
   Ride(
       startLocation: "RPCC",
+      startAddress: "124 Hoy Rd, Ithaca, NY 14850",
       endLocation: "Teagle Hall",
+      endAddress: "109 Tower Rd, Ithaca, NY 14850",
       status: RideStatus.NOT_STARTED,
       startTime: DateTime(2020, 1, 1, 21, 15),
+      endTime: DateTime(2020, 1, 1, 21, 50),
       rider: _sampleRiders[0]),
   Ride(
       startLocation: "Low Rise 7",
       endLocation: "Teagle Hall",
       status: RideStatus.NOT_STARTED,
       startTime: DateTime(2020, 1, 1, 21, 30),
+      endTime: DateTime(2020, 1, 1, 21, 50),
       rider: _sampleRiders[1]),
   Ride(
       startLocation: "RPCC",
       endLocation: "Upson Hall",
       status: RideStatus.NOT_STARTED,
       startTime: DateTime(2020, 1, 1, 21, 50),
+      endTime: DateTime(2020, 1, 1, 21, 50),
       rider: _sampleRiders[2]),
 ];
 
@@ -309,18 +313,20 @@ Widget _ridesIntro(OnboardingState state, BuildContext context) {
       state,
       headingText: "View your schedule with ease",
       bodyText: "Your personalized rides for the day are organized by time.",
+      progress: 0.22,
     ),
   );
 }
 
-Widget _highlightRegion(OnboardingState state, BuildContext context) {
+Widget _highlightRegion(OnboardingState state, BuildContext context,
+    {double radius = 5}) {
   return GestureDetector(
     onTap: () => state.nextStage(context),
     child: Container(
       decoration: BoxDecoration(
         color: Colors.transparent,
         border: Border.all(color: _highlightColor, width: 4),
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(radius),
       ),
     ),
   );
@@ -360,11 +366,80 @@ Widget _ridesTryIt(OnboardingState state, BuildContext context) {
       });
 }
 
+Widget _sampleBeginRidePage(
+    {void Function(Rect) onContinueRectChange =
+        RidesStateless.onChangeDefault}) {
+  return IgnorePointer(
+      child: BeginRidePage(
+    ride: _sampleRides[0],
+    onContinueRectChange: onContinueRectChange,
+  ));
+}
+
+Widget _beginRideIntro(OnboardingState state, BuildContext context) {
+  return Overlay(
+    child: _sampleBeginRidePage(),
+    overlay: OnboardingSheet(
+      state,
+      headingText: "Everything you need in one place",
+      bodyText:
+          "All the information about a given ride is displayed on one page.",
+      progress: 0.44,
+    ),
+  );
+}
+
+Widget _beginRideTryIt(OnboardingState state, BuildContext context) {
+  final piper = CallbackPiper<Rect>();
+  return OverlayWithHighlight(
+      highlightPiper: piper,
+      child: _sampleBeginRidePage(
+        onContinueRectChange: (rect) {
+          piper.onCallback(rect);
+        },
+      ),
+      overlayBuilder: (context, highlightRect) {
+        return Stack(children: [
+          RectPositioned(
+              rect: highlightRect,
+              child: _highlightRegion(state, context, radius: 2)),
+          Padding(
+            padding: EdgeInsets.only(top: max(0, highlightRect.top - 100)),
+            child: Row(children: [
+              Expanded(flex: 1, child: SizedBox()),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 220,
+                  height: 82,
+                  child: TryItBubble(
+                      text: "Click to begin this ride.", down: true),
+                ),
+              ),
+              Expanded(flex: 1, child: SizedBox())
+            ]),
+          ),
+        ]);
+      });
+}
+
+class Onboarding extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return OnboardingState();
+  }
+}
+
 class OnboardingState extends State<Onboarding> {
   int stage = 0;
 
   final List<Widget Function(OnboardingState state, BuildContext context)>
-      stageBuilders = [_startPage, _ridesIntro, _ridesTryIt];
+      stageBuilders = [
+    _startPage,
+    _ridesTryIt,
+    _beginRideTryIt,
+    
+  ];
 
   void nextStage(BuildContext context) {
     if (stage + 1 < stageBuilders.length)
