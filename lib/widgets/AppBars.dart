@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../Home.dart';
+
 class ReturnHomeBar extends StatelessWidget implements PreferredSizeWidget {
   static final double prefHeight = 80;
   @override
@@ -21,7 +23,9 @@ class ReturnHomeBar extends StatelessWidget implements PreferredSizeWidget {
                   padding: EdgeInsets.zero,
                   visualDensity: VisualDensity.comfortable,
                   onPressed: () {
-                    Navigator.of(context).maybePop();
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (BuildContext context) => Home())
+                    );
                   },
                 ),
                 Text("Home", style: TextStyle(fontSize: 17))

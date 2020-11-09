@@ -1,31 +1,20 @@
 import 'package:carriage/Ride.dart';
-import 'package:carriage/pages/BeginRidePage.dart';
 import 'package:carriage/widgets/AppBars.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideInfoCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import '../RidesInProgress.dart';
 
 class PickUpPage extends StatefulWidget {
+  PickUpPage(this.ride);
+  final Ride ride;
   @override
   _PickUpPageState createState() => _PickUpPageState();
 }
 
 class _PickUpPageState extends State<PickUpPage> {
-  final TempPageData data = TempPageData(
-      "Alex",
-      NetworkImage(
-          "https://www.acouplecooks.com/wp-content/uploads/2019/05/Chopped-Salad-001_1-225x225.jpg"),
-      DateTime.now(),
-      "Upson Hall",
-      "124",
-      "d38dab88-ace5-42b6-ae60-ca1d1dc8cde7",
-      [
-        StopData(false, DateTime.now(), "Upson Hall", "124 Hoy Rd"),
-        StopData(true, DateTime.now(), "Uris Hall", "109 Tower Rd")
-      ]);
-
   bool _requestedContinue = false;
 
   @override
@@ -43,11 +32,10 @@ class _PickUpPageState extends State<PickUpPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text("Is ${data.firstName} here?",
+                Text("Is ${widget.ride.rider.firstName} here?",
                     style: Theme.of(context).textTheme.headline5),
                 SizedBox(height: 59),
-                RideInfoCard(data.firstName, data.photo, false, data.stop,
-                    data.address, data.time),
+                RideInfoCard(widget.ride, false),
                 Expanded(child: SizedBox()),
                 CButton(
                     text: "Pick up",
@@ -55,16 +43,16 @@ class _PickUpPageState extends State<PickUpPage> {
                       if (_requestedContinue) return;
                       setState(() => _requestedContinue = true);
                       final response = await updateRideStatus(
-                          context, data.rideId, RideStatus.PICKED_UP);
+                          context, widget.ride.id, RideStatus.PICKED_UP);
                       if (!mounted) return;
                       if (response.statusCode == 200) {
-                        // TODO: push next page in flow
-                        // TEMP: cancel loading circle
                         setState(() => _requestedContinue = false);
-                        // Navigator.pushReplacement(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (BuildContext context) => ???()));
+                        widget.ride.status = RideStatus.PICKED_UP;
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (BuildContext context) =>
+                                RidesInProgressPage()
+                            )
+                        );
                       } else {
                         setState(() => _requestedContinue = false);
                         throw Exception('Failed to update ride status');
