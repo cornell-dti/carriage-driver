@@ -1,5 +1,4 @@
 import 'package:carriage/Ride.dart';
-import 'package:carriage/pages/BeginRidePage.dart';
 import 'package:carriage/pages/PickUpPage.dart';
 import 'package:carriage/widgets/AppBars.dart';
 import 'package:carriage/widgets/Buttons.dart';
@@ -10,24 +9,13 @@ import 'package:loading_overlay/loading_overlay.dart';
 
 
 class OnTheWayPage extends StatefulWidget {
+  OnTheWayPage(this.ride);
+  final Ride ride;
   @override
   _OnTheWayPageState createState() => _OnTheWayPageState();
 }
 
 class _OnTheWayPageState extends State<OnTheWayPage> {
-  final TempPageData data = TempPageData(
-      "Alex",
-      NetworkImage(
-          "https://www.acouplecooks.com/wp-content/uploads/2019/05/Chopped-Salad-001_1-225x225.jpg"),
-      DateTime.now(),
-      "Upson Hall",
-      "124",
-      "d38dab88-ace5-42b6-ae60-ca1d1dc8cde7",
-      [
-        StopData(false, DateTime.now(), "Upson Hall", "124 Hoy Rd"),
-        StopData(true, DateTime.now(), "Uris Hall", "109 Tower Rd")
-      ]);
-
   bool _requestedContinue = false;
   @override
   Widget build(BuildContext context) {
@@ -47,8 +35,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                 Text("On your way to...",
                     style: Theme.of(context).textTheme.headline5),
                 SizedBox(height: 59),
-                RideInfoCard(data.firstName, data.photo, false, data.stop,
-                    data.address, data.time),
+                RideInfoCard(widget.ride, false),
                 Expanded(child: SizedBox()),
                 CButton(
                     text: "Arrive",
@@ -56,14 +43,15 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                       if (_requestedContinue) return;
                       setState(() => _requestedContinue = true);
                       final response = await updateRideStatus(
-                          context, data.rideId, RideStatus.ARRIVED);
+                          context, widget.ride.id, RideStatus.ARRIVED);
                       if (!mounted) return;
                       if (response.statusCode == 200) {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    PickUpPage()));
+                        setState(() => _requestedContinue = false);
+                        widget.ride.status = RideStatus.ARRIVED;
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (BuildContext context) =>
+                                PickUpPage(widget.ride))
+                        );
                       } else {
                         setState(() => _requestedContinue = false);
                         throw Exception('Failed to update ride status');

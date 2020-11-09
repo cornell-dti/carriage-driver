@@ -1,6 +1,13 @@
 import 'package:carriage/Ride.dart';
+import 'package:carriage/pages/BeginRidePage.dart';
+import 'package:carriage/widgets/AppBars.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
+import 'Home.dart';
+import 'RidesProvider.dart';
 
 BoxDecoration dropShadow = BoxDecoration(
     color: Colors.white,
@@ -63,8 +70,9 @@ class PickupTime extends StatelessWidget {
   }
 }
 class BigRideInProgressCard extends StatelessWidget {
-  BigRideInProgressCard(this.ride);
+  BigRideInProgressCard(this.ride, this.finishRide);
   final Ride ride;
+  final Function finishRide;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -84,7 +92,7 @@ class BigRideInProgressCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8),
-                    Center(child: Text('Terry', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                    Center(child: Text(ride.rider.firstName, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
                     SizedBox(height: 16),
                     Locations(ride.startLocation, ride.endLocation),
                     SizedBox(height: 16),
@@ -97,7 +105,7 @@ class BigRideInProgressCard extends StatelessWidget {
                         color: Colors.black,
                         child: Text('Drop off', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                         onPressed: () {
-                          //TODO: add action when press drop off
+                          finishRide(context, ride);
                         },
                       ),
                     )
@@ -202,52 +210,58 @@ class _SmallRideInProgressCardState extends State<SmallRideInProgressCard> {
 class OtherRideCard extends StatelessWidget {
   OtherRideCard(this.ride);
   final Ride ride;
+
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 4, right: 4, top: 16, bottom: 32),
-      constraints: BoxConstraints(minWidth: 200),
-      child: DecoratedBox(
-          decoration: dropShadow,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 25,
-                        backgroundImage: AssetImage('assets/images/terry.jpg'),
-                      ),
-                      SizedBox(width: 16),
-                      Text(ride.rider.firstName, style: Theme.of(context).textTheme.subtitle1)
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  SizedBox(
-                      width: 200,
-                      child: Locations(ride.startLocation, ride.endLocation)
-                  ),
-                  SizedBox(height: 16),
-                  PickupTime(ride.endTime)
-                ]
-            ),
-          )
+    return GestureDetector(
+      onTap: ()  {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) =>
+                BeginRidePage(ride))
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(left: 4, right: 4, top: 16, bottom: 32),
+        constraints: BoxConstraints(minWidth: 200),
+        child: DecoratedBox(
+            decoration: dropShadow,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 25,
+                          backgroundImage: AssetImage('assets/images/terry.jpg'),
+                        ),
+                        SizedBox(width: 16),
+                        Text(ride.rider.firstName, style: Theme.of(context).textTheme.subtitle1)
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    SizedBox(
+                        width: 200,
+                        child: Locations(ride.startLocation, ride.endLocation)
+                    ),
+                    SizedBox(height: 16),
+                    PickupTime(ride.startTime)
+                  ]
+              ),
+            )
+        ),
       ),
     );
   }
 }
 
 class RidesInProgressPage extends StatefulWidget {
-  RidesInProgressPage(this.currentRides, this.otherRides);
-  final List<Ride> currentRides;
-  final List<Ride> otherRides;
   _RidesInProgressPageState createState() => _RidesInProgressPageState();
 }
 
 class _RidesInProgressPageState extends State<RidesInProgressPage> {
-  List<Ride> selectedRides = [];
 
+  List<Ride> selectedRides = [];
   void selectRide(Ride ride, bool select) {
     setState(() {
       if (select)
@@ -257,87 +271,122 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
     });
   }
 
+  void finishRide(BuildContext context, Ride ride) async {
+    http.Response statusResponse = await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
+    if (statusResponse.statusCode == 200) {
+      http.Response typeResponse = await setRideToPast(context, ride.id);
+      if (typeResponse.statusCode == 200) {
+        Provider.of<RidesProvider>(context, listen: false).finishCurrentRide(ride);
+      }
+      else {
+        throw Exception('Error setting ride type to past');
+      }
+    }
+    else {
+      throw Exception('Error setting ride status to ${toString(RideStatus.COMPLETED)}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+
     return Scaffold(
+        appBar: ReturnHomeBar(),
         backgroundColor: Colors.white,
         body: SafeArea(
-            child: SingleChildScrollView(
+            child: ridesProvider.currentRides.isEmpty ? GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (BuildContext context) => Home())
+                );
+              },
               child: Column(
                 children: [
-                  Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 16),
-                        GestureDetector(
-                          child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.keyboard_arrow_left, size: 30),
-                                Text('Home', style: TextStyle(fontSize: 17))
-                              ]
-                          ),
-                          onTap: () {
-                            //TODO: add navigation when home button pressed
-                          },
-                        ),
-                        SizedBox(height: 24),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Container(
-                            width: 24,
-                            height: 24,
-                            child: Center(child: Text(widget.currentRides.length.toString(), style: TextStyle(color: Colors.white))),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.black),
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Text('Ride(s) In Progress', style: Theme.of(context).textTheme.headline5),
-                        ),
-                        widget.currentRides.length == 1 ?
-                        BigRideInProgressCard(widget.currentRides[0]) :
-                        GridView.count(
-                          padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                          physics: NeverScrollableScrollPhysics(),
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.8,
-                          shrinkWrap: true,
-                          children: widget.currentRides.map((ride) => SmallRideInProgressCard(ride, selectRide)).toList(),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Text('Do you also want to pick up...', style: Theme.of(context).textTheme.subtitle1),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                              children: [SizedBox(width: 16), SizedBox(width: 16)]..insertAll(1, widget.otherRides.map((ride) => OtherRideCard(ride)).toList())
-                          ),
-                        ),
-                        selectedRides.isNotEmpty ? SizedBox(
-                          width: double.infinity,
-                          child: FlatButton(
-                            padding: EdgeInsets.all(16),
-                            color: Colors.black,
-                            child: Text('Drop off ' + (selectedRides.length == 1 ? selectedRides[0].rider.firstName : 'Multiple Passengers'),
-                                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)
-                            ),
-                            onPressed: () {
-                              //TODO: add action when press drop off
-                            },
-                          ),
-                        ) : Container(),
-                      ]
-                  ),
-                ],
+                  SizedBox(height: 90),
+                  Text('Rides Completed', style: Theme.of(context).textTheme.headline5),
+                  SizedBox(height: 120),
+                  Image.asset('assets/images/townCar.png')
+                ]
               ),
+            ) : Stack(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 24),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: Container(
+                              width: 24,
+                              height: 24,
+                              child: Center(
+                                  child: Text(ridesProvider.currentRides.length.toString(), style: TextStyle(color: Colors.white))
+                              ),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.black),
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: Text('Ride(s) In Progress', style: Theme.of(context).textTheme.headline5),
+                          ),
+                          SizedBox(height: 24),
+                          ridesProvider.currentRides.length == 1 ?
+                          BigRideInProgressCard(ridesProvider.currentRides[0], finishRide) :
+                          GridView.count(
+                            padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            physics: NeverScrollableScrollPhysics(),
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.8,
+                            shrinkWrap: true,
+                            children: ridesProvider.currentRides.map((ride) => SmallRideInProgressCard(ride, selectRide)).toList(),
+                          ),
+                          SizedBox(height: 32),
+                          ridesProvider.remainingRides.isNotEmpty ? Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: Text('Do you also want to pick up...', style: Theme.of(context).textTheme.subtitle1),
+                          ) : Container(),
+                          ridesProvider.remainingRides.isNotEmpty ? SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                                children: [SizedBox(width: 16), SizedBox(width: 16)]..insertAll(1, ridesProvider.remainingRides.map((ride) => OtherRideCard(ride)).toList())
+                            ),
+                          ) : Container()
+                        ]
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 16,
+                  child: selectedRides.isNotEmpty ? SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 34, right: 34),
+                      child: FlatButton(
+                        padding: EdgeInsets.all(16),
+                        color: Colors.black,
+                        child: Text('Drop off ' + (selectedRides.length == 1 ? selectedRides[0].rider.firstName : 'Multiple Passengers'),
+                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selectedRides.forEach((Ride r) => finishRide(context, r));
+                            selectedRides = [];
+                          });
+                        },
+                      ),
+                    ),
+                  ) : Container()
+                )
+              ],
             )
         )
     );
