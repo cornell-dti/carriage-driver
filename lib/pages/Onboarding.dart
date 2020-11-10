@@ -298,7 +298,8 @@ final List<Rider> _sampleRiders = [
       accessibilityNeeds: ["Crutches"]),
   Rider(
       firstName: "James", lastName: "Lee", accessibilityNeeds: ["Wheelchair"]),
-  Rider(firstName: "Alex", lastName: "Mcgregor", accessibilityNeeds: [])
+  Rider(firstName: "Alex", lastName: "Mcgregor", accessibilityNeeds: []),
+  Rider(firstName: "Chelsea", lastName: "Wang", accessibilityNeeds: [])
 ];
 
 final List<Ride> _sampleRides = [
@@ -325,6 +326,17 @@ final List<Ride> _sampleRides = [
       startTime: DateTime(2020, 1, 1, 21, 50),
       endTime: DateTime(2020, 1, 1, 21, 50),
       rider: _sampleRiders[2]),
+];
+
+final List<Ride> _sampleCurrentRides = [
+  _sampleRides[0],
+  Ride(
+      startLocation: "RPCC",
+      endLocation: "Upson Hall",
+      status: RideStatus.NOT_STARTED,
+      startTime: DateTime(2020, 1, 1, 21, 50),
+      endTime: DateTime(2020, 1, 1, 21, 50),
+      rider: _sampleRiders[3]),
 ];
 
 Widget _sampleRidesPage(
@@ -509,8 +521,8 @@ Widget _sampleRidesInProgressPage(
         RidesStateless.onChangeDefault}) {
   return IgnorePointer(
       child: RidesInProgressPageStateless(
-    currentRides: _sampleRides,
-    remainingRides: _sampleRides,
+    currentRides: _sampleCurrentRides,
+    remainingRides: _sampleRides.getRange(1, _sampleRides.length).toList(),
     selectedRides: [],
     onFirstRideRectChange: onFirstRideRectChanged,
   ));
