@@ -5,6 +5,7 @@ import 'package:carriage/Ride.dart';
 import 'package:carriage/Rider.dart';
 import 'package:carriage/Rides.dart';
 import 'package:carriage/pages/BeginRidePage.dart';
+import 'package:carriage/pages/OnTheWayPage.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 
@@ -28,11 +29,11 @@ class RectPositioned extends StatelessWidget {
   }
 }
 
-class TryItBubble extends StatelessWidget {
+class OnboardingBubble extends StatelessWidget {
+  final Widget heading;
   final String text;
-  final bool down;
 
-  const TryItBubble({Key key, @required this.text, @required this.down})
+  const OnboardingBubble({Key key, @required this.text, @required this.heading})
       : super(key: key);
 
   @override
@@ -49,24 +50,38 @@ class TryItBubble extends StatelessWidget {
             color: _highlightColor,
             nip: BubbleNip.no,
             child: Padding(
-              padding: const EdgeInsets.only(left: 10, right: 8, top: 11),
+              padding: const EdgeInsets.only(left: 8, right: 8, top: 11),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    RichText(
-                        text: TextSpan(
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w500),
-                            children: [
-                          TextSpan(text: "Try it "),
-                          TextSpan(text: down ? "👇" : "☝️")
-                        ])),
+                    heading,
                     SizedBox(height: 3),
                     Text(text,
                         style: TextStyle(fontSize: 14, color: Colors.white))
                   ]),
             )));
+  }
+}
+
+class TryItBubble extends StatelessWidget {
+  final String text;
+  final bool down;
+
+  const TryItBubble({Key key, @required this.text, @required this.down})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return OnboardingBubble(
+        heading: RichText(
+            text: TextSpan(
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                children: [
+              TextSpan(text: "Try it "),
+              TextSpan(text: down ? "👇" : "☝️")
+            ])),
+        text: text);
   }
 }
 
@@ -175,11 +190,7 @@ class OverlayWithHighlight extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    final state = OverlayWithHighlightState();
-    highlightPiper.onCallback = (rect) {
-      state.setRect(rect);
-    };
-    return state;
+    return OverlayWithHighlightState();
   }
 }
 
@@ -190,6 +201,23 @@ class OverlayWithHighlightState extends State<OverlayWithHighlight> {
     setState(() {
       highlightRect = s;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.highlightPiper.onCallback = (rect) {
+      setRect(rect);
+    };
+  }
+
+  @override
+  void didUpdateWidget(OverlayWithHighlight oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    highlightRect = Rect.largest;
+    widget.highlightPiper.onCallback = (rect) {
+      setRect(rect);
+    };
   }
 
   Widget _overlay() {
@@ -222,7 +250,9 @@ class OverlayWithHighlightState extends State<OverlayWithHighlight> {
             left: 0,
             bottom: 0,
             right: 0,
-            child: widget.overlayBuilder(context, highlightRect))
+            child: highlightRect != Rect.largest
+                ? widget.overlayBuilder(context, highlightRect)
+                : SizedBox())
       ],
     );
   }
@@ -377,14 +407,31 @@ Widget _sampleBeginRidePage(
 }
 
 Widget _beginRideIntro(OnboardingState state, BuildContext context) {
-  return Overlay(
-    child: _sampleBeginRidePage(),
-    overlay: OnboardingSheet(
-      state,
-      headingText: "Everything you need in one place",
-      bodyText:
-          "All the information about a given ride is displayed on one page.",
-      progress: 0.44,
+  return GestureDetector(
+    onTap: () => state.nextStage(context),
+    child: Overlay(
+      child: _sampleBeginRidePage(),
+      overlay: Align(
+        alignment: Alignment.lerp(Alignment.center, Alignment.bottomRight, 0.5),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            width: 275,
+            height: 100,
+            child: OnboardingBubble(
+              heading: RichText(
+                  text: TextSpan(
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                      children: [
+                    TextSpan(text: "Everything you need. "),
+                    TextSpan(text: "ℹ️")
+                  ])),
+              text: "All information about your rides is displayed.",
+            ),
+          ),
+        ),
+      ),
     ),
   );
 }
@@ -423,6 +470,126 @@ Widget _beginRideTryIt(OnboardingState state, BuildContext context) {
       });
 }
 
+Widget _sampleOnTheWayPage(
+    {void Function(Rect) onContinueRectChange =
+        RidesStateless.onChangeDefault}) {
+  return IgnorePointer(
+      child: OnTheWayPage(
+    ride: _sampleRides[0],
+    onContinueRectChange: onContinueRectChange,
+  ));
+}
+
+Widget _onTheWayTryIt(OnboardingState state, BuildContext context) {
+  final piper = CallbackPiper<Rect>();
+  return OverlayWithHighlight(
+      highlightPiper: piper,
+      child: _sampleOnTheWayPage(
+        onContinueRectChange: (rect) {
+          piper.onCallback(rect);
+        },
+      ),
+      overlayBuilder: (context, highlightRect) {
+        return Stack(children: [
+          RectPositioned(
+              rect: highlightRect,
+              child: _highlightRegion(state, context, radius: 2)),
+          Padding(
+            padding: EdgeInsets.only(top: max(0, highlightRect.top - 100)),
+            child: Row(children: [
+              Expanded(flex: 3, child: SizedBox()),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 221,
+                  height: 87,
+                  child: TryItBubble(
+                      text: "Click to notify the rider of your arrival.",
+                      down: true),
+                ),
+              ),
+              Expanded(flex: 2, child: SizedBox())
+            ]),
+          ),
+        ]);
+      });
+}
+
+Widget _sampleRidesInProgressPage(
+    {void Function(Rect) onContinueRectChange =
+        RidesStateless.onChangeDefault}) {
+  return IgnorePointer(
+      child: BeginRidePage(
+    ride: _sampleRides[0],
+    onContinueRectChange: onContinueRectChange,
+  ));
+}
+
+Widget _ridesInProgressIntro(OnboardingState state, BuildContext context) {
+  return GestureDetector(
+    onTap: () => state.nextStage(context),
+    child: Overlay(
+      child: _sampleRidesInProgressPage(),
+      overlay: Align(
+        alignment: Alignment.lerp(Alignment.center, Alignment.bottomRight, 0.5),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            width: 300,
+            height: 80,
+            child: OnboardingBubble(
+              heading: RichText(
+                  text: TextSpan(
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                      children: [
+                    TextSpan(text: "View your current rides. "),
+                    TextSpan(text: "🚗")
+                  ])),
+              text: "Manage multiple rides at once.",
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _ridesInProgressTryIt(OnboardingState state, BuildContext context) {
+  final piper = CallbackPiper<Rect>();
+  return OverlayWithHighlight(
+      highlightPiper: piper,
+      child: _sampleRidesInProgressPage(
+        onContinueRectChange: (rect) {
+          piper.onCallback(rect);
+        },
+      ),
+      overlayBuilder: (context, highlightRect) {
+        return Stack(children: [
+          RectPositioned(
+              rect: highlightRect,
+              child: _highlightRegion(state, context, radius: 2)),
+          Padding(
+            padding: EdgeInsets.only(top: max(0, highlightRect.bottom)),
+            child: Row(children: [
+              Expanded(flex: 3, child: SizedBox()),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 221,
+                  height: 87,
+                  child: TryItBubble(
+                      text: "Click on a ride card to drop riders off.",
+                      down: false),
+                ),
+              ),
+              Expanded(flex: 2, child: SizedBox())
+            ]),
+          ),
+        ]);
+      });
+}
+
 class Onboarding extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -433,12 +600,15 @@ class Onboarding extends StatefulWidget {
 class OnboardingState extends State<Onboarding> {
   int stage = 0;
 
-  final List<Widget Function(OnboardingState state, BuildContext context)>
+  static List<Widget Function(OnboardingState state, BuildContext context)>
       stageBuilders = [
     _startPage,
     _ridesTryIt,
+    _beginRideIntro,
     _beginRideTryIt,
-    
+    _onTheWayTryIt,
+    _ridesInProgressIntro,
+    _ridesInProgressTryIt
   ];
 
   void nextStage(BuildContext context) {

@@ -172,7 +172,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                        OnTheWayPage(widget.ride)));
+                                        OnTheWayPage(ride: widget.ride)));
                           } else {
                             setState(() => _requestedContinue = false);
                             throw Exception('Failed to update ride status');
