@@ -28,22 +28,22 @@ String toString(RideStatus status) {
 class Ride {
   ///The ride's id in the backend.
   final String id;
-  
+
   ///The ride type. Can only be 'active', 'past', or 'unscheduled'.
   String type;
-  
+
   ///The ride status.
   RideStatus status;
-  
+
   ///The starting location of the ride.
   final String startLocation;
 
   ///The ending location of the ride.
   final String endLocation;
-  
+
   ///The starting address of the ride.
   final String startAddress;
-  
+
   ///The ending address of the ride.
   final String endAddress;
 
@@ -58,15 +58,15 @@ class Ride {
 
   Ride(
       {this.id,
-        this.type,
-        this.status,
-        this.startLocation,
-        this.endLocation,
-        this.startAddress,
-        this.endAddress,
-        this.rider,
-        this.endTime,
-        this.startTime});
+      this.type,
+      this.status,
+      this.startLocation,
+      this.endLocation,
+      this.startAddress,
+      this.endAddress,
+      this.rider,
+      this.endTime,
+      this.startTime});
 
   ///Creates a ride from JSON representation.
   factory Ride.fromJson(Map<String, dynamic> json) {
@@ -111,8 +111,7 @@ Future<http.Response> updateRideStatus(
       headers: <String, String>{"Content-Type": "application/json"});
 }
 
-Future<http.Response> setRideToPast(
-    BuildContext context, String id) async {
+Future<http.Response> setRideToPast(BuildContext context, String id) async {
   final body = jsonEncode(<String, String>{"type": "past"});
   return http.put(AppConfig.of(context).baseUrl + '/rides/$id',
       body: body,
@@ -241,28 +240,28 @@ class _RideCardState extends State<RideCard> {
             child: CustomPaint(painter: ArrowPainter(calculateArrowLength())))
         : Container();
 
-
     Widget card = GestureDetector(
         onTap: () {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (BuildContext context) =>
-                  BeginRidePage(widget.ride))
-          );
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  BeginRidePage(ride: widget.ride)));
         },
         child: Card(
             elevation: 3.0,
             child: Padding(
-              padding: EdgeInsets.only(top: 24, bottom: 24, left: cardPadding, right: cardPadding),
+              padding: EdgeInsets.only(
+                  top: 24, bottom: 24, left: cardPadding, right: cardPadding),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                        children: [
-                          Text('Pickup', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                          SizedBox(width: 5),
-                          Text(DateFormat.jm().format(widget.ride.startTime), style: TextStyle(fontSize: 20))
-                        ]
-                    ),
+                    Row(children: [
+                      Text('Pickup',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      SizedBox(width: 5),
+                      Text(DateFormat.jm().format(widget.ride.startTime),
+                          style: TextStyle(fontSize: 20))
+                    ]),
                     SizedBox(height: 9),
                     Stack(
                       key: stackKey,
@@ -281,43 +280,35 @@ class _RideCardState extends State<RideCard> {
                                 },
                               ),
                               dropOff
-                            ]
-                        ),
+                            ]),
                       ],
                     ),
                     SizedBox(height: 16),
-                    Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 24,
-                            //TODO: replace with rider's image
-                            backgroundImage: AssetImage('assets/images/terry.jpg'),
-                          ),
-                          SizedBox(width: 16),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(widget.ride.rider.firstName,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                    )
-                                ),
-                                SizedBox(height: 4),
-                                Text(widget.ride.rider.accessibilityNeeds.join(', '),
-                                    style: TextStyle(
-                                        color: Color(0xFF848484),
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 15)
-                                )
-                              ]
-                          ),
-                        ]
-                    ),
-                  ]
-              ),
-            )
-        )
-    );
+                    Row(children: [
+                      CircleAvatar(
+                        radius: 24,
+                        //TODO: replace with rider's image
+                        backgroundImage: AssetImage('assets/images/terry.jpg'),
+                      ),
+                      SizedBox(width: 16),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.ride.rider.firstName,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                )),
+                            SizedBox(height: 4),
+                            Text(
+                                widget.ride.rider.accessibilityNeeds.join(', '),
+                                style: TextStyle(
+                                    color: Color(0xFF848484),
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 15))
+                          ]),
+                    ]),
+                  ]),
+            )));
     return card;
   }
 }

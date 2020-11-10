@@ -1,3 +1,4 @@
+import 'package:carriage/MeasureRect.dart';
 import 'package:carriage/Ride.dart';
 import 'package:carriage/pages/BeginRidePage.dart';
 import 'package:carriage/widgets/AppBars.dart';
@@ -259,20 +260,25 @@ class OtherRideCard extends StatelessWidget {
   }
 }
 
-class RidesInProgressPage extends StatefulWidget {
-  _RidesInProgressPageState createState() => _RidesInProgressPageState();
-}
+class RidesInProgressPageStateless extends StatelessWidget {
+  final List<Ride> currentRides;
+  final List<Ride> remainingRides;
+  final List<Ride> selectedRides;
+  final Function onTapRide;
+  final Function onDropoffPressed;
 
-class _RidesInProgressPageState extends State<RidesInProgressPage> {
-  List<Ride> selectedRides = [];
-  void selectRide(Ride ride, bool select) {
-    setState(() {
-      if (select)
-        selectedRides.add(ride);
-      else
-        selectedRides.remove(ride);
-    });
-  }
+  final OnWidgetRectChange onFirstRideRectChange;
+  static void onChangeDefault(Rect s) {}
+
+  RidesInProgressPageStateless({
+    Key key,
+    this.currentRides,
+    this.remainingRides,
+    this.selectedRides = const [],
+    this.onTapRide,
+    this.onDropoffPressed,
+    this.onFirstRideRectChange = onChangeDefault,
+  }) : super(key: key);
 
   void finishRide(BuildContext context, Ride ride) async {
     http.Response statusResponse =
@@ -293,13 +299,11 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
 
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
-
     return Scaffold(
         appBar: ReturnHomeBar(),
         backgroundColor: Colors.white,
         body: SafeArea(
-            child: ridesProvider.currentRides.isEmpty
+            child: currentRides.isEmpty
                 ? GestureDetector(
                     onTap: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -329,8 +333,7 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                                     height: 24,
                                     child: Center(
                                         child: Text(
-                                            ridesProvider.currentRides.length
-                                                .toString(),
+                                            currentRides.length.toString(),
                                             style: TextStyle(
                                                 color: Colors.white))),
                                     decoration: BoxDecoration(
@@ -347,10 +350,9 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                                           .headline5),
                                 ),
                                 SizedBox(height: 24),
-                                ridesProvider.currentRides.length == 1
+                                currentRides.length == 1
                                     ? BigRideInProgressCard(
-                                        ridesProvider.currentRides[0],
-                                        finishRide)
+                                        currentRides[0], finishRide)
                                     : GridView.count(
                                         padding: EdgeInsets.only(
                                             top: 24,
@@ -363,14 +365,25 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                                         crossAxisCount: 2,
                                         childAspectRatio: 0.8,
                                         shrinkWrap: true,
-                                        children: ridesProvider.currentRides
-                                            .map((ride) =>
-                                                SmallRideInProgressCard(
-                                                    ride, selectRide))
+                                        children: currentRides
+                                            .asMap()
+                                            .map((i, ride) {
+                                              final card =
+                                                  SmallRideInProgressCard(
+                                                      ride, onTapRide);
+                                              final res = i != 0
+                                                  ? card
+                                                  : MeasureRect(
+                                                      child: card,
+                                                      onChange:
+                                                          onFirstRideRectChange);
+                                              return MapEntry(i, res);
+                                            })
+                                            .values
                                             .toList(),
                                       ),
                                 SizedBox(height: 32),
-                                ridesProvider.remainingRides.isNotEmpty
+                                remainingRides.isNotEmpty
                                     ? Padding(
                                         padding:
                                             const EdgeInsets.only(left: 16),
@@ -381,7 +394,7 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                                                 .subtitle1),
                                       )
                                     : Container(),
-                                ridesProvider.remainingRides.isNotEmpty
+                                remainingRides.isNotEmpty
                                     ? SingleChildScrollView(
                                         scrollDirection: Axis.horizontal,
                                         child: Row(
@@ -390,7 +403,7 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                                           SizedBox(width: 16)
                                         ]..insertAll(
                                                 1,
-                                                ridesProvider.remainingRides
+                                                remainingRides
                                                     .map((ride) =>
                                                         OtherRideCard(ride))
                                                     .toList())),
@@ -408,31 +421,76 @@ class _RidesInProgressPageState extends State<RidesInProgressPage> {
                                     padding: const EdgeInsets.only(
                                         left: 34, right: 34),
                                     child: FlatButton(
-                                      padding: EdgeInsets.all(16),
-                                      color: Colors.black,
-                                      child: Text(
-                                          'Drop off ' +
-                                              (selectedRides.length == 1
-                                                  ? selectedRides[0]
-                                                      .rider
-                                                      .firstName
-                                                  : 'Multiple Passengers'),
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold)),
-                                      onPressed: () {
-                                        setState(() {
-                                          selectedRides.forEach((Ride r) =>
-                                              finishRide(context, r));
-                                          selectedRides = [];
-                                        });
-                                      },
-                                    ),
+                                        padding: EdgeInsets.all(16),
+                                        color: Colors.black,
+                                        child: Text(
+                                            'Drop off ' +
+                                                (selectedRides.length == 1
+                                                    ? selectedRides[0]
+                                                        .rider
+                                                        .firstName
+                                                    : 'Multiple Passengers'),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold)),
+                                        onPressed: onDropoffPressed),
                                   ),
                                 )
                               : Container())
                     ],
                   )));
+  }
+}
+
+class RidesInProgressPage extends StatefulWidget {
+  _RidesInProgressPageState createState() => _RidesInProgressPageState();
+}
+
+class _RidesInProgressPageState extends State<RidesInProgressPage> {
+  List<Ride> selectedRides = [];
+  void _selectRide(Ride ride, bool select) {
+    setState(() {
+      if (select)
+        selectedRides.add(ride);
+      else
+        selectedRides.remove(ride);
+    });
+  }
+
+  void _finishSelectedRides() {
+    selectedRides.forEach((Ride r) => _finishRide(context, r));
+    setState(() {
+      selectedRides = [];
+    });
+  }
+
+  void _finishRide(BuildContext context, Ride ride) async {
+    http.Response statusResponse =
+        await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
+    if (statusResponse.statusCode == 200) {
+      http.Response typeResponse = await setRideToPast(context, ride.id);
+      if (typeResponse.statusCode == 200) {
+        Provider.of<RidesProvider>(context, listen: false)
+            .finishCurrentRide(ride);
+      } else {
+        throw Exception('Error setting ride type to past');
+      }
+    } else {
+      throw Exception(
+          'Error setting ride status to ${toString(RideStatus.COMPLETED)}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+    return RidesInProgressPageStateless(
+      currentRides: ridesProvider.currentRides,
+      remainingRides: ridesProvider.remainingRides,
+      selectedRides: selectedRides,
+      onTapRide: _selectRide,
+      onDropoffPressed: _finishSelectedRides,
+    );
   }
 }

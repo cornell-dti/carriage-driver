@@ -4,6 +4,7 @@ import 'package:bubble/bubble.dart';
 import 'package:carriage/Ride.dart';
 import 'package:carriage/Rider.dart';
 import 'package:carriage/Rides.dart';
+import 'package:carriage/RidesInProgress.dart';
 import 'package:carriage/pages/BeginRidePage.dart';
 import 'package:carriage/pages/OnTheWayPage.dart';
 import 'package:carriage/widgets/Buttons.dart';
@@ -336,17 +337,17 @@ Widget _sampleRidesPage(
   ));
 }
 
-Widget _ridesIntro(OnboardingState state, BuildContext context) {
-  return Overlay(
-    child: _sampleRidesPage(),
-    overlay: OnboardingSheet(
-      state,
-      headingText: "View your schedule with ease",
-      bodyText: "Your personalized rides for the day are organized by time.",
-      progress: 0.22,
-    ),
-  );
-}
+// Widget _ridesIntro(OnboardingState state, BuildContext context) {
+//   return Overlay(
+//     child: _sampleRidesPage(),
+//     overlay: OnboardingSheet(
+//       state,
+//       headingText: "View your schedule with ease",
+//       bodyText: "Your personalized rides for the day are organized by time.",
+//       progress: 0.22,
+//     ),
+//   );
+// }
 
 Widget _highlightRegion(OnboardingState state, BuildContext context,
     {double radius = 5}) {
@@ -516,12 +517,14 @@ Widget _onTheWayTryIt(OnboardingState state, BuildContext context) {
 }
 
 Widget _sampleRidesInProgressPage(
-    {void Function(Rect) onContinueRectChange =
+    {void Function(Rect) onFirstRideRectChanged =
         RidesStateless.onChangeDefault}) {
   return IgnorePointer(
-      child: BeginRidePage(
-    ride: _sampleRides[0],
-    onContinueRectChange: onContinueRectChange,
+      child: RidesInProgressPageStateless(
+    currentRides: _sampleRides,
+    remainingRides: _sampleRides,
+    selectedRides: [],
+    onFirstRideRectChange: onFirstRideRectChanged,
   ));
 }
 
@@ -560,7 +563,7 @@ Widget _ridesInProgressTryIt(OnboardingState state, BuildContext context) {
   return OverlayWithHighlight(
       highlightPiper: piper,
       child: _sampleRidesInProgressPage(
-        onContinueRectChange: (rect) {
+        onFirstRideRectChanged: (rect) {
           piper.onCallback(rect);
         },
       ),
@@ -572,7 +575,7 @@ Widget _ridesInProgressTryIt(OnboardingState state, BuildContext context) {
           Padding(
             padding: EdgeInsets.only(top: max(0, highlightRect.bottom)),
             child: Row(children: [
-              Expanded(flex: 3, child: SizedBox()),
+              Expanded(flex: 1, child: SizedBox()),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -583,7 +586,7 @@ Widget _ridesInProgressTryIt(OnboardingState state, BuildContext context) {
                       down: false),
                 ),
               ),
-              Expanded(flex: 2, child: SizedBox())
+              Expanded(flex: 5, child: SizedBox())
             ]),
           ),
         ]);
