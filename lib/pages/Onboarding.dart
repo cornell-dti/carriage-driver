@@ -337,18 +337,6 @@ Widget _sampleRidesPage(
   ));
 }
 
-// Widget _ridesIntro(OnboardingState state, BuildContext context) {
-//   return Overlay(
-//     child: _sampleRidesPage(),
-//     overlay: OnboardingSheet(
-//       state,
-//       headingText: "View your schedule with ease",
-//       bodyText: "Your personalized rides for the day are organized by time.",
-//       progress: 0.22,
-//     ),
-//   );
-// }
-
 Widget _highlightRegion(OnboardingState state, BuildContext context,
     {double radius = 5}) {
   return GestureDetector(
@@ -534,22 +522,26 @@ Widget _ridesInProgressIntro(OnboardingState state, BuildContext context) {
     child: Overlay(
       child: _sampleRidesInProgressPage(),
       overlay: Align(
-        alignment: Alignment.lerp(Alignment.center, Alignment.bottomRight, 0.5),
+        alignment:
+            Alignment.lerp(Alignment.center, Alignment.bottomRight, 0.85),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: 300,
-            height: 80,
-            child: OnboardingBubble(
-              heading: RichText(
-                  text: TextSpan(
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                      children: [
-                    TextSpan(text: "View your current rides. "),
-                    TextSpan(text: "🚗")
-                  ])),
-              text: "Manage multiple rides at once.",
+          padding: const EdgeInsets.only(right: 20),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 300,
+              height: 80,
+              child: OnboardingBubble(
+                heading: RichText(
+                    text: TextSpan(
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                        children: [
+                      TextSpan(text: "View your current rides. "),
+                      TextSpan(text: "🚗")
+                    ])),
+                text: "Manage multiple rides at once.",
+              ),
             ),
           ),
         ),
