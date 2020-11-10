@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:bubble/bubble.dart';
 import 'package:carriage/Ride.dart';
 import 'package:carriage/Rider.dart';
 import 'package:carriage/Rides.dart';
@@ -9,6 +8,7 @@ import 'package:carriage/pages/BeginRidePage.dart';
 import 'package:carriage/pages/OnTheWayPage.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:speech_bubble/speech_bubble.dart';
 
 final Color _highlightColor = Color(0xFF1AA0EB);
 final Color _overlayColor = Colors.transparent;
@@ -33,9 +33,26 @@ class RectPositioned extends StatelessWidget {
 class OnboardingBubble extends StatelessWidget {
   final Widget heading;
   final String text;
+  final NipLocation nipLocation;
 
-  const OnboardingBubble({Key key, @required this.text, @required this.heading})
+  static double borderRadius = 4;
+
+  const OnboardingBubble(
+      {Key key, @required this.text, @required this.heading, this.nipLocation})
       : super(key: key);
+
+  Widget _inner() {
+    return Padding(
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 11),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              heading,
+              SizedBox(height: 3),
+              Text(text, style: TextStyle(fontSize: 14, color: Colors.white))
+            ]));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,21 +64,17 @@ class OnboardingBubble extends StatelessWidget {
               blurRadius: 10,
               offset: Offset(0, 9)),
         ]),
-        child: Bubble(
-            color: _highlightColor,
-            nip: BubbleNip.no,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8, top: 11),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    heading,
-                    SizedBox(height: 3),
-                    Text(text,
-                        style: TextStyle(fontSize: 14, color: Colors.white))
-                  ]),
-            )));
+        child: nipLocation == null
+            ? Container(
+                decoration: BoxDecoration(
+                    color: _highlightColor,
+                    borderRadius: BorderRadius.circular(borderRadius)),
+                child: Padding(padding: EdgeInsets.all(6.0), child: _inner()))
+            : SpeechBubble(
+                color: _highlightColor,
+                borderRadius: borderRadius,
+                nipLocation: nipLocation,
+                child: _inner()));
   }
 }
 
@@ -75,6 +88,7 @@ class TryItBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OnboardingBubble(
+        nipLocation: down ? NipLocation.BOTTOM : NipLocation.TOP,
         heading: RichText(
             text: TextSpan(
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
@@ -384,14 +398,14 @@ Widget _beginRideTryIt(OnboardingState state, BuildContext context) {
               rect: highlightRect,
               child: _highlightRegion(state, context, radius: 2)),
           Padding(
-            padding: EdgeInsets.only(top: max(0, highlightRect.top - 100)),
+            padding: EdgeInsets.only(top: max(0, highlightRect.top - 108)),
             child: Row(children: [
               Expanded(flex: 1, child: SizedBox()),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   width: 220,
-                  height: 82,
+                  height: 90,
                   child: TryItBubble(
                       text: "Click to begin this ride.", down: true),
                 ),
@@ -428,14 +442,14 @@ Widget _onTheWayTryIt(OnboardingState state, BuildContext context) {
               rect: highlightRect,
               child: _highlightRegion(state, context, radius: 2)),
           Padding(
-            padding: EdgeInsets.only(top: max(0, highlightRect.top - 100)),
+            padding: EdgeInsets.only(top: max(0, highlightRect.top - 113)),
             child: Row(children: [
               Expanded(flex: 3, child: SizedBox()),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   width: 221,
-                  height: 87,
+                  height: 95,
                   child: TryItBubble(
                       text: "Click to notify the rider of your arrival.",
                       down: true),
@@ -516,7 +530,7 @@ Widget _ridesInProgressTryIt(OnboardingState state, BuildContext context) {
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   width: 221,
-                  height: 87,
+                  height: 95,
                   child: TryItBubble(
                       text: "Click on a ride card to drop riders off.",
                       down: false),
