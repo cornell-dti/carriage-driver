@@ -5,7 +5,7 @@ import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideInfoCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import '../RidesInProgress.dart';
+import '../Home.dart';
 
 class PickUpPage extends StatefulWidget {
   PickUpPage(this.ride);
@@ -50,7 +50,7 @@ class _PickUpPageState extends State<PickUpPage> {
                         widget.ride.status = RideStatus.PICKED_UP;
                         Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (BuildContext context) =>
-                                RidesInProgressPage()
+                                Home()
                             )
                         );
                       } else {

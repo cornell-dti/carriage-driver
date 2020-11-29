@@ -134,9 +134,8 @@ BoxShadow dropShadow = BoxShadow(
 );
 
 class RideCard extends StatefulWidget {
-  RideCard(this.ride, this.pagePadding);
+  RideCard(this.ride);
   final Ride ride;
-  final double pagePadding;
 
   @override
   _RideCardState createState() => _RideCardState();
@@ -179,8 +178,14 @@ class _RideCardState extends State<RideCard> {
                   BeginRidePage(widget.ride))
           );
         },
-        child: Card(
-            elevation: 3.0,
+        child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  dropShadow
+                ],
+                borderRadius: BorderRadius.circular(12)
+            ),
             child: Padding(
               padding: EdgeInsets.all(24),
               child: Column(
@@ -206,23 +211,21 @@ class _RideCardState extends State<RideCard> {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(widget.ride.rider.firstName + ' ' +
-                                    widget.ride.rider.lastName.substring(
-                                        0, 1) + '.',
+                                Text(widget.ride.rider.firstName,
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold
                                     )
                                 ),
                                 SizedBox(height: 4),
-                                Text(
+                                widget.ride.rider.accessibilityNeeds.length > 0 ? Text(
                                     widget.ride.rider.accessibilityNeeds.join(
                                         ', '),
                                     style: TextStyle(
                                         color: Color(0xFF848484),
                                         fontStyle: FontStyle.italic,
                                         fontSize: 15)
-                                )
+                                ) : Container()
                               ]
                           ),
                           Spacer(),
