@@ -17,25 +17,19 @@ class _RidesState extends State<Rides> {
 
   Widget emptyPage(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 195),
-        Center(
-            child: Column(
-              children: <Widget>[
-                Image(
-                  image: AssetImage('assets/images/steeringWheel@3x.png'),
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  height: MediaQuery.of(context).size.width * 0.2,
-                ),
-                SizedBox(height: 22),
-                Text(
-                  'Congratulations! You are done for the day. \n'
-                      'Come back tomorrow!',
-                  textAlign: TextAlign.center,
-                )
-              ],
-            )),
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Image(
+          image: AssetImage('assets/images/steeringWheel@3x.png'),
+          width: MediaQuery.of(context).size.width * 0.2,
+          height: MediaQuery.of(context).size.width * 0.2,
+        ),
+        SizedBox(height: 22),
+        Text(
+          'Congratulations! You are done for the day. \n'
+              'Come back tomorrow!',
+          textAlign: TextAlign.center,
+        )
       ],
     );
   }
@@ -120,7 +114,13 @@ class _RidesState extends State<Rides> {
   Widget build(BuildContext context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
     return SafeArea(
-        child: ridesProvider.currentRides.isEmpty && ridesProvider.remainingRides.isEmpty ? emptyPage(context) :
+        child: ridesProvider.currentRides.isEmpty && ridesProvider.remainingRides.isEmpty ?
+        Container(
+          height: MediaQuery.of(context).size.height,
+            child: Center(
+                child: emptyPage(context)
+            )
+        ) :
         Stack(
           children: [
             Container(
@@ -215,7 +215,18 @@ class RideGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String title = '$hour:00 ~ $hour:50 ' + (hour < 12 ? 'AM' : 'PM');
+    int hour12 = hour;
+    String period;
+    if (hour < 12) {
+      period = 'AM';
+    }
+    else {
+      period = 'PM';
+      if (hour > 12) {
+        hour12 -= 12;
+      }
+    }
+    String title = '$hour12:00 ~ $hour12:50 ' + period;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
