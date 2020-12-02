@@ -84,14 +84,8 @@ class UserInfo {
   ///The last name of the driver.
   final String lastName;
 
-  ///Time that the driver starts working.
-  final String startTime;
-
-  ///Time that the driver stops working.
-  final String endTime;
-
-  ///The driver's breaks.
-  final Breaks breaks;
+  ///Time that the driver works.
+  final Map<String, dynamic> availability;
 
   ///Name of the vehicle the driver uses.
   final String vehicle;
@@ -109,9 +103,7 @@ class UserInfo {
   UserInfo(
       {this.firstName,
       this.lastName,
-      this.startTime,
-      this.endTime,
-      this.breaks,
+      this.availability,
       this.vehicle,
       this.phoneNumber,
       this.email,
@@ -122,9 +114,7 @@ class UserInfo {
     return UserInfo(
         firstName: json['firstName'],
         lastName: json['lastName'],
-        startTime: json['startTime'],
-        endTime: json['endTime'],
-        breaks: Breaks.fromJson(json['breaks']),
+        availability: json['availability'],
         vehicle: json['vehicle']['name'],
         phoneNumber: json['phoneNumber'],
         email: json['email'],

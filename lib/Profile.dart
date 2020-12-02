@@ -133,13 +133,7 @@ class _ProfileState extends State<Profile> {
             "Schedule Info",
             [
               InfoRow("hours", Icons.schedule,
-                  "${userInfoProvider.info.startTime} to ${userInfoProvider.info.endTime}"),
-              InfoRow(
-                  "breaks",
-                  Icons.free_breakfast,
-                  (userInfoProvider.info.breaks == null)
-                      ? 'None'
-                      : userInfoProvider.info.breaks.toString()),
+                  "${userInfoProvider.info.availability}"),
               InfoRow("vehicle", Icons.directions_car,
                   userInfoProvider.info.vehicle),
             ],
