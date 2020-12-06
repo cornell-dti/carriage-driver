@@ -210,10 +210,37 @@ class CarProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LinearProgressIndicator(
-      value: progress,
-      backgroundColor: Color(0xFFDCDCDC),
-      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+    return Column(
+      children: [
+        // jank to move the car to the end of the bar
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      right: 5 + constraints.maxWidth * (1 - progress)),
+                  child: Image(
+                    image: AssetImage('assets/images/progress_car.png'),
+                    alignment: AlignmentGeometry.lerp(
+                        Alignment.bottomLeft, Alignment.bottomRight, progress),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: LinearProgressIndicator(
+            minHeight: 8,
+            value: progress,
+            backgroundColor: Color(0xFFDCDCDC),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+          ),
+        ),
+      ],
     );
   }
 }
