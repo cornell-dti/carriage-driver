@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'AuthProvider.dart';
 import 'LocationTracker.dart';
 import 'Rides.dart';
+import 'RidesProvider.dart';
 import 'main_common.dart';
 import 'Profile.dart';
 import 'UserInfoProvider.dart';
@@ -65,17 +66,26 @@ class _HomeState extends State<Home> {
   }
 
   Widget _profilePage(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Profile(),
-      ],
-    );
+    return Profile();
   }
 
   Widget getPage(BuildContext context, int index) {
     switch (index) {
       case (RIDES):
-        return Rides();
+        RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+        return FutureBuilder(
+            future: ridesProvider.requestActiveRides(context),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return SafeArea(
+                  child: Center(
+                      child: CircularProgressIndicator()
+                  ),
+                );
+              }
+              return Rides();
+            }
+        );
       case (HISTORY):
         return Column(
           children: <Widget>[
