@@ -5,6 +5,7 @@ import 'package:carriage/Rider.dart';
 import 'package:carriage/Rides.dart';
 import 'package:carriage/pages/BeginRidePage.dart';
 import 'package:carriage/pages/OnTheWayPage.dart';
+import 'package:carriage/pages/PickUpPage.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/OnboardingWidgets.dart';
 import 'package:flutter/material.dart';
@@ -48,10 +49,6 @@ final List<Ride> _sampleRides = [
       startTime: DateTime(2020, 1, 1, 21, 50),
       endTime: DateTime(2020, 1, 1, 21, 50),
       rider: _sampleRiders[2]),
-];
-
-final List<Ride> _sampleCurrentRides = [
-  _sampleRides[0],
   Ride(
       startLocation: "RPCC",
       endLocation: "Upson Hall",
@@ -59,6 +56,10 @@ final List<Ride> _sampleCurrentRides = [
       startTime: DateTime(2020, 1, 1, 21, 50),
       endTime: DateTime(2020, 1, 1, 21, 50),
       rider: _sampleRiders[3]),
+];
+
+final List<Ride> _sampleCurrentRides = [
+  _sampleRides[0],
 ];
 
 // PAGES
@@ -94,13 +95,14 @@ Widget _start(OnboardingState state, BuildContext context) {
 }
 
 Widget _sampleRidesPage(
-    {void Function(Rect) rectCallback = RidesStateless.onChangeDefault}) {
+    {void Function(Rect) firstRemainingRideRectCb =
+        RidesStateless.onChangeDefault}) {
   return IgnorePointer(
       child: RidesStateless(
     remainingRides: _sampleRides,
     currentRides: [],
     selectedRides: [],
-    firstRemainingRideRectCb: rectCallback,
+    firstRemainingRideRectCb: firstRemainingRideRectCb,
   ));
 }
 
@@ -121,7 +123,7 @@ Widget _ridesTryIt(OnboardingState state, BuildContext context) {
   return OverlayWithHighlight(
       highlightPiper: piper,
       child: _sampleRidesPage(
-        rectCallback: (rect) {
+        firstRemainingRideRectCb: (rect) {
           piper.onCallback(rect);
         },
       ),
@@ -163,32 +165,12 @@ Widget _sampleBeginRidePage(
 }
 
 Widget _beginRidePreview(OnboardingState state, BuildContext context) {
-  return GestureDetector(
-    onTap: () => state.nextStage(context),
-    child: OverlayShadow(
-      child: _sampleBeginRidePage(),
-      overlay: Align(
-        alignment: Alignment.lerp(Alignment.center, Alignment.bottomRight, 0.5),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: 275,
-            height: 100,
-            child: OnboardingBubble(
-              heading: RichText(
-                  text: TextSpan(
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                      children: [
-                    TextSpan(text: "Everything you need. "),
-                    TextSpan(text: "ℹ️")
-                  ])),
-              text: "All information about your rides is displayed.",
-            ),
-          ),
-        ),
-      ),
-    ),
+  return OverlayShadow(
+    overlay: OnboardingSheet(state,
+        headingText: "Complete rides in just a few clicks.",
+        bodyText: "Description here.",
+        progress: 0.4),
+    child: _sampleBeginRidePage(),
   );
 }
 
@@ -271,86 +253,109 @@ Widget _onTheWayTryIt(OnboardingState state, BuildContext context) {
       });
 }
 
-// Widget _sampleRidesInProgressPage(
-//     {void Function(Rect) onFirstRideRectChanged =
-//         RidesStateless.onChangeDefault}) {
-//   return IgnorePointer(
-//       child: RidesInProgressPageStateless(
-//     currentRides: _sampleCurrentRides,
-//     remainingRides: _sampleRides.getRange(1, _sampleRides.length).toList(),
-//     selectedRides: [],
-//     onFirstRideRectChange: onFirstRideRectChanged,
-//   ));
-// }
+Widget _samplePickupPage(
+    {void Function(Rect) onContinueRectChange =
+        RidesStateless.onChangeDefault}) {
+  return IgnorePointer(
+      child: PickUpPage(
+    ride: _sampleRides[0],
+    onContinueRectChange: onContinueRectChange,
+  ));
+}
 
-// Widget _ridesInProgressPreview(OnboardingState state, BuildContext context) {
-//   return GestureDetector(
-//     onTap: () => state.nextStage(context),
-//     child: OverlayShadow(
-//       child: _sampleRidesInProgressPage(),
-//       overlay: Align(
-//         alignment:
-//             Alignment.lerp(Alignment.center, Alignment.bottomRight, 0.85),
-//         child: Padding(
-//           padding: const EdgeInsets.only(right: 20),
-//           child: Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Container(
-//               width: 300,
-//               height: 80,
-//               child: OnboardingBubble(
-//                 heading: RichText(
-//                     text: TextSpan(
-//                         style: TextStyle(
-//                             fontSize: 20, fontWeight: FontWeight.w500),
-//                         children: [
-//                       TextSpan(text: "View your current rides. "),
-//                       TextSpan(text: "🚗")
-//                     ])),
-//                 text: "Manage multiple rides at once.",
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     ),
-//   );
-// }
+Widget _pickupTryIt(OnboardingState state, BuildContext context) {
+  final piper = CallbackPiper<Rect>();
+  return OverlayWithHighlight(
+      highlightPiper: piper,
+      child: _samplePickupPage(
+        onContinueRectChange: (rect) {
+          piper.onCallback(rect);
+        },
+      ),
+      overlayBuilder: (context, highlightRect) {
+        return Stack(children: [
+          RectPositioned(
+              rect: highlightRect,
+              child: highlightRegion(state, context, radius: 2)),
+          Padding(
+            padding: EdgeInsets.only(top: max(0, highlightRect.top - 113)),
+            child: Row(children: [
+              Expanded(flex: 3, child: SizedBox()),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 221,
+                  height: 95,
+                  child: TryItBubble(
+                      text: "Click once you've picked up.", down: true),
+                ),
+              ),
+              Expanded(flex: 2, child: SizedBox())
+            ]),
+          ),
+        ]);
+      });
+}
 
-// Widget _ridesInProgressTryIt(OnboardingState state, BuildContext context) {
-//   final piper = CallbackPiper<Rect>();
-//   return OverlayWithHighlight(
-//       highlightPiper: piper,
-//       child: _sampleRidesInProgressPage(
-//         onFirstRideRectChanged: (rect) {
-//           piper.onCallback(rect);
-//         },
-//       ),
-//       overlayBuilder: (context, highlightRect) {
-//         return Stack(children: [
-//           RectPositioned(
-//               rect: highlightRect,
-//               child: highlightRegion(state, context, radius: 2)),
-//           Padding(
-//             padding: EdgeInsets.only(top: max(0, highlightRect.bottom)),
-//             child: Row(children: [
-//               Expanded(flex: 1, child: SizedBox()),
-//               Padding(
-//                 padding: const EdgeInsets.all(8.0),
-//                 child: Container(
-//                   width: 221,
-//                   height: 95,
-//                   child: TryItBubble(
-//                       text: "Click on a ride card to drop riders off.",
-//                       down: false),
-//                 ),
-//               ),
-//               Expanded(flex: 5, child: SizedBox())
-//             ]),
-//           ),
-//         ]);
-//       });
-// }
+Widget _sampleRidesInProgressPage(
+    {void Function(Rect) firstRemainingRideRectCb =
+        RidesStateless.onChangeDefault}) {
+  return IgnorePointer(
+      child: RidesStateless(
+    currentRides: _sampleCurrentRides,
+    remainingRides: _sampleRides.getRange(1, _sampleRides.length).toList(),
+    selectedRides: [],
+    firstRemainingRideRectCb: firstRemainingRideRectCb,
+  ));
+}
+
+Widget _ridesInProgressPreview(OnboardingState state, BuildContext context) {
+  return OverlayShadow(
+    overlay: OnboardingSheet(state,
+        headingText: "Complete multiple rides at once.",
+        bodyText: "Description here.",
+        progress: 0.7),
+    child: _sampleRidesInProgressPage(),
+  );
+}
+
+Widget _ridesInProgressTryIt(OnboardingState state, BuildContext context) {
+  double radius = 12;
+  final piper = CallbackPiper<Rect>();
+  return OverlayWithHighlight(
+      highlightPiper: piper,
+      child: _sampleRidesInProgressPage(
+        firstRemainingRideRectCb: (rect) {
+          piper.onCallback(rect);
+        },
+      ),
+      radius: radius,
+      overlayBuilder: (context, highlightRect) {
+        return Stack(children: [
+          RectPositioned(
+              rect: highlightRect,
+              child: highlightRegion(state, context, radius: radius)),
+          Padding(
+            padding: EdgeInsets.only(top: max(0, highlightRect.top - 135)),
+            child: Row(children: [
+              Expanded(flex: 90, child: SizedBox()),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 221,
+                  height: 115,
+                  child: TryItBubble(
+                      text:
+                          "Click on another ride card to add it to your current rides.",
+                      down: true),
+                ),
+              ),
+              Expanded(flex: 102, child: SizedBox())
+            ]),
+          ),
+        ]);
+      });
+}
 
 List<Widget Function(OnboardingState state, BuildContext context)>
     stageBuilders = [
@@ -360,7 +365,7 @@ List<Widget Function(OnboardingState state, BuildContext context)>
   _beginRidePreview,
   _beginRideTryIt,
   _onTheWayTryIt,
-  // _pickupTryIt,
-  // _ridesInProgressPreview,
-  // _ridesInProgressTryIt
+  _pickupTryIt,
+  _ridesInProgressPreview,
+  _ridesInProgressTryIt,
 ];

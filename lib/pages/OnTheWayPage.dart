@@ -57,7 +57,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      PickUpPage(widget.ride)));
+                                      PickUpPage(ride: widget.ride)));
                         } else {
                           setState(() => _requestedContinue = false);
                           throw Exception('Failed to update ride status');

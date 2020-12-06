@@ -32,7 +32,7 @@ class OnboardingBubble extends StatelessWidget {
   final String text;
   final NipLocation nipLocation;
 
-  static double borderRadius = 4;
+  static double borderRadius = 11;
 
   const OnboardingBubble(
       {Key key, @required this.text, @required this.heading, this.nipLocation})

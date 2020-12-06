@@ -7,7 +7,7 @@ import 'Ride.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
-class RidesStateless extends StatelessWidget {
+class RidesStateless extends StatelessWidget {  
   final List<Ride> currentRides;
   final List<Ride> remainingRides;
   final List<Ride> selectedRides;
@@ -49,10 +49,6 @@ class RidesStateless extends StatelessWidget {
   }
 
   Widget ridesInProgress(BuildContext context) {
-    RidesProvider ridesProvider =
-        Provider.of<RidesProvider>(context, listen: false);
-    List<Ride> currentRides = ridesProvider.currentRides;
-
     return Container(
         child: Column(children: [
       Padding(

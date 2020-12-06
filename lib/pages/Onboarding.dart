@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'OnboardingStages.dart';
 
+// See OnboardingStages.dart for dummy pages used for each stage
+// OnboardingWidgets.dart for widgets
+
 class Onboarding extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
