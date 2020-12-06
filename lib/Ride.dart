@@ -28,22 +28,22 @@ String toString(RideStatus status) {
 class Ride {
   ///The ride's id in the backend.
   final String id;
-  
+
   ///The ride type. Can only be 'active', 'past', or 'unscheduled'.
   String type;
-  
+
   ///The ride status.
   RideStatus status;
-  
+
   ///The starting location of the ride.
   final String startLocation;
 
   ///The ending location of the ride.
   final String endLocation;
-  
+
   ///The starting address of the ride.
   final String startAddress;
-  
+
   ///The ending address of the ride.
   final String endAddress;
 
@@ -126,35 +126,16 @@ T getOrNull<T>(Map<String, dynamic> map, String key, {T parse(dynamic s)}) {
   return parse(x);
 }
 
-class ArrowPainter extends CustomPainter {
-  ArrowPainter(this.length);
-  double length;
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..strokeWidth = 2
-      ..color = Colors.black;
-    canvas.drawLine(Offset(0, 0), Offset(length - 5, 0), paint);
-    paint.style = PaintingStyle.fill;
-    Path trianglePath = Path();
-    trianglePath.moveTo(length - 5, 5);
-    trianglePath.lineTo(length - 5, -5);
-    trianglePath.lineTo(length, 0);
-    trianglePath.close();
-    canvas.drawPath(trianglePath, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
-  }
-}
+BoxShadow dropShadow = BoxShadow(
+    blurRadius: 2,
+    spreadRadius: 0,
+    color: Colors.black.withOpacity(0.25)
+);
 
 class RideCard extends StatefulWidget {
-  RideCard(this.ride, this.pagePadding);
+  RideCard(this.ride);
   final Ride ride;
-  final double pagePadding;
 
   @override
   _RideCardState createState() => _RideCardState();
@@ -167,131 +148,64 @@ class _RideCardState extends State<RideCard> {
   GlobalKey dropoffKey = GlobalKey();
   Size pickupTextSize;
 
-  @override
-  Widget build(BuildContext context) {
-    Widget pickup = Expanded(
-        flex: 4,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('From',
-              style: TextStyle(
-                  fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))),
-          Container(
-            child: MeasureSize(
-              child: Text(
-                widget.ride.startLocation,
-                style: TextStyle(fontSize: 17),
-                textWidthBasis: TextWidthBasis.longestLine,
-              ),
-              onChange: (size) {
-                pickupTextSize = size;
-              },
-            ),
+  Widget actionButton(IconData icon, Function action) {
+    return GestureDetector(
+      onTap: action,
+      child: Container(
+          width: 33,
+          height: 33,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(100),
+              boxShadow: [
+                dropShadow
+              ]
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Icon(icon, size: 20, color: Colors.black),
           )
-        ]));
-
-    Widget dropOff = Expanded(
-      flex: 4,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('To',
-              style: TextStyle(
-                  fontSize: 11, color: Color.fromRGBO(132, 132, 132, 0.5))),
-          Text(widget.ride.endLocation,
-              key: dropoffKey, style: TextStyle(fontSize: 17))
-        ],
       ),
     );
+  }
 
-    double getDropoffX() {
-      RenderBox box = dropoffKey.currentContext.findRenderObject();
-      double x = box.localToGlobal(Offset.zero).dx;
-      return x;
-    }
-
-    double getDropoffY() {
-      RenderBox child = dropoffKey.currentContext.findRenderObject();
-      Offset childOffset = child.localToGlobal(Offset.zero);
-      //convert
-      RenderBox parent = stackKey.currentContext.findRenderObject();
-      Offset childRelativeToParent = parent.globalToLocal(childOffset);
-      return childRelativeToParent.dy;
-    }
-
-    double cardPadding = 16;
-    double arrowPadding = 24;
-
-    double calculateArrowStart() {
-      return pickupTextSize.width + arrowPadding;
-    }
-
-    double calculateArrowLength() {
-      double idealLength = getDropoffX() -
-          cardPadding -
-          widget.pagePadding -
-          pickupTextSize.width -
-          (arrowPadding * 2);
-      return idealLength;
-    }
-
-    Widget arrow = pickupTextSize != null && spacerSize != null
-        ? Positioned(
-            left: calculateArrowStart(),
-            top: getDropoffY(),
-            child: CustomPaint(painter: ArrowPainter(calculateArrowLength())))
-        : Container();
-
-
-    Widget card = GestureDetector(
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
         onTap: () {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (BuildContext context) =>
                   BeginRidePage(widget.ride))
           );
         },
-        child: Card(
-            elevation: 3.0,
+        child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  dropShadow
+                ],
+                borderRadius: BorderRadius.circular(12)
+            ),
             child: Padding(
-              padding: EdgeInsets.only(top: 24, bottom: 24, left: cardPadding, right: cardPadding),
+              padding: EdgeInsets.all(24),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                         children: [
-                          Text('Pickup', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                          SizedBox(width: 5),
-                          Text(DateFormat.jm().format(widget.ride.startTime), style: TextStyle(fontSize: 20))
-                        ]
-                    ),
-                    SizedBox(height: 9),
-                    Stack(
-                      key: stackKey,
-                      children: [
-                        arrow,
-                        Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              pickup,
-                              MeasureSize(
-                                child: Expanded(flex: 2, child: SizedBox()),
-                                onChange: (size) {
-                                  setState(() {
-                                    spacerSize = size;
-                                  });
-                                },
-                              ),
-                              dropOff
-                            ]
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 24,
-                            //TODO: replace with rider's image
-                            backgroundImage: AssetImage('assets/images/terry.jpg'),
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                dropShadow
+                              ],
+                            ),
+                            child: CircleAvatar(
+                              radius: 24,
+                              //TODO: replace with rider's image
+                              backgroundImage: AssetImage(
+                                  'assets/images/terry.jpg'),
+                            ),
                           ),
                           SizedBox(width: 16),
                           Column(
@@ -299,25 +213,167 @@ class _RideCardState extends State<RideCard> {
                               children: [
                                 Text(widget.ride.rider.firstName,
                                     style: TextStyle(
-                                      fontSize: 15,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold
                                     )
                                 ),
                                 SizedBox(height: 4),
-                                Text(widget.ride.rider.accessibilityNeeds.join(', '),
+                                widget.ride.rider.accessibilityNeeds.length > 0 ? Text(
+                                    widget.ride.rider.accessibilityNeeds.join(
+                                        ', '),
                                     style: TextStyle(
                                         color: Color(0xFF848484),
                                         fontStyle: FontStyle.italic,
                                         fontSize: 15)
-                                )
+                                ) : Container()
                               ]
                           ),
+                          Spacer(),
+                          actionButton(Icons.phone, () {}),
+                          SizedBox(width: 8),
+                          actionButton(Icons.notifications, () {})
                         ]
                     ),
+                    SizedBox(height: 32),
+                    TimeLine(widget.ride)
                   ]
               ),
             )
         )
     );
-    return card;
+  }
+}
+
+class TimeLine extends StatefulWidget {
+  TimeLine(this.ride);
+  final Ride ride;
+
+  @override
+  _TimeLineState createState() => _TimeLineState();
+}
+
+class _TimeLineState extends State<TimeLine> {
+  double size = 26;
+  double timelineHeight;
+  Widget line;
+
+  Widget locationCircle() {
+    Color grey = Color(0xFF9B9B9B);
+    return Container(
+      width: size,
+      height: size,
+      child: Icon(Icons.circle, size: 9.75, color: grey),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            dropShadow
+          ]
+      ),
+    );
+  }
+
+
+  Widget locationInfo(bool isPickup, DateTime time, String location) {
+
+    TextStyle directionStyle = TextStyle(
+        color: Color(0xFFA7A7A7),
+        fontSize: 11,
+        fontWeight: FontWeight.bold
+    );
+
+    TextStyle locationStyle = TextStyle(
+        color: Colors.black,
+        fontSize: 17,
+        fontWeight: FontWeight.normal
+    );
+
+    TextStyle timeStyle = locationStyle.copyWith(fontWeight: FontWeight.bold);
+
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(isPickup ? 'Pickup' : 'Dropoff', style: directionStyle),
+          SizedBox(height: 2),
+          RichText(
+            text: TextSpan(
+                text: DateFormat('jm').format(time),
+                style: timeStyle,
+                children: [
+                  TextSpan(
+                      text: ' @ $location',
+                      style: locationStyle)
+                ]
+            ),
+          )
+        ]
+    );
+  }
+  @override
+  Widget build(BuildContext context) {
+    double lineWidth = 4;
+    GlobalKey firstRowKey = GlobalKey();
+    GlobalKey lastRowKey = GlobalKey();
+
+    double getFirstRowPos() {
+      RenderBox firstRowBox = firstRowKey.currentContext.findRenderObject();
+      return firstRowBox.localToGlobal(Offset.zero).dy;
+    }
+
+    double getLastRowPos() {
+      RenderBox lastRowBox = lastRowKey.currentContext.findRenderObject();
+      return lastRowBox.localToGlobal(Offset.zero).dy + lastRowBox.size.height;
+    }
+
+    Widget buildLine() {
+      return timelineHeight != null && firstRowKey.currentContext != null &&
+          lastRowKey.currentContext != null ? Container(
+        margin: EdgeInsets.only(left: size / 2 - (lineWidth / 2)),
+        width: 4,
+        height: getLastRowPos() - getFirstRowPos(),
+        color: Color(0xFFECEBED),
+      ) : CircularProgressIndicator();
+    }
+
+    return Stack(
+      children: <Widget>[
+        line == null ? CircularProgressIndicator() : line,
+        MeasureSize(
+          onChange: (size) {
+            setState(() {
+              timelineHeight = size.height;
+              line = buildLine();
+            });
+          },
+          child: Column(
+              children: [
+                Container(
+                    key: firstRowKey,
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          locationCircle(),
+                          SizedBox(width: 16),
+                          locationInfo(true, widget.ride.startTime, widget.ride.startLocation)
+                        ]
+                    )
+                ),
+                SizedBox(height: 24),
+                Container(
+                    key: lastRowKey,
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          locationCircle(),
+                          SizedBox(width: 16),
+                          locationInfo(false, widget.ride.endTime, widget.ride.endLocation)
+                        ]
+                    )
+                ),
+              ]
+          ),
+        ),
+      ],
+    );
   }
 }
