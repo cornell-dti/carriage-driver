@@ -1,6 +1,7 @@
 import 'package:carriage/pages/Onboarding.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:speech_bubble/speech_bubble.dart';
 
 final Color highlightColor = Color(0xFF1AA0EB);
@@ -222,11 +223,8 @@ class CarProgressBar extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(
                         right: 5 + constraints.maxWidth * (1 - progress)),
-                    child: Image(
-                      image: AssetImage('assets/images/progress_car.png'),
-                      alignment: AlignmentGeometry.lerp(Alignment.bottomLeft,
-                          Alignment.bottomRight, progress),
-                    ),
+                    child: SvgPicture.asset('assets/images/progress_car.svg',
+                        alignment: Alignment.bottomRight),
                   ),
                 ),
               ],
