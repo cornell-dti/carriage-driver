@@ -76,6 +76,7 @@ Widget _start(OnboardingState state, BuildContext context) {
             children: [
               Text(
                 "Welcome to Carriage",
+                textAlign: TextAlign.center,
                 overflow: TextOverflow.clip,
                 style: Theme.of(context).textTheme.headline5.copyWith(
                     fontSize: 32,

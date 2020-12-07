@@ -218,13 +218,15 @@ class CarProgressBar extends StatelessWidget {
             return Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                      right: 5 + constraints.maxWidth * (1 - progress)),
-                  child: Image(
-                    image: AssetImage('assets/images/progress_car.png'),
-                    alignment: AlignmentGeometry.lerp(
-                        Alignment.bottomLeft, Alignment.bottomRight, progress),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        right: 5 + constraints.maxWidth * (1 - progress)),
+                    child: Image(
+                      image: AssetImage('assets/images/progress_car.png'),
+                      alignment: AlignmentGeometry.lerp(Alignment.bottomLeft,
+                          Alignment.bottomRight, progress),
+                    ),
                   ),
                 ),
               ],
