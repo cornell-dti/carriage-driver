@@ -18,6 +18,8 @@ dependencies:
   provider: ^4.0.5+1
   wakelock: ^0.1.4+2
   loading_overlay: ^0.2.1
+  speech_bubble: ^0.0.7
+  flutter_svg: ^0.18.0
 
 dev_dependencies:
   flutter_test:

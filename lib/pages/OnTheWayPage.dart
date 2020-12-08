@@ -1,3 +1,4 @@
+import 'package:carriage/MeasureRect.dart';
 import 'package:carriage/Ride.dart';
 import 'package:carriage/pages/PickUpPage.dart';
 import 'package:carriage/widgets/AppBars.dart';
@@ -7,10 +8,13 @@ import 'package:carriage/widgets/RideInfoCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
-
 class OnTheWayPage extends StatefulWidget {
-  OnTheWayPage(this.ride);
   final Ride ride;
+
+  final OnWidgetRectChange onContinueRectChange;
+  static void onChangeDefault(Rect s) {}
+
+  OnTheWayPage({this.ride, this.onContinueRectChange = onChangeDefault});
   @override
   _OnTheWayPageState createState() => _OnTheWayPageState();
 }
@@ -37,26 +41,29 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                 SizedBox(height: 59),
                 RideInfoCard(widget.ride, false),
                 Expanded(child: SizedBox()),
-                CButton(
-                    text: "Arrive",
-                    onPressed: () async {
-                      if (_requestedContinue) return;
-                      setState(() => _requestedContinue = true);
-                      final response = await updateRideStatus(
-                          context, widget.ride.id, RideStatus.ARRIVED);
-                      if (!mounted) return;
-                      if (response.statusCode == 200) {
-                        setState(() => _requestedContinue = false);
-                        widget.ride.status = RideStatus.ARRIVED;
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (BuildContext context) =>
-                                PickUpPage(widget.ride))
-                        );
-                      } else {
-                        setState(() => _requestedContinue = false);
-                        throw Exception('Failed to update ride status');
-                      }
-                    }),
+                MeasureRect(
+                  onChange: widget.onContinueRectChange,
+                  child: CButton(
+                      text: "Arrive",
+                      onPressed: () async {
+                        if (_requestedContinue) return;
+                        setState(() => _requestedContinue = true);
+                        final response = await updateRideStatus(
+                            context, widget.ride.id, RideStatus.ARRIVED);
+                        if (!mounted) return;
+                        if (response.statusCode == 200) {
+                          setState(() => _requestedContinue = false);
+                          widget.ride.status = RideStatus.ARRIVED;
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      PickUpPage(ride: widget.ride)));
+                        } else {
+                          setState(() => _requestedContinue = false);
+                          throw Exception('Failed to update ride status');
+                        }
+                      }),
+                ),
                 DangerButton(
                     text: "Notify Delay",
                     onPressed: () {

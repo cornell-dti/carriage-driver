@@ -206,9 +206,15 @@ class _RideSummaryState extends State<RideSummary> {
       type: "past",
       startLocation: "Teagle Hall",
       endLocation: "RPCC",
-      startTime: new DateTime(2020,11,14),
-      endTime: new DateTime(2020,11,14),
-      rider: rider.Rider('id', 'tc@gmail.com', '111-222-3333', 'Terry', 'Cruz', ['Crutches']),
+      startTime: new DateTime(2020, 11, 14),
+      endTime: new DateTime(2020, 11, 14),
+      rider: rider.Rider(
+          id: 'id',
+          email: 'tc@gmail.com',
+          phoneNumber: '1112223333',
+          firstName: 'Terry',
+          lastName: 'Cruz',
+          accessibilityNeeds: ['Crutches']),
     );
   }
 
@@ -245,13 +251,13 @@ class _RideSummaryState extends State<RideSummary> {
           Greeting(),
           Expanded(
               child: ListView(shrinkWrap: true, children: <Widget>[
-                _recentRide(),
-                LeftSubheading(heading: 'Upcoming Ride'),
-                Center(child: CurrentRide(_currentRide)),
-                Padding(
-                    padding: EdgeInsets.only(top: 36.0, bottom: 24.0),
-                    child: DriverStats())
-              ]))
+            _recentRide(),
+            LeftSubheading(heading: 'Upcoming Ride'),
+            Center(child: CurrentRide(_currentRide)),
+            Padding(
+                padding: EdgeInsets.only(top: 36.0, bottom: 24.0),
+                child: DriverStats())
+          ]))
         ]);
   }
 

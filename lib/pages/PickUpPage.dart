@@ -1,3 +1,4 @@
+import 'package:carriage/MeasureRect.dart';
 import 'package:carriage/Ride.dart';
 import 'package:carriage/widgets/AppBars.dart';
 import 'package:carriage/widgets/Buttons.dart';
@@ -8,8 +9,11 @@ import 'package:loading_overlay/loading_overlay.dart';
 import '../Home.dart';
 
 class PickUpPage extends StatefulWidget {
-  PickUpPage(this.ride);
+  final OnWidgetRectChange onContinueRectChange;
+  static void onChangeDefault(Rect s) {}
   final Ride ride;
+
+  PickUpPage({this.ride, this.onContinueRectChange = onChangeDefault});
   @override
   _PickUpPageState createState() => _PickUpPageState();
 }
@@ -37,27 +41,28 @@ class _PickUpPageState extends State<PickUpPage> {
                 SizedBox(height: 59),
                 RideInfoCard(widget.ride, false),
                 Expanded(child: SizedBox()),
-                CButton(
-                    text: "Pick up",
-                    onPressed: () async {
-                      if (_requestedContinue) return;
-                      setState(() => _requestedContinue = true);
-                      final response = await updateRideStatus(
-                          context, widget.ride.id, RideStatus.PICKED_UP);
-                      if (!mounted) return;
-                      if (response.statusCode == 200) {
-                        setState(() => _requestedContinue = false);
-                        widget.ride.status = RideStatus.PICKED_UP;
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (BuildContext context) =>
-                                Home()
-                            )
-                        );
-                      } else {
-                        setState(() => _requestedContinue = false);
-                        throw Exception('Failed to update ride status');
-                      }
-                    }),
+                MeasureRect(
+                  onChange: widget.onContinueRectChange,
+                  child: CButton(
+                      text: "Pick up",
+                      onPressed: () async {
+                        if (_requestedContinue) return;
+                        setState(() => _requestedContinue = true);
+                        final response = await updateRideStatus(
+                            context, widget.ride.id, RideStatus.PICKED_UP);
+                        if (!mounted) return;
+                        if (response.statusCode == 200) {
+                          setState(() => _requestedContinue = false);
+                          widget.ride.status = RideStatus.PICKED_UP;
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) => Home()));
+                        } else {
+                          setState(() => _requestedContinue = false);
+                          throw Exception('Failed to update ride status');
+                        }
+                      }),
+                ),
                 DangerButton(
                     text: "Report No Show",
                     onPressed: () {
