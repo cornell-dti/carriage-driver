@@ -1,4 +1,3 @@
-import 'package:carriage/pages/TestPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
@@ -55,7 +54,7 @@ class MyApp extends StatelessWidget {
                         fontSize: 12.0, fontWeight: FontWeight.normal),
                     headline2: TextStyle(
                         fontSize: 16.0, fontWeight: FontWeight.normal))),
-            home: TestPage()),
+            home: HomeOrLogin()),
       ),
     );
   }
