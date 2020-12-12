@@ -13,7 +13,6 @@ class RideDestPickupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 110,
       child: DecoratedBox(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -26,21 +25,17 @@ class RideDestPickupCard extends StatelessWidget {
                   offset: Offset(0, 9)),
             ]),
         child: Padding(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(16),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(_stop),
-                    Text(
-                      _address,
-                      style: TextStyle(color: Colors.black.withOpacity(0.5)),
-                    )
-                  ],
+                Text(_stop, style: TextStyle(fontSize: 17, letterSpacing: -0.41, fontWeight: FontWeight.w400)),
+                Text(
+                    _address,
+                    style: TextStyle(color: Color(0xFFA7A7A7), fontSize: 17, letterSpacing: -0.41, fontWeight: FontWeight.w400)
                 ),
+                SizedBox(height: 24),
                 Text(
                     "${_dropoff ? "Drop off time" : "Pick up time"}: ${DateFormat.jm().format(_time)}",
                     style: TextStyle(fontSize: 13))

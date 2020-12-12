@@ -15,13 +15,20 @@ class RideInfoCard extends StatelessWidget {
       child: Center(
         child: Column(children: <Widget>[
           CircleAvatar(
-            radius: 60.5,
+            radius: 50,
             //TODO: replace with rider image
             backgroundImage: AssetImage('assets/images/terry.jpg'),
           ),
           SizedBox(height: 14),
           Text(ride.rider.firstName,
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold))
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)
+          ),
+          ride.rider.accessibilityNeeds.length > 0 ?
+          Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Text(ride.rider.accessibilityNeeds.join(', '),
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, letterSpacing: -0.41)),
+          ) : Container()
         ]),
       ),
     );

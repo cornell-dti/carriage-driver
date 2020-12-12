@@ -70,33 +70,36 @@ class StopsState extends State<Stops> {
                 _height = size.height;
               });
             },
-            child: ListView(shrinkWrap: true, children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Row(
-                  children: [
-                    Container(width: 52, child: _StopCircle(false)),
-                    Expanded(
-                      child: RideDestPickupCard(false, widget.ride.startTime,
-                          widget.ride.startLocation, widget.ride.startAddress),
+            child: ListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Row(
+                      children: [
+                        Container(width: 52, child: _StopCircle(false)),
+                        Expanded(
+                          child: RideDestPickupCard(false, widget.ride.startTime,
+                              widget.ride.startLocation, widget.ride.startAddress),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 32),
-              Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Row(
-                  children: [
-                    Container(width: 52, child: _StopCircle(true)),
-                    Expanded(
-                      child: RideDestPickupCard(true, widget.ride.endTime,
-                          widget.ride.endLocation, widget.ride.endAddress),
+                  ),
+                  SizedBox(height: 80),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Row(
+                      children: [
+                        Container(width: 52, child: _StopCircle(true)),
+                        Expanded(
+                          child: RideDestPickupCard(true, widget.ride.endTime,
+                              widget.ride.endLocation, widget.ride.endAddress),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              )
-            ])),
+                  )
+                ])),
       ]),
     );
   }
@@ -117,16 +120,24 @@ class _BeginRidePageState extends State<BeginRidePage> {
   Widget _picAndName(BuildContext context) {
     return Center(
       child:
-          Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
+      Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
         CircleAvatar(
-          radius: 60.5,
+          radius: 50,
           backgroundImage: AssetImage('assets/images/terry.jpg'),
         ),
         SizedBox(width: 16),
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(widget.ride.rider.firstName,
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontFamily: 'SFDisplay', fontSize: 28, fontWeight: FontWeight.w700, letterSpacing: 0.23)
+            ),
+            widget.ride.rider.accessibilityNeeds.length > 0 ?
+            Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, letterSpacing: 0.23)),
+            ) : Container()
           ],
         )
       ]),
@@ -166,8 +177,8 @@ class _BeginRidePageState extends State<BeginRidePage> {
                           if (response.statusCode == 200) {
                             widget.ride.status = RideStatus.ON_THE_WAY;
                             RidesProvider ridesProvider =
-                                Provider.of<RidesProvider>(context,
-                                    listen: false);
+                            Provider.of<RidesProvider>(context,
+                                listen: false);
                             ridesProvider.changeRideToCurrent(widget.ride);
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(

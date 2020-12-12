@@ -12,6 +12,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  
   @override
   Widget build(BuildContext context) {
     UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
@@ -23,6 +24,11 @@ class _ProfileState extends State<Profile> {
     double _picBtnDiameter = _picDiameter * 0.39;
 
     if (userInfoProvider.hasInfo()) {
+      List<String> availabilities = [];
+      userInfoProvider.info.availability.forEach((key, value) {
+        availabilities.add('$key: ${value['startTime']}-${value['endTime']}');
+      });
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -32,7 +38,7 @@ class _ProfileState extends State<Profile> {
                 top: 18.0 + MediaQuery.of(context).padding.top,
                 bottom: 16.0),
             child: Text('Your Profile',
-                style: Theme.of(context).textTheme.headline5),
+                style: Theme.of(context).textTheme.headline4),
           ),
           Container(
               decoration: BoxDecoration(
@@ -90,9 +96,11 @@ class _ProfileState extends State<Profile> {
                                   " " +
                                   userInfoProvider.info.lastName,
                               style: TextStyle(
+                                fontFamily: 'SFDisplay',
                                 fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              )),
+                                fontWeight: FontWeight.w700
+                              )
+                          ),
                           IconButton(
                             icon: Icon(Icons.edit, size: 20),
                             onPressed: () {
@@ -108,7 +116,7 @@ class _ProfileState extends State<Profile> {
                           child: Text("Joined 03/2020",
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Theme.of(context).accentColor,
+                                color: Color(0xFF848484),
                               )),
                           top: 45,
                         )
@@ -133,7 +141,7 @@ class _ProfileState extends State<Profile> {
             "Schedule Info",
             [
               InfoRow("hours", Icons.schedule,
-                  "${userInfoProvider.info.availability}"),
+                  availabilities.join('\n')),
               InfoRow("vehicle", Icons.directions_car,
                   userInfoProvider.info.vehicle),
             ],
@@ -172,7 +180,7 @@ class _InfoRowState extends State<InfoRow> {
                 widget.text,
                 style: TextStyle(
                   fontSize: 17,
-                  color: Theme.of(context).accentColor,
+                  color: Color(0xFF4A4A4A),
                 ),
               ),
             ),
@@ -212,7 +220,7 @@ class _InfoGroupState extends State<InfoGroup> {
               children: <Widget>[
                 Text(widget.title,
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextStyle(fontFamily: 'SFDisplay', fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,

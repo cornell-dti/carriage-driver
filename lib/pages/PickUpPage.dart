@@ -37,7 +37,7 @@ class _PickUpPageState extends State<PickUpPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text("Is ${widget.ride.rider.firstName} here?",
-                    style: Theme.of(context).textTheme.headline5),
+                    style: Theme.of(context).textTheme.headline4),
                 SizedBox(height: 59),
                 RideInfoCard(widget.ride, false),
                 Expanded(child: SizedBox()),

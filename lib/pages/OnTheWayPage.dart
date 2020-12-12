@@ -37,7 +37,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text("On your way to...",
-                    style: Theme.of(context).textTheme.headline5),
+                    style: Theme.of(context).textTheme.headline4),
                 SizedBox(height: 59),
                 RideInfoCard(widget.ride, false),
                 Expanded(child: SizedBox()),
