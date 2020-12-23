@@ -3,6 +3,7 @@ import 'package:carriage/RidesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'CarriageTheme.dart';
 import 'Ride.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -233,12 +234,7 @@ class RideGroupTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(children: [
       Text(title,
-          style: TextStyle(
-              fontFamily: 'SFDisplay',
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-              color: Color(0xFF4A4A4A),
-              letterSpacing: 0.38)),
+          style: CarriageTheme.title3),
       SizedBox(width: 24),
       Icon(Icons.people),
       SizedBox(width: 8),
@@ -317,10 +313,7 @@ class RideInProgressCard extends StatelessWidget {
               color: selected ? Color.fromRGBO(167, 167, 167, 0.4) : Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(8)),
               boxShadow: [
-                BoxShadow(
-                    blurRadius: 2,
-                    spreadRadius: 0,
-                    color: Colors.black.withOpacity(0.25))
+                CarriageTheme.shadow
               ]),
           child: Stack(
             children: [

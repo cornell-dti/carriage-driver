@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'AuthProvider.dart';
+import 'CarriageTheme.dart';
 import 'UserInfoProvider.dart';
 
 class Profile extends StatefulWidget {
@@ -38,7 +39,7 @@ class _ProfileState extends State<Profile> {
                 top: 18.0 + MediaQuery.of(context).padding.top,
                 bottom: 16.0),
             child: Text('Your Profile',
-                style: Theme.of(context).textTheme.headline4),
+                style: CarriageTheme.largeTitle),
           ),
           Container(
               decoration: BoxDecoration(

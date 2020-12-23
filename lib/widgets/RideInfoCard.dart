@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../CarriageTheme.dart';
 import '../Ride.dart';
 import 'RideDestPickupCard.dart';
 
@@ -19,15 +20,13 @@ class RideInfoCard extends StatelessWidget {
             //TODO: replace with rider image
             backgroundImage: AssetImage('assets/images/terry.jpg'),
           ),
-          SizedBox(height: 14),
-          Text(ride.rider.firstName,
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)
-          ),
+          SizedBox(height: 16),
+          Text(ride.rider.firstName, style: CarriageTheme.largeTitle),
           ride.rider.accessibilityNeeds.length > 0 ?
           Padding(
             padding: EdgeInsets.only(top: 8),
             child: Text(ride.rider.accessibilityNeeds.join(', '),
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, letterSpacing: -0.41)),
+                style: CarriageTheme.body),
           ) : Container()
         ]),
       ),

@@ -7,6 +7,7 @@ import 'RidesProvider.dart';
 import 'main_common.dart';
 import 'Profile.dart';
 import 'UserInfoProvider.dart';
+import 'CarriageTheme.dart';
 
 class Greeting extends StatelessWidget {
   @override
@@ -35,7 +36,7 @@ class LeftSubheading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 24.0, bottom: 16.0),
-      child: Text('$heading', style: Theme.of(context).textTheme.subtitle1),
+      child: Text('$heading', style: CarriageTheme.largeTitle),
     );
   }
 }

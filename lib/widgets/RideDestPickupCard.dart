@@ -1,3 +1,4 @@
+import 'package:carriage/CarriageTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -30,15 +31,12 @@ class RideDestPickupCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(_stop, style: TextStyle(fontSize: 17, letterSpacing: -0.41, fontWeight: FontWeight.w400)),
-                Text(
-                    _address,
-                    style: TextStyle(color: Color(0xFFA7A7A7), fontSize: 17, letterSpacing: -0.41, fontWeight: FontWeight.w400)
-                ),
+                Text(_stop, style: CarriageTheme.body),
+                Text(_address, style: CarriageTheme.body.copyWith(color: CarriageTheme.gray3)),
                 SizedBox(height: 24),
                 Text(
                     "${_dropoff ? "Drop off time" : "Pick up time"}: ${DateFormat.jm().format(_time)}",
-                    style: TextStyle(fontSize: 13))
+                    style: CarriageTheme.subheadline.copyWith(color: CarriageTheme.gray1))
               ]),
         ),
       ),

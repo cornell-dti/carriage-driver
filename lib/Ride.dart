@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:carriage/MeasureSize.dart';
 import 'package:carriage/pages/BeginRidePage.dart';
+import 'package:carriage/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'CarriageTheme.dart';
 import 'Rider.dart';
 import 'app_config.dart';
 
@@ -125,9 +127,6 @@ T getOrNull<T>(Map<String, dynamic> map, String key, {T parse(dynamic s)}) {
   return parse(x);
 }
 
-BoxShadow dropShadow = BoxShadow(
-    blurRadius: 2, spreadRadius: 0, color: Colors.black.withOpacity(0.25));
-
 class RideCard extends StatefulWidget {
   RideCard(this.ride);
   final Ride ride;
@@ -143,23 +142,6 @@ class _RideCardState extends State<RideCard> {
   GlobalKey dropoffKey = GlobalKey();
   Size pickupTextSize;
 
-  Widget actionButton(IconData icon, Function action) {
-    return GestureDetector(
-      onTap: action,
-      child: Container(
-          width: 33,
-          height: 33,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(100),
-              boxShadow: [dropShadow]),
-          child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: Icon(icon, size: 20, color: Colors.black),
-          )),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -171,7 +153,7 @@ class _RideCardState extends State<RideCard> {
         child: Container(
             decoration: BoxDecoration(
                 color: Colors.white,
-                boxShadow: [dropShadow],
+                boxShadow: [CarriageTheme.shadow],
                 borderRadius: BorderRadius.circular(12)),
             child: Padding(
               padding: EdgeInsets.all(24),
@@ -182,7 +164,7 @@ class _RideCardState extends State<RideCard> {
                       Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          boxShadow: [dropShadow],
+                          boxShadow: [CarriageTheme.shadow],
                         ),
                         child: CircleAvatar(
                           radius: 24,
@@ -196,12 +178,7 @@ class _RideCardState extends State<RideCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(widget.ride.rider.firstName,
-                                style: TextStyle(
-                                  fontFamily: 'SFDisplay',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.38
-                                )
+                                style: CarriageTheme.title3
                             ),
                             SizedBox(height: 4),
                             widget.ride.rider.accessibilityNeeds.length > 0 ?
@@ -216,9 +193,9 @@ class _RideCardState extends State<RideCard> {
                           ]
                       ),
                       Spacer(),
-                      actionButton(Icons.phone, () {}),
+                      CallButton(),
                       SizedBox(width: 8),
-                      actionButton(Icons.notifications, () {})
+                      NotifyButton()
                     ]),
                     SizedBox(height: 32),
                     TimeLine(widget.ride)
@@ -247,27 +224,31 @@ class _TimeLineState extends State<TimeLine> {
       height: size,
       child: Icon(Icons.circle, size: 9.75, color: grey),
       decoration: BoxDecoration(
-          color: Colors.white, shape: BoxShape.circle, boxShadow: [dropShadow]),
+          color: Colors.white, shape: BoxShape.circle, boxShadow: [CarriageTheme.shadow]),
     );
   }
 
   Widget locationInfo(bool isPickup, DateTime time, String location) {
-    TextStyle directionStyle = TextStyle(
-        fontFamily: 'SFText', color: Color(0xFFA7A7A7), fontSize: 11, fontWeight: FontWeight.w600);
-
-    TextStyle locationStyle = TextStyle(
-        fontFamily: 'SFText', color: Colors.black, fontSize: 17, fontWeight: FontWeight.w400, letterSpacing: -0.41);
-
-    TextStyle timeStyle = locationStyle.copyWith(fontWeight: FontWeight.w700);
-
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(isPickup ? 'Pickup' : 'Dropoff', style: directionStyle),
+      Text(
+          isPickup ? 'Pickup' : 'Dropoff',
+          style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3)
+      ),
       SizedBox(height: 2),
       RichText(
         text: TextSpan(
             text: DateFormat('jm').format(time),
-            style: timeStyle,
-            children: [TextSpan(text: ' @ $location', style: locationStyle)]),
+            style: CarriageTheme.body.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.black
+            ),
+            children: [
+              TextSpan(
+                  text: ' @ $location',
+                  style: CarriageTheme.body
+              )
+            ]
+        ),
       )
     ]);
   }
