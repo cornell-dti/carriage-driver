@@ -1,9 +1,7 @@
 import 'package:carriage/MeasureRect.dart';
 import 'package:carriage/Ride.dart';
-import 'package:carriage/widgets/AppBars.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/Dialogs.dart';
-import 'package:carriage/widgets/RideInfoCard.dart';
 import 'package:carriage/widgets/RideStops.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
@@ -11,7 +9,6 @@ import 'package:provider/provider.dart';
 import '../CarriageTheme.dart';
 import '../Home.dart';
 import '../RidesProvider.dart';
-import 'BeginRidePage.dart';
 
 class PickUpPage extends StatefulWidget {
   final OnWidgetRectChange onContinueRectChange;
