@@ -3,7 +3,8 @@ import 'package:carriage/Ride.dart';
 import 'package:carriage/Rides.dart';
 import 'package:carriage/RidesProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
 
 class RideHistory extends StatelessWidget {
@@ -75,13 +76,34 @@ class LocationInfo extends StatelessWidget {
   final String location;
   final DateTime dateTime;
 
+  // source: https://stackoverflow.com/a/62536187/
+  double getTextWidth(BuildContext context) {
+    TextPainter painter = TextPainter(
+      text: TextSpan(
+          text: 'Dropoff', style: CarriageTheme.caption1
+      ),
+      maxLines: 1,
+      textScaleFactor: MediaQuery.of(context).textScaleFactor,
+      textDirection: TextDirection.ltr
+    )..layout();
+
+    return painter.size.width;
+  }
   @override
   Widget build(BuildContext context) {
+
     return Row(
       children: [
-        Text(isPickup ? 'Pickup' : 'Dropoff', style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3)),
+        Container(
+            width: getTextWidth(context), //dropoffTextSize.width,
+            child: Text(isPickup ? 'Pickup' : 'Dropoff', style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3))
+        ),
         SizedBox(width: 12),
-        Text(location + ' @ ' + DateFormat('jm').format(dateTime), style: CarriageTheme.body)
+        Container(
+            // TODO: try to make this less hard-coded?
+            width: MediaQuery.of(context).size.width / 2,
+            child: Text(location + ' @ ' + intl.DateFormat('jm').format(dateTime), style: CarriageTheme.body)
+        )
       ],
     );
   }
@@ -125,10 +147,10 @@ class PastRideGroup extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ListView.separated(
-        shrinkWrap: true,
+          shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemCount: rides.length + 1,
-          itemBuilder: (context, index) => index == 0 ? RideGroupTitle(DateFormat('yMMMMd').format(date), rides.length) : RideHistoryRow(rides[index - 1]),
+          itemBuilder: (context, index) => index == 0 ? RideGroupTitle(intl.DateFormat('yMMMMd').format(date), rides.length) : RideHistoryRow(rides[index - 1]),
           separatorBuilder: (context, index) => index > 0 ? Padding(
             padding: const EdgeInsets.symmetric(vertical: 24),
             child: Divider(),
