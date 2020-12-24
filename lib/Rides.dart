@@ -234,7 +234,7 @@ class RideGroupTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(children: [
       Text(title,
-          style: CarriageTheme.title3),
+          style: CarriageTheme.title3.copyWith(color: CarriageTheme.gray1)),
       SizedBox(width: 24),
       Icon(Icons.people),
       SizedBox(width: 8),

@@ -10,6 +10,8 @@ import 'package:http/http.dart' as http;
 class RidesProvider with ChangeNotifier {
   List<Ride> remainingRides;
   List<Ride> currentRides;
+  List<Ride> pastRides;
+
   final retryDelay = Duration(seconds: 30);
 
   void changeRideToCurrent(Ride ride) {
@@ -53,6 +55,18 @@ class RidesProvider with ChangeNotifier {
       // TODO: retry only in certain circumstances
       await Future.delayed(retryDelay);
       requestActiveRides(context);
+    }
+  }
+
+  Future<void> requestPastRides(BuildContext context) async {
+    final response = await http.get(AppConfig.of(context).baseUrl + '/rides?type=past&driver=${Provider.of<AuthProvider>(context, listen: false).id}');
+    if (response.statusCode == 200) {
+      pastRides = ridesFromJson(response.body);
+      notifyListeners();
+    } else {
+      // TODO: retry only in certain circumstances
+      await Future.delayed(retryDelay);
+      requestPastRides(context);
     }
   }
 }

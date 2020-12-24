@@ -1,0 +1,139 @@
+import 'package:carriage/CarriageTheme.dart';
+import 'package:carriage/Ride.dart';
+import 'package:carriage/Rides.dart';
+import 'package:carriage/RidesProvider.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+class RideHistory extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+
+    return SafeArea(
+        child: FutureBuilder(
+            future: ridesProvider.requestPastRides(context),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return Center(
+                    child: CircularProgressIndicator()
+                );
+              }
+              List<Ride> pastRides = ridesProvider.pastRides;
+              Map<int, List<Ride>> rideGroups = Map();
+              DateTime now = DateTime.now();
+              DateTime today = DateTime(now.year, now.month, now.day);
+              for (Ride ride in pastRides) {
+                DateTime rideDate = DateTime(ride.startTime.year, ride.startTime.month, ride.startTime.day);
+                int daysAgo = today.difference(rideDate).inDays;
+                if (rideGroups.containsKey(daysAgo)) {
+                  rideGroups[daysAgo].add(ride);
+                }
+                else {
+                  rideGroups[daysAgo] = [ride];
+                }
+              }
+              List<int> days = rideGroups.keys.toList()..sort((a, b) => a - b);
+
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+                      child: Text('History', style: CarriageTheme.largeTitle),
+                    ),
+                    SizedBox(height: 22),
+                    ListView.separated(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: days.length,
+                      itemBuilder: (context, index) {
+                        int daysAgo = days[index];
+                        return PastRideGroup(
+                            rideGroups[daysAgo].first.startTime, rideGroups[daysAgo]
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return SizedBox(height: 48);
+                      },
+                    )
+                  ],
+                ),
+              );
+            }
+        )
+    );
+  }
+}
+
+class LocationInfo extends StatelessWidget {
+  LocationInfo(this.isPickup, this.location, this.dateTime);
+  final bool isPickup;
+  final String location;
+  final DateTime dateTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(isPickup ? 'Pickup' : 'Dropoff', style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3)),
+        SizedBox(width: 12),
+        Text(location + ' @ ' + DateFormat('jm').format(dateTime), style: CarriageTheme.body)
+      ],
+    );
+  }
+}
+class RideHistoryRow extends StatelessWidget {
+  RideHistoryRow(this.ride);
+  final Ride ride;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        CircleAvatar(
+          radius: 27,
+          //TODO: replace with rider image
+          backgroundImage: AssetImage('assets/images/terry.jpg'),
+        ),
+        SizedBox(width: 28),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(ride.rider.firstName, style: CarriageTheme.body.copyWith(fontWeight: FontWeight.w600)),
+            SizedBox(height: 8),
+            LocationInfo(true, ride.startLocation, ride.startTime),
+            SizedBox(height: 4),
+            LocationInfo(false, ride.endLocation, ride.endTime),
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class PastRideGroup extends StatelessWidget {
+  PastRideGroup(this.date, this.rides);
+  final DateTime date;
+  final List<Ride> rides;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ListView.separated(
+        shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: rides.length + 1,
+          itemBuilder: (context, index) => index == 0 ? RideGroupTitle(DateFormat('yMMMMd').format(date), rides.length) : RideHistoryRow(rides[index - 1]),
+          separatorBuilder: (context, index) => index > 0 ? Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: Divider(),
+          ) : SizedBox(height: 24)
+      ),
+    );
+  }
+}
