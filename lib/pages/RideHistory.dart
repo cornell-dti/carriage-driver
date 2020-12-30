@@ -13,59 +13,50 @@ class RideHistory extends StatelessWidget {
   Widget build(BuildContext context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
 
-    return SafeArea(
-        child: FutureBuilder(
-            future: ridesProvider.requestPastRides(context),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return Center(
-                    child: CircularProgressIndicator()
-                );
-              }
-              List<Ride> pastRides = ridesProvider.pastRides;
-              Map<int, List<Ride>> rideGroups = Map();
-              DateTime now = DateTime.now();
-              DateTime today = DateTime(now.year, now.month, now.day);
-              for (Ride ride in pastRides) {
-                DateTime rideDate = DateTime(ride.startTime.year, ride.startTime.month, ride.startTime.day);
-                int daysAgo = today.difference(rideDate).inDays;
-                if (rideGroups.containsKey(daysAgo)) {
-                  rideGroups[daysAgo].add(ride);
-                }
-                else {
-                  rideGroups[daysAgo] = [ride];
-                }
-              }
-              List<int> days = rideGroups.keys.toList()..sort((a, b) => a - b);
+    List<Ride> pastRides = ridesProvider.pastRides;
+    Map<int, List<Ride>> rideGroups = Map();
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+    for (Ride ride in pastRides) {
+      DateTime rideDate = DateTime(ride.startTime.year, ride.startTime.month, ride.startTime.day);
+      int daysAgo = today.difference(rideDate).inDays;
+      if (rideGroups.containsKey(daysAgo)) {
+        rideGroups[daysAgo].add(ride);
+      }
+      else {
+        rideGroups[daysAgo] = [ride];
+      }
+    }
+    List<int> days = rideGroups.keys.toList()..sort((a, b) => a - b);
 
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
-                      child: Text('History', style: CarriageTheme.largeTitle),
-                    ),
-                    SizedBox(height: 22),
-                    ListView.separated(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: days.length,
-                      itemBuilder: (context, index) {
-                        int daysAgo = days[index];
-                        return PastRideGroup(
-                            rideGroups[daysAgo].first.startTime, rideGroups[daysAgo]
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(height: 48);
-                      },
-                    )
-                  ],
-                ),
-              );
-            }
-        )
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+              child: Text('History', style: CarriageTheme.largeTitle),
+            ),
+            SizedBox(height: 22),
+            ListView.separated(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: days.length,
+              itemBuilder: (context, index) {
+                int daysAgo = days[index];
+                return PastRideGroup(
+                    rideGroups[daysAgo].first.startTime, rideGroups[daysAgo]
+                );
+              },
+              separatorBuilder: (context, index) {
+                return SizedBox(height: 48);
+              },
+            ),
+            SizedBox(height: 32)
+          ],
+        ),
+      ),
     );
   }
 }
