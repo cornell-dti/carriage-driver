@@ -112,7 +112,6 @@ class UserInfo {
 
   ///Creates driver info from JSON representation.
   factory UserInfo.fromJson(Map<String, dynamic> json, String photoUrl) {
-    print(json);
     return UserInfo(
         firstName: json['firstName'],
         lastName: json['lastName'],
