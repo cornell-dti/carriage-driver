@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'CarriageTheme.dart';
-import 'AuthProvider.dart';
 import 'Ride.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
