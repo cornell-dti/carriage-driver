@@ -8,6 +8,7 @@ import 'main_common.dart';
 import 'Profile.dart';
 import 'UserInfoProvider.dart';
 
+
 class Greeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -72,20 +73,18 @@ class _HomeState extends State<Home> {
   Widget getPage(BuildContext context, int index) {
     switch (index) {
       case (RIDES):
-        RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+        RidesProvider ridesProvider =
+            Provider.of<RidesProvider>(context, listen: false);
         return FutureBuilder(
             future: ridesProvider.requestActiveRides(context),
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
                 return SafeArea(
-                  child: Center(
-                      child: CircularProgressIndicator()
-                  ),
+                  child: Center(child: CircularProgressIndicator()),
                 );
               }
               return Rides();
-            }
-        );
+            });
       case (HISTORY):
         return Column(
           children: <Widget>[
@@ -114,8 +113,7 @@ class _HomeState extends State<Home> {
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Colors.blue,
           items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.star), label: 'Rides'),
+            BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Rides'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.history), label: 'History'),
             BottomNavigationBarItem(

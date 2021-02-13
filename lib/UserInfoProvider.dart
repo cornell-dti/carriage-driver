@@ -62,7 +62,9 @@ class Breaks {
 
   String toString() {
     if (breaks.isEmpty)
+    {
       return "None";
+    }
     else {
       String str = "";
       for (Break b in breaks) {

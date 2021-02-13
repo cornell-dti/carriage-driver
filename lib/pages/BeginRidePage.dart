@@ -21,14 +21,14 @@ class _StopCircle extends StatelessWidget {
       Container(
           width: 26,
           height: 26,
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.black,
             shape: BoxShape.circle,
           )),
       Container(
           width: 8,
           height: 8,
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white,
             shape: _dropoff ? BoxShape.rectangle : BoxShape.circle,
           ))
@@ -58,7 +58,7 @@ class StopsState extends State<Stops> {
           alignment: Alignment.topCenter,
           child: Container(
             width: 4,
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
                 color: const Color(0xFFECEBED),
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.all(Radius.circular(8.0))),
