@@ -9,7 +9,6 @@ import '../../utils/CarriageTheme.dart';
 import '../Home.dart';
 import '../../providers/RidesProvider.dart';
 import '../../models/Ride.dart';
-import '../../models/Rider.dart';
 
 class PickUpPage extends StatefulWidget {
   final OnWidgetRectChange onContinueRectChange;
