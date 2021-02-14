@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../CarriageTheme.dart';
+import '../utils/CarriageTheme.dart';
 import 'Dialogs.dart';
 
 /// Black button with white text

@@ -1,12 +1,12 @@
-import 'package:carriage/MeasureRect.dart';
-import 'package:carriage/Ride.dart';
+import '../../utils/MeasureRect.dart';
+import '../../models/Ride.dart';
 import 'package:carriage/widgets/AppBars.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/RideStops.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
-import '../RidesProvider.dart';
+import '../../providers/RidesProvider.dart';
 import 'OnTheWayPage.dart';
 
 class BeginRidePage extends StatefulWidget {

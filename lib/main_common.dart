@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
-import 'AuthProvider.dart';
-import 'Home.dart';
-import 'UserInfoProvider.dart';
-import 'app_config.dart';
-import 'Login.dart';
-import 'RidesProvider.dart';
+import 'providers/AuthProvider.dart';
+import 'pages/Home.dart';
+import 'providers/UserInfoProvider.dart';
+import 'utils/app_config.dart';
+import 'pages/Login.dart';
+import 'providers/RidesProvider.dart';
 
 void mainCommon() async {
   // Prevent screen from sleeping

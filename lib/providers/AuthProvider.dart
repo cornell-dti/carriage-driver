@@ -6,7 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-import 'app_config.dart';
+import '../utils/app_config.dart';
 
 Future<String> auth(String baseUrl, String token, String email) async {
   String endpoint = baseUrl + '/auth';

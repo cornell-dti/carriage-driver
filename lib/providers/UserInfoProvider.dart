@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'AuthProvider.dart';
-import 'app_config.dart';
+import '../utils/app_config.dart';
 import 'package:http/http.dart' as http;
 
 ///Type for a break in a driver's schedule.

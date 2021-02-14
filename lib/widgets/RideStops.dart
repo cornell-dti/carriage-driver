@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../MeasureSize.dart';
-import '../Ride.dart';
+import '../utils/MeasureSize.dart';
+import '../models/Ride.dart';
 import 'RideDestPickupCard.dart';
 
 class RideStops extends StatefulWidget {

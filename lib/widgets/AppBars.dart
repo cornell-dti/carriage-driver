@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../Home.dart';
+import '../pages/Home.dart';
 
 class ReturnHomeBar extends StatelessWidget implements PreferredSizeWidget {
   static final double prefHeight = 80;

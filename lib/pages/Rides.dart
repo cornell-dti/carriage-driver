@@ -1,10 +1,11 @@
-import 'package:carriage/MeasureRect.dart';
-import 'package:carriage/RidesProvider.dart';
+import '../utils/MeasureRect.dart';
+import '../providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'CarriageTheme.dart';
-import 'Ride.dart';
+import '../utils/CarriageTheme.dart';
+import '../models/Ride.dart';
+import '../widgets/RideCard.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 

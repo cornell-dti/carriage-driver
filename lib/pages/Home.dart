@@ -1,14 +1,14 @@
 import 'package:carriage/pages/RideHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'AuthProvider.dart';
-import 'LocationTracker.dart';
+import '../providers/AuthProvider.dart';
+import '../utils/LocationTracker.dart';
 import 'Rides.dart';
-import 'RidesProvider.dart';
-import 'main_common.dart';
+import '../providers/RidesProvider.dart';
+import '../main_common.dart';
 import 'Profile.dart';
-import 'UserInfoProvider.dart';
-import 'CarriageTheme.dart';
+import '../providers/UserInfoProvider.dart';
+import '../utils/CarriageTheme.dart';
 
 class Greeting extends StatelessWidget {
   @override

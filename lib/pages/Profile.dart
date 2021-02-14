@@ -1,11 +1,11 @@
-import 'package:carriage/app_config.dart';
+import '../utils/app_config.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'AuthProvider.dart';
-import 'CarriageTheme.dart';
-import 'UserInfoProvider.dart';
+import '../providers/AuthProvider.dart';
+import '../utils/CarriageTheme.dart';
+import '../providers/UserInfoProvider.dart';
 
 class Profile extends StatefulWidget {
   @override

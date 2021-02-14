@@ -1,15 +1,14 @@
-import 'package:carriage/MeasureRect.dart';
-import 'package:carriage/Ride.dart';
-import 'package:carriage/pages/PickUpPage.dart';
+import '../../utils/MeasureRect.dart';
+import '../../models/Ride.dart';
+import 'PickUpPage.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideDestPickupCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
-
-import '../CarriageTheme.dart';
-import '../RidesProvider.dart';
+import '../../utils/CarriageTheme.dart';
+import '../../providers/RidesProvider.dart';
 
 class OnTheWayPage extends StatefulWidget {
   final Ride ride;
