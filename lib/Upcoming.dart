@@ -208,7 +208,7 @@ class _CurrentRideState extends State<CurrentRide> {
             borderRadius: BorderRadius.circular(3),
             boxShadow: [
               BoxShadow(
-                  color: Color.fromARGB(15, 0, 0, 0),
+                  color: Colors.black.withOpacity(0.15),
                   offset: Offset(0, 4.0),
                   blurRadius: 10.0,
                   spreadRadius: 1.0)
@@ -311,7 +311,7 @@ class FutureRide extends StatelessWidget {
             borderRadius: BorderRadius.circular(3),
             boxShadow: [
               BoxShadow(
-                  color: Color.fromARGB(15, 0, 0, 0),
+                  color: Colors.black.withOpacity(0.15),
                   offset: Offset(0, 4.0),
                   blurRadius: 10.0,
                   spreadRadius: 1.0)

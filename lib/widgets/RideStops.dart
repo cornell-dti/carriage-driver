@@ -50,7 +50,7 @@ class RideStopsState extends State<RideStops> {
         child: Container(
           width: 4,
           decoration: new BoxDecoration(
-              color: const Color(0xFFECEBED),
+              color: const Color.fromRGBO(236, 235, 237, 1),
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(8.0))
           ),

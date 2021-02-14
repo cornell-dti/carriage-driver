@@ -32,7 +32,7 @@ class DangerButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: FlatButton(
-            textColor: Color(0xFFF08686),
+            textColor: Color.fromRGBO(240, 134, 134, 1),
             child: Text(text, style: TextStyle(fontWeight: FontWeight.bold)),
             onPressed: onPressed
         )

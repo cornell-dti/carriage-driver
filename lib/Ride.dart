@@ -63,15 +63,15 @@ class Ride {
 
   Ride(
       {this.id,
-      this.type,
-      this.status,
-      this.startLocation,
-      this.endLocation,
-      this.startAddress,
-      this.endAddress,
-      this.rider,
-      this.endTime,
-      this.startTime});
+        this.type,
+        this.status,
+        this.startLocation,
+        this.endLocation,
+        this.startAddress,
+        this.endAddress,
+        this.rider,
+        this.endTime,
+        this.startTime});
 
   ///Creates a ride from JSON representation.
   factory Ride.fromJson(Map<String, dynamic> json) {
@@ -181,7 +181,7 @@ class _RideCardState extends State<RideCard> {
                           radius: 24,
                           //TODO: replace with rider's image
                           backgroundImage:
-                              AssetImage('assets/images/terry.jpg'),
+                          AssetImage('assets/images/terry.jpg'),
                         ),
                       ),
                       SizedBox(width: 16),
@@ -191,15 +191,15 @@ class _RideCardState extends State<RideCard> {
                             Text(widget.ride.rider.firstName,
                                 style: CarriageTheme.title3),
                             SizedBox(height: 4),
-                            widget.ride.rider.accessibilityNeeds.length > 0
-                                ? Text(
-                                    widget.ride.rider.accessibilityNeeds
-                                        .join(', '),
-                                    style: TextStyle(
-                                        color: Color(0xFF848484),
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 15))
-                                : Container()
+                            widget.ride.rider.accessibilityNeeds.length > 0 ?
+                            Text(
+                                widget.ride.rider.accessibilityNeeds.join(', '),
+                                style: TextStyle(
+                                    color: CarriageTheme.gray2,
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 15
+                                )
+                            ) : Container()
                           ]),
                       Spacer(),
                       CallButton(),
@@ -227,7 +227,7 @@ class _TimeLineState extends State<TimeLine> {
   Widget line;
 
   Widget locationCircle() {
-    Color grey = Color(0xFF9B9B9B);
+    Color grey = Color.fromRGBO(155, 155, 155, 1);
     return Container(
       width: size,
       height: size,
@@ -274,14 +274,14 @@ class _TimeLineState extends State<TimeLine> {
 
     Widget buildLine() {
       return timelineHeight != null &&
-              firstRowKey.currentContext != null &&
-              lastRowKey.currentContext != null
+          firstRowKey.currentContext != null &&
+          lastRowKey.currentContext != null
           ? Container(
-              margin: EdgeInsets.only(left: size / 2 - (lineWidth / 2)),
-              width: 4,
-              height: getLastRowPos() - getFirstRowPos(),
-              color: Color(0xFFECEBED),
-            )
+        margin: EdgeInsets.only(left: size / 2 - (lineWidth / 2)),
+        width: 4,
+        height: getLastRowPos() - getFirstRowPos(),
+        color: Color.fromRGBO(236, 235, 237, 1),
+      )
           : CircularProgressIndicator();
     }
 
@@ -310,7 +310,7 @@ class _TimeLineState extends State<TimeLine> {
             Container(
                 key: lastRowKey,
                 child:
-                    Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   locationCircle(),
                   SizedBox(width: 16),
                   locationInfo(

@@ -21,13 +21,13 @@ class RidesStateless extends StatelessWidget {
 
   const RidesStateless(
       {Key key,
-      this.currentRides,
-      this.remainingRides,
-      this.selectedRides,
-      this.onDropoff,
-      this.selectCallback,
-      this.firstCurrentRideRectCb = onChangeDefault,
-      this.firstRemainingRideRectCb = onChangeDefault})
+        this.currentRides,
+        this.remainingRides,
+        this.selectedRides,
+        this.onDropoff,
+        this.selectCallback,
+        this.firstCurrentRideRectCb = onChangeDefault,
+        this.firstRemainingRideRectCb = onChangeDefault})
       : super(key: key);
 
   Widget emptyPage(BuildContext context) {
@@ -42,7 +42,7 @@ class RidesStateless extends StatelessWidget {
         SizedBox(height: 22),
         Text(
           'Congratulations! You are done for the day. \n'
-          'Come back tomorrow!',
+              'Come back tomorrow!',
           textAlign: TextAlign.center,
         )
       ],
@@ -51,31 +51,30 @@ class RidesStateless extends StatelessWidget {
 
   Widget ridesInProgress(BuildContext context) {
     return Container(
-        child: Column(children: [
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: RideGroupTitle('In Progress', currentRides.length),
-      ),
-      GridView.count(
-        padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        physics: NeverScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        shrinkWrap: true,
-        children: currentRides
-            .asMap()
-            .map((i, ride) {
-              Widget w = RideInProgressCard(Key(ride.id), ride,
-                  selectedRides.contains(ride), selectCallback);
-              if (i == 0)
-                w = MeasureRect(child: w, onChange: firstCurrentRideRectCb);
-              return MapEntry(i, w);
-            })
-            .values
-            .toList(),
-      )
-    ]));
+        child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: RideGroupTitle('In Progress', currentRides.length),
+              ),
+              GridView.count(
+                padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                physics: NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                children: currentRides.asMap().map((i, ride) {
+                  Widget w = RideInProgressCard(Key(ride.id), ride, selectedRides.contains(ride), selectCallback);
+                  if (i == 0) {
+                    w = MeasureRect(child: w, onChange: firstCurrentRideRectCb);
+                  }
+                  return MapEntry(i, w);
+                }).values.toList(),
+              )
+            ]
+        )
+    );
   }
 
   Widget rideCards(BuildContext context, List<Ride> rides) {
@@ -109,63 +108,65 @@ class RidesStateless extends StatelessWidget {
     return SafeArea(
         child: currentRides.isEmpty && remainingRides.isEmpty
             ? Container(
-                height: MediaQuery.of(context).size.height,
-                child: Center(child: emptyPage(context)))
+            height: MediaQuery.of(context).size.height,
+            child: Center(child: emptyPage(context)))
             : Stack(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    child: SingleChildScrollView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 32, left: 16, right: 16),
-                              child: Text(
-                                  DateFormat('yMMMM').format(DateTime.now()),
-                                  style: Theme.of(context).textTheme.headline4),
-                            ),
-                            SizedBox(height: 32),
-                            currentRides.length > 0
-                                ? ridesInProgress(context)
-                                : Container(),
-                            selectedRides.isEmpty
-                                ? Padding(
-                                    padding: EdgeInsets.only(bottom: 32),
-                                    child: rideCards(context, remainingRides),
-                                  )
-                                : Container()
-                          ]),
-                    ),
-                  ),
-                  selectedRides.isNotEmpty
-                      ? Positioned(
-                          bottom: 32,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 34, right: 34),
-                              child: FlatButton(
-                                  padding: EdgeInsets.all(16),
-                                  color: Colors.black,
-                                  child: Text(
-                                      'Drop off ' +
-                                          (selectedRides.length == 1
-                                              ? selectedRides[0].rider.firstName
-                                              : 'Multiple Passengers'),
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  onPressed: onDropoff),
-                            ),
-                          ),
-                        )
-                      : Container()
-                ],
-              ));
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 32, left: 16, right: 16),
+                        child: Text(
+                            DateFormat('yMMMM').format(DateTime.now()),
+                            style: Theme.of(context).textTheme.headline4),
+                      ),
+                      SizedBox(height: 32),
+                      currentRides.length > 0
+                          ? ridesInProgress(context)
+                          : Container(),
+                      selectedRides.isEmpty
+                          ? Padding(
+                        padding: EdgeInsets.only(bottom: 32),
+                        child: rideCards(context, remainingRides),
+                      )
+                          : Container()
+                    ]
+                ),
+              ),
+            ),
+            selectedRides.isNotEmpty ? Positioned(
+              bottom: 32,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding:
+                  const EdgeInsets.only(left: 34, right: 34),
+                  child: FlatButton(
+                      padding: EdgeInsets.all(16),
+                      color: Colors.black,
+                      child: Text(
+                          'Drop off ' +
+                              (selectedRides.length == 1
+                                  ? selectedRides[0].rider.firstName
+                                  : 'Multiple Passengers'),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          )
+                      ),
+                      onPressed: onDropoff),
+                ),
+              ),
+            ): Container()
+          ],
+        )
+    );
   }
 }
 
@@ -188,7 +189,7 @@ class _RidesState extends State<Rides> {
 
   void finishRide(BuildContext context, Ride ride) async {
     http.Response statusResponse =
-        await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
+    await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
     if (statusResponse.statusCode == 200) {
       http.Response typeResponse = await setRideToPast(context, ride.id);
       if (typeResponse.statusCode == 200) {
@@ -206,7 +207,7 @@ class _RidesState extends State<Rides> {
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider =
-        Provider.of<RidesProvider>(context, listen: false);
+    Provider.of<RidesProvider>(context, listen: false);
 
     List<Ride> currentRides = ridesProvider.currentRides;
     List<Ride> remainingRides = ridesProvider.remainingRides;
@@ -310,23 +311,23 @@ class RideInProgressCard extends StatelessWidget {
         selectCallback(ride);
       },
       child: DecoratedBox(
-          decoration: BoxDecoration(
-              color:
-                  selected ? Color.fromRGBO(167, 167, 167, 0.4) : Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              boxShadow: [CarriageTheme.shadow]),
-          child: Stack(
+        decoration: BoxDecoration(
+            color:
+            selected ? Color.fromRGBO(167, 167, 167, 0.4) : Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            boxShadow: [CarriageTheme.shadow]),
+        child: Stack(
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 8, top: 8),
                 child: selected
                     ? Icon(Icons.check_circle, size: 20, color: Colors.black)
                     : Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Color(0x7FC4C4C4)),
-                      ),
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Color.fromRGBO(196, 196, 196, 0.5)),
+                ),
               ),
               Container(
                 padding: const EdgeInsets.all(16),
@@ -345,11 +346,7 @@ class RideInProgressCard extends StatelessWidget {
                   RichText(
                     text: TextSpan(
                         text: 'To ',
-                        style: TextStyle(
-                            fontFamily: 'SFText',
-                            fontSize: 15,
-                            color: Color(0xFF848484),
-                            letterSpacing: -0.24),
+                        style: CarriageTheme.subheadline.copyWith(color: CarriageTheme.gray2),
                         children: [
                           TextSpan(
                               text: ride.endLocation,
@@ -358,8 +355,10 @@ class RideInProgressCard extends StatelessWidget {
                                   fontSize: 15,
                                   color: Colors.black,
                                   letterSpacing: -0.24,
-                                  fontWeight: FontWeight.w600))
-                        ]),
+                                  fontWeight: FontWeight.w600)
+                          )
+                        ]
+                    ),
                   ),
                   SizedBox(height: 8),
                   RichText(
@@ -368,7 +367,7 @@ class RideInProgressCard extends StatelessWidget {
                         style: TextStyle(
                             fontFamily: 'SFText',
                             fontSize: 15,
-                            color: Color(0xFF4A4A4A),
+                            color: CarriageTheme.gray1,
                             fontWeight: FontWeight.w400),
                         children: [
                           TextSpan(
@@ -376,14 +375,19 @@ class RideInProgressCard extends StatelessWidget {
                               style: TextStyle(
                                   fontFamily: 'SFText',
                                   fontSize: 15,
-                                  color: Color(0xFF4A4A4A),
-                                  fontWeight: FontWeight.w600))
-                        ]),
+                                  color: CarriageTheme.gray1,
+                                  fontWeight: FontWeight.w600
+                              )
+                          )
+                        ]
+                    ),
                   ),
-                ]),
+                ]
+                ),
               ),
-            ],
-          )),
+            ]
+        ),
+      ),
     );
   }
 }
@@ -404,12 +408,14 @@ class _RidesCompletedPageState extends State<RidesCompletedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(children: [
-          SizedBox(height: 90),
-          Text('Rides Completed', style: Theme.of(context).textTheme.headline5),
-          SizedBox(height: 120),
-          Image.asset('assets/images/townCar.png')
-        ]),
+        child: Column(
+            children: [
+              SizedBox(height: 90),
+              Text('Rides Completed', style: Theme.of(context).textTheme.headline5),
+              SizedBox(height: 120),
+              Image.asset('assets/images/townCar.png')
+            ]
+        ),
       ),
     );
   }
