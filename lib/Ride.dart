@@ -199,7 +199,7 @@ class _RideCardState extends State<RideCard> {
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold)),
                             SizedBox(height: 4),
-                            widget.ride.rider.accessibilityNeeds.length > 0
+                            widget.ride.rider.accessibilityNeeds.isNotEmpty
                                 ? Text(
                                     widget.ride.rider.accessibilityNeeds
                                         .join(', '),

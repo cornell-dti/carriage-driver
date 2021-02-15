@@ -7,7 +7,7 @@ import 'Ride.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
-class RidesStateless extends StatelessWidget {  
+class RidesStateless extends StatelessWidget {
   final List<Ride> currentRides;
   final List<Ride> remainingRides;
   final List<Ride> selectedRides;
@@ -68,8 +68,9 @@ class RidesStateless extends StatelessWidget {
             .map((i, ride) {
               Widget w = RideInProgressCard(Key(ride.id), ride,
                   selectedRides.contains(ride), selectCallback);
-              if (i == 0)
+              if (i == 0) {
                 w = MeasureRect(child: w, onChange: firstCurrentRideRectCb);
+              }
               return MapEntry(i, w);
             })
             .values
@@ -127,7 +128,7 @@ class RidesStateless extends StatelessWidget {
                                   style: Theme.of(context).textTheme.headline5),
                             ),
                             SizedBox(height: 32),
-                            currentRides.length > 0
+                            currentRides.isNotEmpty
                                 ? ridesInProgress(context)
                                 : Container(),
                             selectedRides.isEmpty
@@ -179,10 +180,11 @@ class _RidesState extends State<Rides> {
 
   void selectRide(Ride ride) {
     setState(() {
-      if (!selectedRides.contains(ride))
+      if (!selectedRides.contains(ride)) {
         selectedRides.add(ride);
-      else
+      } else {
         selectedRides.remove(ride);
+      }
     });
   }
 
@@ -284,8 +286,9 @@ class RideGroup extends StatelessWidget {
             );
           }
           Widget w = RideCard(rides[index]);
-          if (index == 0 && groupIndex == 0)
+          if (index == 0 && groupIndex == 0) {
             w = MeasureRect(child: w, onChange: firstRemainingRideRectCb);
+          }
           return w;
         },
         separatorBuilder: (context, index) {

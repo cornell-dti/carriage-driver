@@ -60,8 +60,8 @@ class MapPreview extends StatelessWidget {
     return const SizedBox(
       width: 400.0,
       height: 164.0,
-      child: const DecoratedBox(
-        decoration: const BoxDecoration(color: Colors.black),
+      child: DecoratedBox(
+        decoration: BoxDecoration(color: Colors.black),
       ),
     );
   }
@@ -149,7 +149,7 @@ class _FinishedRideState extends State<FinishedRide> {
                           color: Color(0),
                         ),
                         Text(
-                            "$_distance mile${_distance != 1 ? "s" : ""}, ${_riders.length} rider${_riders.length > 0 ? "s" : ""}",
+                            "$_distance mile${_distance != 1 ? "s" : ""}, ${_riders.length} rider${_riders.isNotEmpty ? "s" : ""}",
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText2
@@ -201,13 +201,13 @@ class _RideSummaryState extends State<RideSummary> {
   void initState() {
     super.initState();
     // TODO: placeholder
-    _currentRide = new Ride(
+    _currentRide = Ride(
       id: "1",
       type: "past",
       startLocation: "Teagle Hall",
       endLocation: "RPCC",
-      startTime: new DateTime(2020, 11, 14),
-      endTime: new DateTime(2020, 11, 14),
+      startTime: DateTime(2020, 11, 14),
+      endTime: DateTime(2020, 11, 14),
       rider: rider.Rider(
           id: 'id',
           email: 'tc@gmail.com',
