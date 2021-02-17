@@ -116,14 +116,15 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         body: getPage(context, _selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Colors.blue,
+          selectedItemColor: Colors.black,
+          unselectedItemColor: Colors.grey,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.star), label: 'Rides'),
+              icon: Image.asset(_selectedIndex == 0 ? 'assets/images/carIconBlack.png' : 'assets/images/carIconGrey.png', width: 20), label: 'Rides'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.history), label: 'History'),
+                icon: Image.asset(_selectedIndex == 1 ? 'assets/images/clockIconBlack.png' : 'assets/images/clockIconGrey.png', width: 20), label: 'History'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle), label: 'Profile')
+                icon: Image.asset(_selectedIndex == 2 ? 'assets/images/profileIconBlack.png' : 'assets/images/profileIconGrey.png', width: 20), label: 'Profile')
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,

@@ -240,7 +240,7 @@ class RideGroupTitle extends StatelessWidget {
       Text(title,
           style: CarriageTheme.title3.copyWith(color: CarriageTheme.gray1)),
       SizedBox(width: 24),
-      Icon(Icons.people),
+      Image.asset('assets/images/peopleIcon.png', width: 20, height: 12),
       SizedBox(width: 8),
       Text(numRides.toString(),
           style: TextStyle(

@@ -40,10 +40,10 @@ class DangerButton extends StatelessWidget {
   }
 }
 
-class ShadowedIconButton extends StatelessWidget {
-  final IconData icon;
+class ShadowedCircleButton extends StatelessWidget {
+  final String imagePath;
   final Function onPressed;
-  ShadowedIconButton(this.icon, this.onPressed);
+  ShadowedCircleButton(this.imagePath, this.onPressed);
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +58,8 @@ class ShadowedIconButton extends StatelessWidget {
               boxShadow: [CarriageTheme.shadow]
           ),
           child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: Icon(icon, size: 20, color: Colors.black),
+            padding: EdgeInsets.all(12),
+            child: Image.asset(imagePath, color: Colors.black),
           )
       ),
     );
@@ -69,7 +69,7 @@ class ShadowedIconButton extends StatelessWidget {
 class CallButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ShadowedIconButton(Icons.phone, () {
+    return ShadowedCircleButton('assets/images/phoneIcon.png', () {
       // TODO: implement call
     });
   }
@@ -78,7 +78,7 @@ class CallButton extends StatelessWidget {
 class NotifyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ShadowedIconButton(Icons.notifications, () {
+    return ShadowedCircleButton('assets/images/bellIcon.png', () {
       showDialog(
           context: context,
           builder: (_) => ConfirmDialog(

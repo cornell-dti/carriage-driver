@@ -93,7 +93,7 @@ class _PickUpPageState extends State<PickUpPage> {
                                       children: [
                                         CallButton(),
                                         SizedBox(width: 16),
-                                        ShadowedIconButton(Icons.person_outline, () {
+                                        ShadowedCircleButton('assets/images/cancelIcon.png', () {
                                           // TODO: add no show functionality
                                         })
                                       ]
