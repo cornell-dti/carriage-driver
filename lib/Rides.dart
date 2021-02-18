@@ -7,7 +7,7 @@ import 'Ride.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
-class RidesStateless extends StatelessWidget {  
+class RidesStateless extends StatelessWidget {
   final List<Ride> currentRides;
   final List<Ride> remainingRides;
   final List<Ride> selectedRides;
@@ -61,7 +61,7 @@ class RidesStateless extends StatelessWidget {
         crossAxisSpacing: 16,
         physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 2,
-        childAspectRatio: 0.8,
+        childAspectRatio: 1.05,
         shrinkWrap: true,
         children: currentRides
             .asMap()
@@ -177,7 +177,7 @@ class Rides extends StatefulWidget {
 class _RidesState extends State<Rides> {
   List<Ride> selectedRides = [];
 
-  void selectRide(Ride ride) {
+  void _selectRide(Ride ride) {
     setState(() {
       if (!selectedRides.contains(ride))
         selectedRides.add(ride);
@@ -220,7 +220,7 @@ class _RidesState extends State<Rides> {
           selectedRides = [];
         });
       },
-      selectCallback: selectRide,
+      selectCallback: _selectRide,
     );
   }
 }
@@ -324,22 +324,42 @@ class RideInProgressCard extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(16),
             child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  selected
-                      ? Icon(Icons.check_circle, size: 20, color: Colors.black)
-                      : Container(
-                          width: 20,
-                          height: 20,
+                  Stack(
+                    children: [
+                      selected
+                          ? Icon(Icons.check_circle,
+                              size: 20, color: Colors.black)
+                          : Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0x7FC4C4C4)),
+                            ),
+                    ],
+                  ),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 16,
+                        backgroundImage: AssetImage('assets/images/terry.jpg'),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20, top: 18),
+                        child: Container(
+                          width: 14,
+                          height: 14,
                           decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: Color(0x7FC4C4C4)),
+                              color: Color(0xFF6FCF97),
+                              shape: BoxShape.circle,
+                              border:
+                                  Border.all(color: Colors.white, width: 1.5)),
                         ),
-                  Center(
-                    child: CircleAvatar(
-                      radius: 16,
-                      backgroundImage: AssetImage('assets/images/terry.jpg'),
-                    ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 8),
                   Center(
@@ -347,6 +367,7 @@ class RideInProgressCard extends StatelessWidget {
                           style: Theme.of(context).textTheme.subtitle1)),
                   SizedBox(height: 8),
                   RichText(
+                    textAlign: TextAlign.center,
                     text: TextSpan(
                         text: 'To ',
                         style:
