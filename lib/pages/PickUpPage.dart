@@ -6,6 +6,7 @@ import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideInfoCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:pedantic/pedantic.dart';
 import '../Home.dart';
 
 class PickUpPage extends StatefulWidget {
@@ -54,9 +55,9 @@ class _PickUpPageState extends State<PickUpPage> {
                         if (response.statusCode == 200) {
                           setState(() => _requestedContinue = false);
                           widget.ride.status = RideStatus.PICKED_UP;
-                          Navigator.of(context).pushReplacement(
+                          unawaited (Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                  builder: (BuildContext context) => Home()));
+                                  builder: (BuildContext context) => Home())));
                         } else {
                           setState(() => _requestedContinue = false);
                           throw Exception('Failed to update ride status');

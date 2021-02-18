@@ -7,6 +7,7 @@ import 'package:carriage/widgets/RideDestPickupCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
+import 'package:pedantic/pedantic.dart';
 import '../RidesProvider.dart';
 import 'OnTheWayPage.dart';
 
@@ -169,10 +170,10 @@ class _BeginRidePageState extends State<BeginRidePage> {
                                 Provider.of<RidesProvider>(context,
                                     listen: false);
                             ridesProvider.changeRideToCurrent(widget.ride);
-                            Navigator.of(context).pushReplacement(
+                            unawaited(Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                        OnTheWayPage(ride: widget.ride)));
+                                        OnTheWayPage(ride: widget.ride))));
                           } else {
                             setState(() => _requestedContinue = false);
                             throw Exception('Failed to update ride status');

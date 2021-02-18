@@ -52,7 +52,7 @@ class RidesProvider with ChangeNotifier {
     } else {
       // TODO: retry only in certain circumstances
       await Future.delayed(retryDelay);
-      requestActiveRides(context);
+      await requestActiveRides(context);
     }
   }
 }

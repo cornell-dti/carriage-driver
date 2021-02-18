@@ -78,7 +78,7 @@ abstract class LocationTracker {
     bool success = await _requestPermission();
     if (!success) return false;
     if (subscription != null) {
-      subscription.cancel();
+      await subscription.cancel();
     }
     if (_isWorkingHours()) {
       subscription = Geolocation.locationUpdates(

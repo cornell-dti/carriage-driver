@@ -7,6 +7,7 @@ import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideInfoCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:pedantic/pedantic.dart';
 
 class OnTheWayPage extends StatefulWidget {
   final Ride ride;
@@ -54,10 +55,10 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                         if (response.statusCode == 200) {
                           setState(() => _requestedContinue = false);
                           widget.ride.status = RideStatus.ARRIVED;
-                          Navigator.of(context).pushReplacement(
+                          unawaited (Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      PickUpPage(ride: widget.ride)));
+                                      PickUpPage(ride: widget.ride))));
                         } else {
                           setState(() => _requestedContinue = false);
                           throw Exception('Failed to update ride status');

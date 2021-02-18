@@ -10,7 +10,7 @@ import 'RidesProvider.dart';
 
 void mainCommon() async {
   // Prevent screen from sleeping
-  Wakelock.enable();
+  await Wakelock.enable();
 }
 
 class MyApp extends StatelessWidget {
