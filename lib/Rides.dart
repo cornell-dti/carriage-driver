@@ -124,7 +124,7 @@ class RidesStateless extends StatelessWidget {
                             top: 32, left: 16, right: 16),
                         child: Text(
                             DateFormat('yMMMM').format(DateTime.now()),
-                            style: Theme.of(context).textTheme.headline4),
+                            style: CarriageTheme.largeTitle),
                       ),
                       SizedBox(height: 32),
                       currentRides.length > 0
@@ -342,7 +342,7 @@ class RideInProgressCard extends StatelessWidget {
                       SizedBox(height: 8),
                       Center(
                           child: Text(ride.rider.firstName,
-                              style: Theme.of(context).textTheme.subtitle2
+                              style: CarriageTheme.title1
                           )
                       ),
                       SizedBox(height: 8),
