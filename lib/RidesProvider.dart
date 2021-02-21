@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -33,9 +34,14 @@ class RidesProvider with ChangeNotifier {
   }
 
   Future<void> requestActiveRides(BuildContext context) async {
-    final dateFormat = DateFormat("yyyy-MM-dd");
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     DateTime now = DateTime.now();
-    final response = await http.get(AppConfig.of(context).baseUrl + '/rides?type=active&date=${dateFormat.format(now)}&driver=${Provider.of<AuthProvider>(context, listen: false).id}');
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    String token = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.get(
+        AppConfig.of(context).baseUrl + '/rides?type=active&date=${dateFormat.format(now)}&driver=${authProvider.id}',
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"}
+    );
     if (response.statusCode == 200) {
       List<Ride> rides = ridesFromJson(response.body);
       currentRides = [];
