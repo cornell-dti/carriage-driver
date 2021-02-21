@@ -322,7 +322,7 @@ class RideInProgressCard extends StatelessWidget {
                     color: Colors.black.withOpacity(0.25))
               ]),
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(8),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -348,7 +348,7 @@ class RideInProgressCard extends StatelessWidget {
                         backgroundImage: AssetImage('assets/images/terry.jpg'),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 20, top: 18),
+                        padding: EdgeInsets.only(left: 32, top: 20),
                         child: Container(
                           width: 14,
                           height: 14,
@@ -356,44 +356,51 @@ class RideInProgressCard extends StatelessWidget {
                               color: Color(0xFF6FCF97),
                               shape: BoxShape.circle,
                               border:
-                                  Border.all(color: Colors.white, width: 1.5)),
+                                  Border.all(color: Colors.white, width: 2)),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
-                  Center(
-                      child: Text(ride.rider.firstName,
-                          style: Theme.of(context).textTheme.subtitle1)),
-                  SizedBox(height: 8),
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                        text: 'To ',
-                        style:
-                            TextStyle(fontSize: 15, color: Color(0x7F3F3356)),
-                        children: [
-                          TextSpan(
-                              text: ride.endLocation,
+                  Padding(
+                    padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 8),
+                        Center(
+                            child: Text(ride.rider.firstName,
+                                style: Theme.of(context).textTheme.subtitle1)),
+                        SizedBox(height: 8),
+                        RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                              text: 'To ',
                               style:
-                                  TextStyle(fontSize: 15, color: Colors.black))
-                        ]),
-                  ),
-                  SizedBox(height: 8),
-                  RichText(
-                    text: TextSpan(
-                        text: 'Drop off by ',
-                        style:
-                            TextStyle(fontSize: 15, color: Color(0x7F3F3356)),
-                        children: [
-                          TextSpan(
-                              text: DateFormat('jm').format(ride.endTime),
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold))
-                        ]),
-                  ),
+                              TextStyle(fontSize: 15, color: Color(0x7F3F3356)),
+                              children: [
+                                TextSpan(
+                                    text: ride.endLocation,
+                                    style:
+                                    TextStyle(fontSize: 15, color: Colors.black))
+                              ]),
+                        ),
+                        SizedBox(height: 8),
+                        RichText(
+                          text: TextSpan(
+                              text: 'Drop off by ',
+                              style:
+                              TextStyle(fontSize: 15, color: Color(0x7F3F3356)),
+                              children: [
+                                TextSpan(
+                                    text: DateFormat('jm').format(ride.endTime),
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold))
+                              ]),
+                        ),
+                      ]
+                    ),
+                  )
                 ]),
           )),
     );
