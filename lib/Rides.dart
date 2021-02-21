@@ -339,7 +339,7 @@ class RideInProgressCard extends StatelessWidget {
                   SizedBox(height: 8),
                   Center(
                       child: Text(ride.rider.firstName,
-                          style: CarriageTheme.title1)),
+                          style: CarriageTheme.body.copyWith(fontWeight: FontWeight.bold))),
                   SizedBox(height: 8),
                   RichText(
                     text: TextSpan(
