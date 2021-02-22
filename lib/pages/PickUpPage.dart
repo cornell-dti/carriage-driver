@@ -25,7 +25,7 @@ class _PickUpPageState extends State<PickUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: ReturnHomeBar(),
+        appBar: CalendarButtonBar(),
         body: LoadingOverlay(
           color: Colors.white,
           opacity: 0.3,

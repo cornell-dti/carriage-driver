@@ -16,17 +16,21 @@ class RidesStateless extends StatelessWidget {
 
   final OnWidgetRectChange firstCurrentRideRectCb;
   final OnWidgetRectChange firstRemainingRideRectCb;
+
   static void onChangeDefault(Rect s) {}
+
+  final bool interactive;
 
   const RidesStateless(
       {Key key,
-      this.currentRides,
-      this.remainingRides,
-      this.selectedRides,
-      this.onDropoff,
-      this.selectCallback,
-      this.firstCurrentRideRectCb = onChangeDefault,
-      this.firstRemainingRideRectCb = onChangeDefault})
+        this.currentRides,
+        this.remainingRides,
+        this.selectedRides,
+        this.onDropoff,
+        this.selectCallback,
+        this.firstCurrentRideRectCb = onChangeDefault,
+        this.firstRemainingRideRectCb = onChangeDefault,
+        this.interactive})
       : super(key: key);
 
   Widget emptyPage(BuildContext context) {
@@ -41,7 +45,7 @@ class RidesStateless extends StatelessWidget {
         SizedBox(height: 22),
         Text(
           'Congratulations! You are done for the day. \n'
-          'Come back tomorrow!',
+              'Come back tomorrow!',
           textAlign: TextAlign.center,
         )
       ],
@@ -49,33 +53,44 @@ class RidesStateless extends StatelessWidget {
   }
 
   Widget ridesInProgress(BuildContext context) {
+
+    Widget ridesInProgressGrid = GridView.count(
+      padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 16,
+      physics: NeverScrollableScrollPhysics(),
+      crossAxisCount: 2,
+      childAspectRatio: 1.05,
+      shrinkWrap: true,
+      children: currentRides
+          .asMap()
+          .map((i, ride) {
+        Widget w = RideInProgressCard(Key(ride.id), ride,
+            selectedRides.contains(ride), selectCallback);
+        if (i == 0)
+          w = MeasureRect(child: w, onChange: firstCurrentRideRectCb);
+        return MapEntry(i, w);
+      })
+          .values
+          .toList(),
+    );
+
     return Container(
-        child: Column(children: [
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: RideGroupTitle('In Progress', currentRides.length),
-      ),
-      GridView.count(
-        padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        physics: NeverScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        childAspectRatio: 1.05,
-        shrinkWrap: true,
-        children: currentRides
-            .asMap()
-            .map((i, ride) {
-              Widget w = RideInProgressCard(Key(ride.id), ride,
-                  selectedRides.contains(ride), selectCallback);
-              if (i == 0)
-                w = MeasureRect(child: w, onChange: firstCurrentRideRectCb);
-              return MapEntry(i, w);
-            })
-            .values
-            .toList(),
-      )
-    ]));
+        child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: RideGroupTitle('In Progress', currentRides.length),
+              ),
+              Opacity(
+                opacity: interactive ? 1 : 0.5,
+                child: interactive ? ridesInProgressGrid : IgnorePointer(
+                  child: ridesInProgressGrid
+                ),
+              )
+            ]
+        )
+    );
   }
 
   Widget rideCards(BuildContext context, List<Ride> rides) {
@@ -96,7 +111,8 @@ class RidesStateless extends StatelessWidget {
       itemBuilder: (context, index) {
         int hour = hours[index];
         return RideGroup(
-            rideGroups[hour], hour, index, firstRemainingRideRectCb);
+            rideGroups[hour], hour, index, firstRemainingRideRectCb, interactive
+        );
       },
       separatorBuilder: (context, index) {
         return SizedBox(height: 32);
@@ -109,67 +125,81 @@ class RidesStateless extends StatelessWidget {
     return SafeArea(
         child: currentRides.isEmpty && remainingRides.isEmpty
             ? Container(
-                height: MediaQuery.of(context).size.height,
-                child: Center(child: emptyPage(context)))
+            height: MediaQuery.of(context).size.height,
+            child: Center(child: emptyPage(context)))
             : Stack(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    child: SingleChildScrollView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 32, left: 16, right: 16),
-                              child: Text(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 32, left: 16, right: 16),
+                        child: Row(
+                            children: [
+                              Text(
                                   DateFormat('yMMMM').format(DateTime.now()),
-                                  style: Theme.of(context).textTheme.headline5),
-                            ),
-                            SizedBox(height: 32),
-                            currentRides.length > 0
-                                ? ridesInProgress(context)
-                                : Container(),
-                            selectedRides.isEmpty
-                                ? Padding(
-                                    padding: EdgeInsets.only(bottom: 32),
-                                    child: rideCards(context, remainingRides),
-                                  )
-                                : Container()
-                          ]),
-                    ),
-                  ),
-                  selectedRides.isNotEmpty
-                      ? Positioned(
-                          bottom: 32,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 34, right: 34),
-                              child: FlatButton(
-                                  padding: EdgeInsets.all(16),
-                                  color: Colors.black,
-                                  child: Text(
-                                      'Drop off ' +
-                                          (selectedRides.length == 1
-                                              ? selectedRides[0].rider.firstName
-                                              : 'Multiple Passengers'),
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  onPressed: onDropoff),
-                            ),
-                          ),
-                        )
-                      : Container()
-                ],
-              ));
+                                  style: Theme.of(context).textTheme.headline5
+                              ),
+                              interactive ? Container() : Spacer(),
+                              interactive ?
+                              Container() : GestureDetector(
+                                child: Image.asset('assets/images/carButton.png', width: 24, height: 21),
+                                onTap: () => Navigator.of(context).pop(),
+                              )
+                            ]
+                        ),
+                      ),
+                      SizedBox(height: 32),
+                      currentRides.length > 0
+                          ? ridesInProgress(context)
+                          : Container(),
+                      selectedRides.isEmpty
+                          ? Padding(
+                        padding: EdgeInsets.only(bottom: 32),
+                        child: rideCards(context, remainingRides),
+                      )
+                          : Container()
+                    ]),
+              ),
+            ),
+            selectedRides.isNotEmpty
+                ? Positioned(
+              bottom: 32,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding:
+                  const EdgeInsets.only(left: 34, right: 34),
+                  child: FlatButton(
+                      padding: EdgeInsets.all(16),
+                      color: Colors.black,
+                      child: Text(
+                          'Drop off ' +
+                              (selectedRides.length == 1
+                                  ? selectedRides[0].rider.firstName
+                                  : 'Multiple Passengers'),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold)),
+                      onPressed: onDropoff),
+                ),
+              ),
+            )
+                : Container()
+          ],
+        ));
   }
 }
 
 class Rides extends StatefulWidget {
+  Rides(this.interactive);
+  final bool interactive;
+
   @override
   _RidesState createState() => _RidesState();
 }
@@ -188,7 +218,7 @@ class _RidesState extends State<Rides> {
 
   void finishRide(BuildContext context, Ride ride) async {
     http.Response statusResponse =
-        await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
+    await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
     if (statusResponse.statusCode == 200) {
       http.Response typeResponse = await setRideToPast(context, ride.id);
       if (typeResponse.statusCode == 200) {
@@ -211,16 +241,17 @@ class _RidesState extends State<Rides> {
     var remainingRides = ridesProvider.remainingRides;
 
     return RidesStateless(
-      currentRides: currentRides,
-      remainingRides: remainingRides,
-      selectedRides: selectedRides,
-      onDropoff: () {
-        setState(() {
-          selectedRides.forEach((Ride r) => finishRide(context, r));
-          selectedRides = [];
-        });
-      },
-      selectCallback: _selectRide,
+        currentRides: currentRides,
+        remainingRides: remainingRides,
+        selectedRides: selectedRides,
+        onDropoff: () {
+          setState(() {
+            selectedRides.forEach((Ride r) => finishRide(context, r));
+            selectedRides = [];
+          });
+        },
+        selectCallback: _selectRide,
+        interactive: widget.interactive
     );
   }
 }
@@ -249,12 +280,12 @@ class RideGroupTitle extends StatelessWidget {
 }
 
 class RideGroup extends StatelessWidget {
-  RideGroup(
-      this.rides, this.hour, this.groupIndex, this.firstRemainingRideRectCb);
+  RideGroup(this.rides, this.hour, this.groupIndex, this.firstRemainingRideRectCb, this.interactive);
   final int hour;
   final List<Ride> rides;
   final int groupIndex;
   final Function firstRemainingRideRectCb;
+  final bool interactive;
 
   @override
   Widget build(BuildContext context) {
@@ -283,7 +314,13 @@ class RideGroup extends StatelessWidget {
               child: RideGroupTitle(title, rides.length),
             );
           }
-          Widget w = RideCard(rides[index]);
+          Widget w = Opacity(
+              opacity: interactive ? 1 : 0.5,
+              child: RideCard(rides[index])
+          );
+          if (!interactive) {
+            w = IgnorePointer(child: w);
+          }
           if (index == 0 && groupIndex == 0)
             w = MeasureRect(child: w, onChange: firstRemainingRideRectCb);
           return w;
@@ -330,14 +367,14 @@ class RideInProgressCard extends StatelessWidget {
                     children: [
                       selected
                           ? Icon(Icons.check_circle,
-                              size: 20, color: Colors.black)
+                          size: 20, color: Colors.black)
                           : Container(
-                              width: 20,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0x7FC4C4C4)),
-                            ),
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0x7FC4C4C4)),
+                      ),
                     ],
                   ),
                   Stack(
@@ -356,7 +393,7 @@ class RideInProgressCard extends StatelessWidget {
                               color: Color(0xFF6FCF97),
                               shape: BoxShape.circle,
                               border:
-                                  Border.all(color: Colors.white, width: 1.5)),
+                              Border.all(color: Colors.white, width: 1.5)),
                         ),
                       ),
                     ],
@@ -371,12 +408,12 @@ class RideInProgressCard extends StatelessWidget {
                     text: TextSpan(
                         text: 'To ',
                         style:
-                            TextStyle(fontSize: 15, color: Color(0x7F3F3356)),
+                        TextStyle(fontSize: 15, color: Color(0x7F3F3356)),
                         children: [
                           TextSpan(
                               text: ride.endLocation,
                               style:
-                                  TextStyle(fontSize: 15, color: Colors.black))
+                              TextStyle(fontSize: 15, color: Colors.black))
                         ]),
                   ),
                   SizedBox(height: 8),
@@ -384,7 +421,7 @@ class RideInProgressCard extends StatelessWidget {
                     text: TextSpan(
                         text: 'Drop off by ',
                         style:
-                            TextStyle(fontSize: 15, color: Color(0x7F3F3356)),
+                        TextStyle(fontSize: 15, color: Color(0x7F3F3356)),
                         children: [
                           TextSpan(
                               text: DateFormat('jm').format(ride.endTime),

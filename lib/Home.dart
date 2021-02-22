@@ -83,7 +83,9 @@ class _HomeState extends State<Home> {
                   ),
                 );
               }
-              return Rides();
+              return SafeArea(
+                child: Rides(true)
+              );
             }
         );
       case (HISTORY):
