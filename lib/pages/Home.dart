@@ -7,13 +7,13 @@ import 'Rides.dart';
 import '../providers/RidesProvider.dart';
 import '../main_common.dart';
 import 'Profile.dart';
-import '../providers/UserInfoProvider.dart';
+import '../providers/DriverProvider.dart';
 import '../utils/CarriageTheme.dart';
 
 class Greeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
+    DriverProvider userInfoProvider = Provider.of<DriverProvider>(context);
     return Padding(
         child: Container(
             height: 46,

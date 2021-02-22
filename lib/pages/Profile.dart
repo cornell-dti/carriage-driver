@@ -1,3 +1,5 @@
+import 'package:carriage/models/Driver.dart';
+
 import '../utils/app_config.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -5,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import '../providers/AuthProvider.dart';
 import '../utils/CarriageTheme.dart';
-import '../providers/UserInfoProvider.dart';
+import '../providers/DriverProvider.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -16,7 +18,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
+    DriverProvider userInfoProvider = Provider.of<DriverProvider>(context);
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
     double _picRadius = _picDiameter / 2;
@@ -259,7 +261,7 @@ class _InfoGroupState extends State<InfoGroup> {
 
 class EditProfile extends StatefulWidget {
   EditProfile(this.driver);
-  final UserInfo driver;
+  final Driver driver;
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -269,7 +271,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
+    DriverProvider userInfoProvider = Provider.of<DriverProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     String _firstName = widget.driver.firstName;
     String _lastName = widget.driver.lastName;
