@@ -53,28 +53,6 @@ class RidesStateless extends StatelessWidget {
   }
 
   Widget ridesInProgress(BuildContext context) {
-
-    Widget ridesInProgressGrid = GridView.count(
-      padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
-      mainAxisSpacing: 16,
-      crossAxisSpacing: 16,
-      physics: NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      childAspectRatio: 1.05,
-      shrinkWrap: true,
-      children: currentRides
-          .asMap()
-          .map((i, ride) {
-        Widget w = RideInProgressCard(Key(ride.id), ride,
-            selectedRides.contains(ride), selectCallback);
-        if (i == 0)
-          w = MeasureRect(child: w, onChange: firstCurrentRideRectCb);
-        return MapEntry(i, w);
-      })
-          .values
-          .toList(),
-    );
-
     return Container(
         child: Column(
             children: [
@@ -82,11 +60,25 @@ class RidesStateless extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: RideGroupTitle('In Progress', currentRides.length),
               ),
-              Opacity(
-                opacity: interactive ? 1 : 0.5,
-                child: interactive ? ridesInProgressGrid : IgnorePointer(
-                  child: ridesInProgressGrid
-                ),
+              GridView.count(
+                padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                physics: NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                childAspectRatio: 1.05,
+                shrinkWrap: true,
+                children: currentRides
+                    .asMap()
+                    .map((i, ride) {
+                  Widget w = RideInProgressCard(Key(ride.id), ride,
+                      selectedRides.contains(ride), selectCallback);
+                  if (i == 0)
+                    w = MeasureRect(child: w, onChange: firstCurrentRideRectCb);
+                  return MapEntry(i, w);
+                })
+                    .values
+                    .toList(),
               )
             ]
         )
@@ -154,7 +146,7 @@ class RidesStateless extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 32),
-                      currentRides.length > 0
+                      interactive && currentRides.length > 0
                           ? ridesInProgress(context)
                           : Container(),
                       selectedRides.isEmpty
