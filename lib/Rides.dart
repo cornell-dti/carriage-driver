@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:carriage/MeasureRect.dart';
 import 'package:carriage/RidesProvider.dart';
 import 'package:flutter/material.dart';
