@@ -50,8 +50,44 @@ class RidesStateless extends StatelessWidget {
     );
   }
 
+  List<Widget> buildRideGrid(BuildContext context) {
+    double spacing = 16;
+    List<Widget> rideCards = currentRides.asMap().map((i, ride) {
+      Widget card = Container(
+          width: (MediaQuery.of(context).size.width / 2) - (spacing * 1.5),
+          child: RideInProgressCard(Key(ride.id), ride,
+              selectedRides.contains(ride), selectCallback
+          )
+      );
+      if (i == 0)
+        card = MeasureRect(child: card, onChange: firstCurrentRideRectCb);
+      return MapEntry(i, card);
+    }).values.toList();
+
+    List<Widget> result = [];
+    while (rideCards.length > 0) {
+      List<Widget> rowCards = rideCards.take(2).toList();
+      for (int i = 0; i < rowCards.length; i++){
+        if (rideCards.length > 0) {
+          rideCards.removeAt(0);
+        }
+      }
+      if (rowCards.length == 2) {
+        rowCards.insert(1, SizedBox(width: spacing));
+      }
+      Widget row = IntrinsicHeight(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: rowCards,
+        ),
+      );
+      result.add(row);
+      result.add(SizedBox(height: spacing));
+    }
+    return result;
+  }
+
   Widget ridesInProgress(BuildContext context) {
-    double gridSpacing = 16;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Container(
@@ -59,22 +95,11 @@ class RidesStateless extends StatelessWidget {
               children: [
                 RideGroupTitle('In Progress', currentRides.length),
                 Padding(
-                  padding: EdgeInsets.only(top: 24, bottom: 32),
-                  child: Wrap(
-                    spacing: gridSpacing,
-                    runSpacing: gridSpacing,
-                    children: currentRides.asMap().map((i, ride) {
-                      Widget card = Container(
-                        width: (MediaQuery.of(context).size.width / 2) - (gridSpacing * 1.5),
-                          child: RideInProgressCard(Key(ride.id), ride,
-                              selectedRides.contains(ride), selectCallback
-                          )
-                      );
-                      if (i == 0)
-                        card = MeasureRect(child: card, onChange: firstCurrentRideRectCb);
-                      return MapEntry(i, card);
-                    }).values.toList(),
-                  ),
+                    padding: EdgeInsets.only(top: 24, bottom: 32),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: buildRideGrid(context),
+                    )
                 )
               ]
           )
