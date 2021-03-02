@@ -52,7 +52,6 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             numRides > 0 ?
-                            SizedBox(height: 24) :
                             Container(
                               width: 25,
                               height: 25,
@@ -65,7 +64,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)
                                 ),
                               )
-                            ),
+                            ) : SizedBox(height: 24),
                             Text("On your way to...", style: CarriageTheme.largeTitle)
                           ],
                         ),

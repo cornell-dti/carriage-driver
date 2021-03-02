@@ -245,14 +245,20 @@ class _TimeLineState extends State<TimeLine> {
       Text(isPickup ? 'Pickup' : 'Dropoff',
           style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3)),
       SizedBox(height: 2),
-      RichText(
-        text: TextSpan(
-            text: DateFormat('jm').format(time),
-            style: CarriageTheme.body
-                .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
-            children: [
-              TextSpan(text: ' @ $location', style: CarriageTheme.body)
-            ]),
+      Row(
+        children: [
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                  text: DateFormat('jm').format(time),
+                  style: CarriageTheme.body.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                  children: [
+                    TextSpan(text: ' @ $location', style: CarriageTheme.body)
+                  ]),
+            ),
+          ),
+        ],
       )
     ]);
   }
@@ -304,8 +310,9 @@ class _TimeLineState extends State<TimeLine> {
                     children: [
                       locationCircle(),
                       SizedBox(width: 16),
-                      locationInfo(true, widget.ride.startTime,
-                          widget.ride.startLocation)
+                      Expanded(
+                          child: locationInfo(true, widget.ride.startTime,
+                              widget.ride.startLocation))
                     ])),
             SizedBox(height: 24),
             Container(
@@ -314,8 +321,9 @@ class _TimeLineState extends State<TimeLine> {
                     Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   locationCircle(),
                   SizedBox(width: 16),
-                  locationInfo(
-                      false, widget.ride.endTime, widget.ride.endLocation)
+                  Expanded(
+                      child: locationInfo(
+                          false, widget.ride.endTime, widget.ride.endLocation))
                 ])),
           ]),
         ),

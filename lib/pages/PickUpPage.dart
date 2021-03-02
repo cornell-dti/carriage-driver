@@ -51,7 +51,6 @@ class _PickUpPageState extends State<PickUpPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               numRides > 0 ?
-                              SizedBox(height: 24) :
                               Container(
                                   width: 25,
                                   height: 25,
@@ -64,7 +63,7 @@ class _PickUpPageState extends State<PickUpPage> {
                                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)
                                     ),
                                   )
-                              ),
+                              ) : SizedBox(height: 24),
                               Text("Is ${widget.ride.rider.firstName} here?", style: CarriageTheme.largeTitle)
                             ],
                           ),

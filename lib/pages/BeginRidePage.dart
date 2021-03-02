@@ -6,6 +6,7 @@ import 'package:carriage/widgets/RideStops.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
+import '../CarriageTheme.dart';
 import '../RidesProvider.dart';
 import 'OnTheWayPage.dart';
 
@@ -34,13 +35,13 @@ class _BeginRidePageState extends State<BeginRidePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(widget.ride.rider.firstName,
-                style: TextStyle(fontFamily: 'SFDisplay', fontSize: 28, fontWeight: FontWeight.w700, letterSpacing: 0.23)
+              style: CarriageTheme.title1,
             ),
             widget.ride.rider.accessibilityNeeds.length > 0 ?
             Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, letterSpacing: 0.23)),
+                padding: EdgeInsets.only(top: 8),
+                child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
+                    style: CarriageTheme.body)
             ) : Container()
           ],
         )

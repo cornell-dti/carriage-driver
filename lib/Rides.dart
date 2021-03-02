@@ -125,7 +125,7 @@ class RidesStateless extends StatelessWidget {
                                   top: 32, left: 16, right: 16),
                               child: Text(
                                   DateFormat('yMMMM').format(DateTime.now()),
-                                  style: Theme.of(context).textTheme.headline4),
+                                  style: CarriageTheme.largeTitle),
                             ),
                             SizedBox(height: 32),
                             currentRides.length > 0
@@ -316,80 +316,75 @@ class RideInProgressCard extends StatelessWidget {
                   selected ? Color.fromRGBO(167, 167, 167, 0.4) : Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(8)),
               boxShadow: [CarriageTheme.shadow]),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Stack(
-                    children: [
-                      selected
-                          ? Icon(Icons.check_circle,
-                              size: 20, color: Colors.black)
-                          : Container(
-                              width: 20,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0x7FC4C4C4)),
-                            ),
-                    ],
-                  ),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 16,
-                        backgroundImage: AssetImage('assets/images/terry.jpg'),
+          child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 8, top: 8),
+                child: selected
+                    ? Icon(Icons.check_circle, size: 20, color: Colors.black)
+                    : Container(
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: Color(0x7FC4C4C4)),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 20, top: 18),
-                        child: Container(
-                          width: 14,
-                          height: 14,
-                          decoration: BoxDecoration(
-                              color: Color(0xFF6FCF97),
-                              shape: BoxShape.circle,
-                              border:
-                                  Border.all(color: Colors.white, width: 1.5)),
-                        ),
-                      ),
-                    ],
+              ),
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: Column(mainAxisSize: MainAxisSize.max, children: [
+                  Center(
+                    child: CircleAvatar(
+                      radius: 16,
+                      backgroundImage: AssetImage('assets/images/terry.jpg'),
+                    ),
                   ),
                   SizedBox(height: 8),
                   Center(
                       child: Text(ride.rider.firstName,
-                          style: Theme.of(context).textTheme.subtitle1)),
+                          style: CarriageTheme.body
+                              .copyWith(fontWeight: FontWeight.bold))),
                   SizedBox(height: 8),
                   RichText(
-                    textAlign: TextAlign.center,
                     text: TextSpan(
                         text: 'To ',
-                        style:
-                            TextStyle(fontSize: 15, color: Color(0x7F3F3356)),
+                        style: TextStyle(
+                            fontFamily: 'SFText',
+                            fontSize: 15,
+                            color: Color(0xFF848484),
+                            letterSpacing: -0.24),
                         children: [
                           TextSpan(
                               text: ride.endLocation,
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.black))
+                              style: TextStyle(
+                                  fontFamily: 'SFText',
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  letterSpacing: -0.24,
+                                  fontWeight: FontWeight.w600))
                         ]),
                   ),
                   SizedBox(height: 8),
                   RichText(
                     text: TextSpan(
                         text: 'Drop off by ',
-                        style:
-                            TextStyle(fontSize: 15, color: Color(0x7F3F3356)),
+                        style: TextStyle(
+                            fontFamily: 'SFText',
+                            fontSize: 15,
+                            color: Color(0xFF4A4A4A),
+                            fontWeight: FontWeight.w400),
                         children: [
                           TextSpan(
                               text: DateFormat('jm').format(ride.endTime),
                               style: TextStyle(
+                                  fontFamily: 'SFText',
                                   fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold))
+                                  color: Color(0xFF4A4A4A),
+                                  fontWeight: FontWeight.w600))
                         ]),
                   ),
                 ]),
+              ),
+            ],
           )),
     );
   }
