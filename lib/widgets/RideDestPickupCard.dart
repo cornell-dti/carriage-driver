@@ -1,3 +1,4 @@
+import 'package:carriage/CarriageTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -13,7 +14,6 @@ class RideDestPickupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 110,
       child: DecoratedBox(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -26,24 +26,17 @@ class RideDestPickupCard extends StatelessWidget {
                   offset: Offset(0, 9)),
             ]),
         child: Padding(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(16),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(_stop),
-                    Text(
-                      _address,
-                      style: TextStyle(color: Colors.black.withOpacity(0.5)),
-                    )
-                  ],
-                ),
+                Text(_stop, style: CarriageTheme.body),
+                Text(_address, style: CarriageTheme.body.copyWith(color: CarriageTheme.gray3)),
+                SizedBox(height: 24),
                 Text(
                     "${_dropoff ? "Drop off time" : "Pick up time"}: ${DateFormat.jm().format(_time)}",
-                    style: TextStyle(fontSize: 13))
+                    style: CarriageTheme.subheadline.copyWith(color: CarriageTheme.gray1))
               ]),
         ),
       ),

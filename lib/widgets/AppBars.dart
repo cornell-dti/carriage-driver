@@ -11,25 +11,30 @@ class ReturnHomeBar extends StatelessWidget implements PreferredSizeWidget {
       child: Column(
         children: [
           Expanded(child: SizedBox()),
-          Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.chevron_left,
-                    size: 40,
+          GestureDetector(
+            onTap: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (BuildContext context) => Home())
+            ),
+            child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.chevron_left,
+                      size: 40,
+                    ),
+                    padding: EdgeInsets.zero,
+                    visualDensity: VisualDensity.comfortable,
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (BuildContext context) => Home())
+                      );
+                    },
                   ),
-                  padding: EdgeInsets.zero,
-                  visualDensity: VisualDensity.comfortable,
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (BuildContext context) => Home())
-                    );
-                  },
-                ),
-                Text("Home", style: TextStyle(fontSize: 17))
-              ]),
+                  Text("Home", style: TextStyle(fontSize: 17))
+                ]),
+          ),
         ],
       ),
     );

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../CarriageTheme.dart';
+import 'Dialogs.dart';
+
 /// Black button with white text
 class CButton extends StatelessWidget {
   final String text;
@@ -13,11 +16,7 @@ class CButton extends StatelessWidget {
       padding: EdgeInsets.all(16),
       color: Colors.black,
       child: Text(text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          )),
+          style: CarriageTheme.button),
       onPressed: onPressed,
     );
   }
@@ -35,6 +34,83 @@ class DangerButton extends StatelessWidget {
         child: FlatButton(
             textColor: Color(0xFFF08686),
             child: Text(text, style: TextStyle(fontWeight: FontWeight.bold)),
-            onPressed: onPressed));
+            onPressed: onPressed
+        )
+    );
+  }
+}
+
+class ShadowedIconButton extends StatelessWidget {
+  final IconData icon;
+  final Function onPressed;
+  ShadowedIconButton(this.icon, this.onPressed);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(100),
+              boxShadow: [CarriageTheme.shadow]
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Icon(icon, size: 20, color: Colors.black),
+          )
+      ),
+    );
+  }
+}
+
+class CallButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ShadowedIconButton(Icons.phone, () {
+      // TODO: implement call
+    });
+  }
+}
+
+class NotifyButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ShadowedIconButton(Icons.notifications, () {
+      showDialog(
+          context: context,
+          builder: (_) => ConfirmDialog(
+            title: "Notify Delay",
+            content: "Would you like to notify the rider of a delay?",
+            actionName: "Notify",
+            onConfirm: () {
+              // TODO: notify delay functionality
+            },
+          ),
+          barrierDismissible: true
+      );
+    });
+  }
+}
+
+class CalendarButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16),
+      child: Row(
+          children: [
+            Spacer(),
+            IconButton(
+                icon: Icon(Icons.calendar_today),
+                onPressed: () {
+                  // TODO: implement button functionality
+                }
+            ),
+          ]
+      ),
+    );
   }
 }
