@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'AuthProvider.dart';
@@ -104,12 +105,12 @@ class UserInfo {
 
   UserInfo(
       {this.firstName,
-      this.lastName,
-      this.availability,
-      this.vehicle,
-      this.phoneNumber,
-      this.email,
-      this.photoUrl});
+        this.lastName,
+        this.availability,
+        this.vehicle,
+        this.phoneNumber,
+        this.email,
+        this.photoUrl});
 
   ///Creates driver info from JSON representation.
   factory UserInfo.fromJson(Map<String, dynamic> json, String photoUrl) {
@@ -147,28 +148,31 @@ class UserInfoProvider with ChangeNotifier {
   /// Fetches the logged in driver's data and updates [info] with the
   /// retrieved data. Retries continuously if the request fails.
   Future<void> requestInfo(AppConfig config, AuthProvider authProvider) async {
-    await http
-        .get("${config.baseUrl}/drivers/${authProvider.id}")
-        .then((response) async {
-      if (response.statusCode == 200) {
-        Map<String, dynamic> json = jsonDecode(response.body);
-        _setInfo(UserInfo.fromJson(
-            json, authProvider.googleSignIn.currentUser.photoUrl));
-      } else {
-        // TODO: retry only in certain circumstances
-        await Future.delayed(retryDelay);
-        await requestInfo(config, authProvider);
-      }
-    });
+    String token = await authProvider.secureStorage.read(key: 'token');
+    http.Response response = await http.get(
+        "${config.baseUrl}/drivers/${authProvider.id}",
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"}
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> json = jsonDecode(response.body);
+      _setInfo(UserInfo.fromJson(
+          json, authProvider.googleSignIn.currentUser.photoUrl));
+    } else {
+      // TODO: retry only in certain circumstances
+      await Future.delayed(retryDelay);
+      await requestInfo(config, authProvider);
+    }
   }
 
   /// Updates the logged in driver's name and phone number.
   Future<void> updateDriver(AppConfig config, AuthProvider authProvider,
       String firstName, String lastName, String phoneNumber) async {
+    String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.put(
       "${config.baseUrl}/drivers/${authProvider.id}",
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer $token"
       },
       body: jsonEncode(<String, String>{
         'firstName': firstName,

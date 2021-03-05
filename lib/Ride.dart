@@ -1,11 +1,16 @@
 import 'dart:convert';
 import 'dart:core';
+import 'dart:io';
 import 'package:carriage/MeasureSize.dart';
 import 'package:carriage/pages/BeginRidePage.dart';
+import 'package:carriage/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'CarriageTheme.dart';
+import 'package:provider/provider.dart';
+import 'AuthProvider.dart';
 import 'Rider.dart';
 import 'app_config.dart';
 
@@ -58,15 +63,15 @@ class Ride {
 
   Ride(
       {this.id,
-      this.type,
-      this.status,
-      this.startLocation,
-      this.endLocation,
-      this.startAddress,
-      this.endAddress,
-      this.rider,
-      this.endTime,
-      this.startTime});
+        this.type,
+        this.status,
+        this.startLocation,
+        this.endLocation,
+        this.startAddress,
+        this.endAddress,
+        this.rider,
+        this.endTime,
+        this.startTime});
 
   ///Creates a ride from JSON representation.
   factory Ride.fromJson(Map<String, dynamic> json) {
@@ -105,17 +110,26 @@ RideStatus getStatusEnum(String status) {
 ///Modifies the ride with [id] to have status [status].
 Future<http.Response> updateRideStatus(
     BuildContext context, String id, RideStatus status) async {
+  AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+  String token = await authProvider.secureStorage.read(key: 'token');
+
   final body = jsonEncode(<String, String>{"status": toString(status)});
-  return http.put(AppConfig.of(context).baseUrl + '/rides/$id',
-      body: body,
-      headers: <String, String>{"Content-Type": "application/json"});
+  return http
+      .put(AppConfig.of(context).baseUrl + '/rides/$id', body: body, headers: {
+    "Content-Type": "application/json",
+    HttpHeaders.authorizationHeader: "Bearer $token"
+  });
 }
 
 Future<http.Response> setRideToPast(BuildContext context, String id) async {
   final body = jsonEncode(<String, String>{"type": "past"});
-  return http.put(AppConfig.of(context).baseUrl + '/rides/$id',
-      body: body,
-      headers: <String, String>{"Content-Type": "application/json"});
+  AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+  String token = await authProvider.secureStorage.read(key: 'token');
+  return http
+      .put(AppConfig.of(context).baseUrl + '/rides/$id', body: body, headers: {
+    "Content-Type": "application/json",
+    HttpHeaders.authorizationHeader: "Bearer $token"
+  });
 }
 
 T getOrNull<T>(Map<String, dynamic> map, String key, {T parse(dynamic s)}) {
@@ -124,9 +138,6 @@ T getOrNull<T>(Map<String, dynamic> map, String key, {T parse(dynamic s)}) {
   if (parse == null) return x;
   return parse(x);
 }
-
-BoxShadow dropShadow = BoxShadow(
-    blurRadius: 2, spreadRadius: 0, color: Colors.black.withOpacity(0.25));
 
 class RideCard extends StatefulWidget {
   RideCard(this.ride);
@@ -143,23 +154,6 @@ class _RideCardState extends State<RideCard> {
   GlobalKey dropoffKey = GlobalKey();
   Size pickupTextSize;
 
-  Widget actionButton(IconData icon, Function action) {
-    return GestureDetector(
-      onTap: action,
-      child: Container(
-          width: 33,
-          height: 33,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(100),
-              boxShadow: [dropShadow]),
-          child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: Icon(icon, size: 20, color: Colors.black),
-          )),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -171,7 +165,7 @@ class _RideCardState extends State<RideCard> {
         child: Container(
             decoration: BoxDecoration(
                 color: Colors.white,
-                boxShadow: [dropShadow],
+                boxShadow: [CarriageTheme.shadow],
                 borderRadius: BorderRadius.circular(12)),
             child: Padding(
               padding: EdgeInsets.all(24),
@@ -182,13 +176,13 @@ class _RideCardState extends State<RideCard> {
                       Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          boxShadow: [dropShadow],
+                          boxShadow: [CarriageTheme.shadow],
                         ),
                         child: CircleAvatar(
                           radius: 24,
                           //TODO: replace with rider's image
                           backgroundImage:
-                              AssetImage('assets/images/terry.jpg'),
+                          AssetImage('assets/images/terry.jpg'),
                         ),
                       ),
                       SizedBox(width: 16),
@@ -196,23 +190,22 @@ class _RideCardState extends State<RideCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(widget.ride.rider.firstName,
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold)),
+                                style: CarriageTheme.title3),
                             SizedBox(height: 4),
                             widget.ride.rider.accessibilityNeeds.isNotEmpty
                                 ? Text(
-                                    widget.ride.rider.accessibilityNeeds
-                                        .join(', '),
-                                    style: TextStyle(
-                                        color: Color(0xFF848484),
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 15))
+                                widget.ride.rider.accessibilityNeeds
+                                    .join(', '),
+                                style: TextStyle(
+                                    color: Color(0xFF848484),
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 15))
                                 : Container()
                           ]),
                       Spacer(),
-                      actionButton(Icons.phone, () {}),
+                      CallButton(),
                       SizedBox(width: 8),
-                      actionButton(Icons.notifications, () {})
+                      NotifyButton()
                     ]),
                     SizedBox(height: 32),
                     TimeLine(widget.ride)
@@ -241,29 +234,37 @@ class _TimeLineState extends State<TimeLine> {
       height: size,
       child: Icon(Icons.circle, size: 9.75, color: grey),
       decoration: BoxDecoration(
-          color: Colors.white, shape: BoxShape.circle, boxShadow: [dropShadow]),
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [CarriageTheme.shadow]),
     );
   }
 
   Widget locationInfo(bool isPickup, DateTime time, String location) {
-    TextStyle directionStyle = TextStyle(
-        color: Color(0xFFA7A7A7), fontSize: 11, fontWeight: FontWeight.bold);
-
-    TextStyle locationStyle = TextStyle(
-        color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal);
-
-    TextStyle timeStyle = locationStyle.copyWith(fontWeight: FontWeight.bold);
-
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(isPickup ? 'Pickup' : 'Dropoff', style: directionStyle),
-      SizedBox(height: 2),
-      RichText(
-        text: TextSpan(
-            text: DateFormat('jm').format(time),
-            style: timeStyle,
-            children: [TextSpan(text: ' @ $location', style: locationStyle)]),
-      )
-    ]);
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(isPickup ? 'Pickup' : 'Dropoff',
+              style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3)),
+          SizedBox(height: 2),
+          Row(
+            children: [
+              Expanded(
+                child: RichText(
+                  text: TextSpan(
+                      text: DateFormat('jm').format(time),
+                      style: CarriageTheme.body
+                          .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
+                      children: [
+                        TextSpan(text: ' @ $location', style: CarriageTheme.body)
+                      ]
+                  ),
+                ),
+              ),
+            ],
+          )
+        ]
+    );
   }
 
   @override
@@ -284,14 +285,14 @@ class _TimeLineState extends State<TimeLine> {
 
     Widget buildLine() {
       return timelineHeight != null &&
-              firstRowKey.currentContext != null &&
-              lastRowKey.currentContext != null
+          firstRowKey.currentContext != null &&
+          lastRowKey.currentContext != null
           ? Container(
-              margin: EdgeInsets.only(left: size / 2 - (lineWidth / 2)),
-              width: 4,
-              height: getLastRowPos() - getFirstRowPos(),
-              color: Color(0xFFECEBED),
-            )
+        margin: EdgeInsets.only(left: size / 2 - (lineWidth / 2)),
+        width: 4,
+        height: getLastRowPos() - getFirstRowPos(),
+        color: Color(0xFFECEBED),
+      )
           : CircularProgressIndicator();
     }
 
@@ -313,19 +314,23 @@ class _TimeLineState extends State<TimeLine> {
                     children: [
                       locationCircle(),
                       SizedBox(width: 16),
-                      locationInfo(true, widget.ride.startTime,
-                          widget.ride.startLocation)
-                    ])),
+                      Expanded(child: locationInfo(true, widget.ride.startTime, widget.ride.startLocation))
+                    ]
+                )
+            ),
             SizedBox(height: 24),
             Container(
                 key: lastRowKey,
                 child:
-                    Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                  locationCircle(),
-                  SizedBox(width: 16),
-                  locationInfo(
-                      false, widget.ride.endTime, widget.ride.endLocation)
-                ])),
+                Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      locationCircle(),
+                      SizedBox(width: 16),
+                      Expanded(child: locationInfo(false, widget.ride.endTime, widget.ride.endLocation))
+                    ]
+                )
+            ),
           ]),
         ),
       ],

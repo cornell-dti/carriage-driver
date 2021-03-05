@@ -3,6 +3,7 @@ import 'package:carriage/RidesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'CarriageTheme.dart';
 import 'Ride.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -61,7 +62,7 @@ class RidesStateless extends StatelessWidget {
         crossAxisSpacing: 16,
         physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 2,
-        childAspectRatio: 0.8,
+        childAspectRatio: 1.05,
         shrinkWrap: true,
         children: currentRides
             .asMap()
@@ -125,7 +126,7 @@ class RidesStateless extends StatelessWidget {
                                   top: 32, left: 16, right: 16),
                               child: Text(
                                   DateFormat('yMMMM').format(DateTime.now()),
-                                  style: Theme.of(context).textTheme.headline5),
+                                  style: CarriageTheme.largeTitle),
                             ),
                             SizedBox(height: 32),
                             currentRides.isNotEmpty
@@ -178,7 +179,7 @@ class Rides extends StatefulWidget {
 class _RidesState extends State<Rides> {
   List<Ride> selectedRides = [];
 
-  void selectRide(Ride ride) {
+  void _selectRide(Ride ride) {
     setState(() {
       if (!selectedRides.contains(ride)) {
         selectedRides.add(ride);
@@ -222,7 +223,7 @@ class _RidesState extends State<Rides> {
           selectedRides = [];
         });
       },
-      selectCallback: selectRide,
+      selectCallback: _selectRide,
     );
   }
 }
@@ -235,11 +236,7 @@ class RideGroupTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      Text(title,
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-              color: Color(0xFF4A4A4A))),
+      Text(title, style: CarriageTheme.title3),
       SizedBox(width: 24),
       Icon(Icons.people),
       SizedBox(width: 8),
@@ -316,28 +313,26 @@ class RideInProgressCard extends StatelessWidget {
       },
       child: DecoratedBox(
           decoration: BoxDecoration(
-              color: selected ? Color(0xFFBDBDBD) : Colors.white,
+              color:
+                  selected ? Color.fromRGBO(167, 167, 167, 0.4) : Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(8)),
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 2,
-                    spreadRadius: 0,
-                    color: Colors.black.withOpacity(0.25))
-              ]),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  selected
-                      ? Icon(Icons.check_circle, size: 20, color: Colors.black)
-                      : Container(
-                          width: 20,
-                          height: 20,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: Color(0x7FC4C4C4)),
-                        ),
+              boxShadow: [CarriageTheme.shadow]),
+          child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 8, top: 8),
+                child: selected
+                    ? Icon(Icons.check_circle, size: 20, color: Colors.black)
+                    : Container(
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: Color(0x7FC4C4C4)),
+                      ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: Column(mainAxisSize: MainAxisSize.max, children: [
                   Center(
                     child: CircleAvatar(
                       radius: 16,
@@ -347,36 +342,49 @@ class RideInProgressCard extends StatelessWidget {
                   SizedBox(height: 8),
                   Center(
                       child: Text(ride.rider.firstName,
-                          style: Theme.of(context).textTheme.subtitle1)),
+                          style: CarriageTheme.body.copyWith(fontWeight: FontWeight.bold))),
                   SizedBox(height: 8),
                   RichText(
                     text: TextSpan(
                         text: 'To ',
-                        style:
-                            TextStyle(fontSize: 15, color: Color(0x7F3F3356)),
+                        style: TextStyle(
+                            fontFamily: 'SFText',
+                            fontSize: 15,
+                            color: Color(0xFF848484),
+                            letterSpacing: -0.24),
                         children: [
                           TextSpan(
                               text: ride.endLocation,
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.black))
+                              style: TextStyle(
+                                  fontFamily: 'SFText',
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  letterSpacing: -0.24,
+                                  fontWeight: FontWeight.w600))
                         ]),
                   ),
                   SizedBox(height: 8),
                   RichText(
                     text: TextSpan(
                         text: 'Drop off by ',
-                        style:
-                            TextStyle(fontSize: 15, color: Color(0x7F3F3356)),
+                        style: TextStyle(
+                            fontFamily: 'SFText',
+                            fontSize: 15,
+                            color: Color(0xFF4A4A4A),
+                            fontWeight: FontWeight.w400),
                         children: [
                           TextSpan(
                               text: DateFormat('jm').format(ride.endTime),
                               style: TextStyle(
+                                  fontFamily: 'SFText',
                                   fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold))
+                                  color: Color(0xFF4A4A4A),
+                                  fontWeight: FontWeight.w600))
                         ]),
                   ),
                 ]),
+              ),
+            ],
           )),
     );
   }
