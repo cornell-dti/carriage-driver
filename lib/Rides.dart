@@ -69,8 +69,9 @@ class RidesStateless extends StatelessWidget {
             .map((i, ride) {
               Widget w = RideInProgressCard(Key(ride.id), ride,
                   selectedRides.contains(ride), selectCallback);
-              if (i == 0)
+              if (i == 0) {
                 w = MeasureRect(child: w, onChange: firstCurrentRideRectCb);
+              }
               return MapEntry(i, w);
             })
             .values
@@ -128,7 +129,7 @@ class RidesStateless extends StatelessWidget {
                                   style: CarriageTheme.largeTitle),
                             ),
                             SizedBox(height: 32),
-                            currentRides.length > 0
+                            currentRides.isNotEmpty
                                 ? ridesInProgress(context)
                                 : Container(),
                             selectedRides.isEmpty
@@ -180,10 +181,11 @@ class _RidesState extends State<Rides> {
 
   void _selectRide(Ride ride) {
     setState(() {
-      if (!selectedRides.contains(ride))
+      if (!selectedRides.contains(ride)) {
         selectedRides.add(ride);
-      else
+      } else {
         selectedRides.remove(ride);
+      }
     });
   }
 
@@ -281,8 +283,9 @@ class RideGroup extends StatelessWidget {
             );
           }
           Widget w = RideCard(rides[index]);
-          if (index == 0 && groupIndex == 0)
+          if (index == 0 && groupIndex == 0) {
             w = MeasureRect(child: w, onChange: firstRemainingRideRectCb);
+          }
           return w;
         },
         separatorBuilder: (context, index) {

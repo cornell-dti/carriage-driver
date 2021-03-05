@@ -5,6 +5,7 @@ import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/RideStops.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 import '../CarriageTheme.dart';
 import '../RidesProvider.dart';
@@ -37,7 +38,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
             Text(widget.ride.rider.firstName,
               style: CarriageTheme.title1,
             ),
-            widget.ride.rider.accessibilityNeeds.length > 0 ?
+            widget.ride.rider.accessibilityNeeds.isNotEmpty ?
             Padding(
                 padding: EdgeInsets.only(top: 8),
                 child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
@@ -86,10 +87,10 @@ class _BeginRidePageState extends State<BeginRidePage> {
                               Provider.of<RidesProvider>(context,
                                   listen: false);
                               ridesProvider.changeRideToCurrent(widget.ride);
-                              Navigator.of(context).pushReplacement(
+                              unawaited(Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          OnTheWayPage(ride: widget.ride)));
+                                          OnTheWayPage(ride: widget.ride))));
                             } else {
                               setState(() => _requestedContinue = false);
                               throw Exception('Failed to update ride status');

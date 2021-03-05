@@ -6,8 +6,8 @@ import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideDestPickupCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
-
 import '../CarriageTheme.dart';
 import '../RidesProvider.dart';
 
@@ -78,7 +78,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                     ),
                     SizedBox(height: 16),
                     Text(widget.ride.rider.firstName, style: CarriageTheme.title1),
-                    widget.ride.rider.accessibilityNeeds.length > 0 ?
+                    widget.ride.rider.accessibilityNeeds.isNotEmpty ?
                     Padding(
                       padding: EdgeInsets.only(top: 2),
                       child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
@@ -116,10 +116,10 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                               if (response.statusCode == 200) {
                                 setState(() => _requestedContinue = false);
                                 widget.ride.status = RideStatus.ARRIVED;
-                                Navigator.of(context).pushReplacement(
+                                unawaited(Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
-                                            PickUpPage(ride: widget.ride)));
+                                            PickUpPage(ride: widget.ride))));
                               } else {
                                 setState(() => _requestedContinue = false);
                                 throw Exception('Failed to update ride status');

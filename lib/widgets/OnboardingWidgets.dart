@@ -260,7 +260,7 @@ class OnboardingSheet extends StatelessWidget {
     return Container(
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: new BorderRadius.only(
+            borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(20.0),
                 topRight: const Radius.circular(20.0))),
         height: 350,

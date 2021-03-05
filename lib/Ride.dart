@@ -192,7 +192,7 @@ class _RideCardState extends State<RideCard> {
                             Text(widget.ride.rider.firstName,
                                 style: CarriageTheme.title3),
                             SizedBox(height: 4),
-                            widget.ride.rider.accessibilityNeeds.length > 0
+                            widget.ride.rider.accessibilityNeeds.isNotEmpty
                                 ? Text(
                                 widget.ride.rider.accessibilityNeeds
                                     .join(', '),

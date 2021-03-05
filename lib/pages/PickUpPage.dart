@@ -5,6 +5,7 @@ import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideStops.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 import '../CarriageTheme.dart';
 import '../Home.dart';
@@ -81,7 +82,7 @@ class _PickUpPageState extends State<PickUpPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(widget.ride.rider.firstName, style: CarriageTheme.title1),
-                                  widget.ride.rider.accessibilityNeeds.length > 0 ?
+                                  widget.ride.rider.accessibilityNeeds.isNotEmpty ?
                                   Padding(
                                     padding: EdgeInsets.only(top: 2),
                                     child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
@@ -119,9 +120,9 @@ class _PickUpPageState extends State<PickUpPage> {
                                   if (response.statusCode == 200) {
                                     setState(() => _requestedContinue = false);
                                     widget.ride.status = RideStatus.PICKED_UP;
-                                    Navigator.of(context).pushReplacement(
+                                    unawaited(Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
-                                            builder: (BuildContext context) => Home()));
+                                            builder: (BuildContext context) => Home())));
                                   } else {
                                     setState(() => _requestedContinue = false);
                                     throw Exception('Failed to update ride status');

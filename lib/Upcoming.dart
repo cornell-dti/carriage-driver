@@ -34,7 +34,7 @@ class Rider extends StatelessWidget {
                         color: Color.fromRGBO(142, 142, 147, 1),
                         fontSize: 10,
                         letterSpacing: 0.19));
-              } else return new Container();
+              } else {return Container();}
               }()
             ],
           )
@@ -80,7 +80,7 @@ class Date extends StatelessWidget {
 
   final DateTime date;
 
-  final DateFormat format = new DateFormat('MMM d');
+  final DateFormat format = DateFormat('MMM d');
 
   @override
   Widget build(BuildContext context) {
@@ -159,8 +159,8 @@ class CurrentRide extends StatefulWidget {
   final DateTime date;
   // TODO: still placeholder values
   final List<_StopData> stops = [
-    new _StopData('Terry Cruz', 'Cascadilla', StopType.pickup),
-    new _StopData('Chris Hansen', 'Rhodes', StopType.dropoff)
+    _StopData('Terry Cruz', 'Cascadilla', StopType.pickup),
+    _StopData('Chris Hansen', 'Rhodes', StopType.dropoff)
   ];
 
   @override
@@ -183,7 +183,7 @@ class _CurrentRideState extends State<CurrentRide> {
         return 'Drop off';
     }
     // TODO: maybe change if we have a convention for this?
-    throw new Exception("impossible");
+    throw Exception("impossible");
   }
 
   @override

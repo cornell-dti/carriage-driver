@@ -63,7 +63,9 @@ class Breaks {
 
   String toString() {
     if (breaks.isEmpty)
+    {
       return "None";
+    }
     else {
       String str = "";
       for (Break b in breaks) {
@@ -158,7 +160,7 @@ class UserInfoProvider with ChangeNotifier {
     } else {
       // TODO: retry only in certain circumstances
       await Future.delayed(retryDelay);
-      requestInfo(config, authProvider);
+      await requestInfo(config, authProvider);
     }
   }
 
