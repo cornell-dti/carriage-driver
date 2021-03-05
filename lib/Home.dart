@@ -1,3 +1,4 @@
+import 'package:carriage/pages/RideHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'AuthProvider.dart';
@@ -71,9 +72,9 @@ class _HomeState extends State<Home> {
   }
 
   Widget getPage(BuildContext context, int index) {
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     switch (index) {
       case (RIDES):
-        RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
         return FutureBuilder(
             future: ridesProvider.requestActiveRides(context),
             builder: (context, snapshot) {
@@ -88,16 +89,18 @@ class _HomeState extends State<Home> {
             }
         );
       case (HISTORY):
-        return Column(
-          children: <Widget>[
-            SizedBox(height: 50),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SignOutButton(),
-              ],
-            )
-          ],
+        return FutureBuilder(
+            future: ridesProvider.requestPastRides(context),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return SafeArea(
+                  child: Center(
+                      child: CircularProgressIndicator()
+                  ),
+                );
+              }
+              return RideHistory();
+            }
         );
       case (PROFILE):
         return SingleChildScrollView(child: _profilePage(context));
