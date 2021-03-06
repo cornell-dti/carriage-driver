@@ -206,10 +206,11 @@ class _RidesState extends State<Rides> {
 
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+    RidesProvider ridesProvider =
+        Provider.of<RidesProvider>(context, listen: false);
 
-    var currentRides = ridesProvider.currentRides;
-    var remainingRides = ridesProvider.remainingRides;
+    List<Ride> currentRides = ridesProvider.currentRides;
+    List<Ride> remainingRides = ridesProvider.remainingRides;
 
     return RidesStateless(
       currentRides: currentRides,
@@ -234,7 +235,8 @@ class RideGroupTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      Text(title, style: CarriageTheme.title3),
+      Text(title,
+          style: CarriageTheme.title3.copyWith(color: CarriageTheme.gray1)),
       SizedBox(width: 24),
       Icon(Icons.people),
       SizedBox(width: 8),
@@ -339,7 +341,8 @@ class RideInProgressCard extends StatelessWidget {
                   SizedBox(height: 8),
                   Center(
                       child: Text(ride.rider.firstName,
-                          style: CarriageTheme.body.copyWith(fontWeight: FontWeight.bold))),
+                          style: CarriageTheme.body
+                              .copyWith(fontWeight: FontWeight.bold))),
                   SizedBox(height: 8),
                   RichText(
                     text: TextSpan(
