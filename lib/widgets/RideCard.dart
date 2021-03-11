@@ -51,7 +51,7 @@ class _RideCardState extends State<RideCard> {
                           radius: 24,
                           //TODO: replace with rider's image
                           backgroundImage:
-                          AssetImage('assets/images/terry.jpg'),
+                              AssetImage('assets/images/terry.jpg'),
                         ),
                       ),
                       SizedBox(width: 16),
@@ -61,15 +61,15 @@ class _RideCardState extends State<RideCard> {
                             Text(widget.ride.rider.firstName,
                                 style: CarriageTheme.title3),
                             SizedBox(height: 4),
-                            widget.ride.rider.accessibilityNeeds.length > 0 ?
-                            Text(
-                                widget.ride.rider.accessibilityNeeds.join(', '),
-                                style: TextStyle(
-                                    color: CarriageTheme.gray2,
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 15
-                                )
-                            ) : Container()
+                            widget.ride.rider.accessibilityNeeds.length > 0
+                                ? Text(
+                                    widget.ride.rider.accessibilityNeeds
+                                        .join(', '),
+                                    style: TextStyle(
+                                        color: CarriageTheme.gray2,
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 15))
+                                : Container()
                           ]),
                       Spacer(),
                       CallButton(),
@@ -114,14 +114,20 @@ class _TimeLineState extends State<TimeLine> {
       Text(isPickup ? 'Pickup' : 'Dropoff',
           style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3)),
       SizedBox(height: 2),
-      RichText(
-        text: TextSpan(
-            text: DateFormat('jm').format(time),
-            style: CarriageTheme.body
-                .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
-            children: [
-              TextSpan(text: ' @ $location', style: CarriageTheme.body)
-            ]),
+      Row(
+        children: [
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                  text: DateFormat('jm').format(time),
+                  style: CarriageTheme.body.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                  children: [
+                    TextSpan(text: ' @ $location', style: CarriageTheme.body)
+                  ]),
+            ),
+          ),
+        ],
       )
     ]);
   }
@@ -144,14 +150,14 @@ class _TimeLineState extends State<TimeLine> {
 
     Widget buildLine() {
       return timelineHeight != null &&
-          firstRowKey.currentContext != null &&
-          lastRowKey.currentContext != null
+              firstRowKey.currentContext != null &&
+              lastRowKey.currentContext != null
           ? Container(
-        margin: EdgeInsets.only(left: size / 2 - (lineWidth / 2)),
-        width: 4,
-        height: getLastRowPos() - getFirstRowPos(),
-        color: Color.fromRGBO(236, 235, 237, 1),
-      )
+              margin: EdgeInsets.only(left: size / 2 - (lineWidth / 2)),
+              width: 4,
+              height: getLastRowPos() - getFirstRowPos(),
+              color: Color(0xFFECEBED),
+            )
           : CircularProgressIndicator();
     }
 
@@ -173,18 +179,20 @@ class _TimeLineState extends State<TimeLine> {
                     children: [
                       locationCircle(),
                       SizedBox(width: 16),
-                      locationInfo(true, widget.ride.startTime,
-                          widget.ride.startLocation)
+                      Expanded(
+                          child: locationInfo(true, widget.ride.startTime,
+                              widget.ride.startLocation))
                     ])),
             SizedBox(height: 24),
             Container(
                 key: lastRowKey,
                 child:
-                Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                    Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   locationCircle(),
                   SizedBox(width: 16),
-                  locationInfo(
-                      false, widget.ride.endTime, widget.ride.endLocation)
+                  Expanded(
+                      child: locationInfo(
+                          false, widget.ride.endTime, widget.ride.endLocation))
                 ])),
           ]),
         ),

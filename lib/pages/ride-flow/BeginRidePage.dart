@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import '../../providers/RidesProvider.dart';
-import 'OnTheWayPage.dart';
+import '../CarriageTheme.dart';
 
 class BeginRidePage extends StatefulWidget {
   final OnWidgetRectChange onContinueRectChange;
@@ -24,7 +24,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
   Widget _picAndName(BuildContext context) {
     return Center(
       child:
-      Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
+          Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
         CircleAvatar(
           radius: 50,
           backgroundImage: AssetImage('assets/images/terry.jpg'),
@@ -33,15 +33,16 @@ class _BeginRidePageState extends State<BeginRidePage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.ride.rider.firstName,
-                style: TextStyle(fontFamily: 'SFDisplay', fontSize: 28, fontWeight: FontWeight.w700, letterSpacing: 0.23)
+            Text(
+              widget.ride.rider.firstName,
+              style: CarriageTheme.title1,
             ),
-            widget.ride.rider.accessibilityNeeds.length > 0 ?
-            Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, letterSpacing: 0.23)),
-            ) : Container()
+            widget.ride.rider.accessibilityNeeds.length > 0
+                ? Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
+                        style: CarriageTheme.body))
+                : Container()
           ],
         )
       ]),
@@ -59,13 +60,15 @@ class _BeginRidePageState extends State<BeginRidePage> {
           isLoading: _requestedContinue,
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.only(left: 16, right: 16, bottom: 15, top: 24),
+              padding:
+                  EdgeInsets.only(left: 16, right: 16, bottom: 15, top: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _picAndName(context),
                   SizedBox(height: 48),
-                  RideStops(ride: widget.ride, carIcon: false, largeSpacing: true),
+                  RideStops(
+                      ride: widget.ride, carIcon: false, largeSpacing: true),
                   SizedBox(height: 40),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
@@ -82,8 +85,8 @@ class _BeginRidePageState extends State<BeginRidePage> {
                             if (response.statusCode == 200) {
                               widget.ride.status = RideStatus.ON_THE_WAY;
                               RidesProvider ridesProvider =
-                              Provider.of<RidesProvider>(context,
-                                  listen: false);
+                                  Provider.of<RidesProvider>(context,
+                                      listen: false);
                               ridesProvider.changeRideToCurrent(widget.ride);
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
@@ -93,15 +96,13 @@ class _BeginRidePageState extends State<BeginRidePage> {
                               setState(() => _requestedContinue = false);
                               throw Exception('Failed to update ride status');
                             }
-                          }
-                      ),
+                          }),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-        )
-    );
+        ));
   }
 }
