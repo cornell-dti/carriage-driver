@@ -3,6 +3,7 @@ import 'dart:core';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../providers/AuthProvider.dart';
 import 'Rider.dart';
@@ -77,8 +78,8 @@ class Ride {
       endLocation: json['endLocation']['name'],
       startAddress: json['startLocation']['address'],
       endAddress: json['endLocation']['address'],
-      startTime: DateTime.parse(json['startTime']),
-      endTime: DateTime.parse(json['endTime']),
+      startTime: DateFormat('yyyy-MM-ddTHH:mm:ss').parse(json['startTime'], true).toLocal(),
+      endTime: DateFormat('yyyy-MM-ddTHH:mm:ss').parse(json['endTime'], true).toLocal(),
       rider: Rider.fromJson(json['rider']),
     );
   }
