@@ -42,16 +42,7 @@ class _RideCardState extends State<RideCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [CarriageTheme.shadow],
-                        ),
-                        child: CircleAvatar(
-                          radius: 24,
-                          backgroundImage: NetworkImage(widget.ride.rider.photoLink)
-                        ),
-                      ),
+                      widget.ride.rider.profilePicture(48),
                       SizedBox(width: 16),
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

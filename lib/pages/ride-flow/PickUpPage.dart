@@ -71,10 +71,7 @@ class _PickUpPageState extends State<PickUpPage> {
                         SizedBox(height: 32),
                         Row(
                             children: [
-                              CircleAvatar(
-                                radius: 50,
-                                backgroundImage: NetworkImage(widget.ride.rider.photoLink),
-                              ),
+                              widget.ride.rider.profilePicture(100),
                               SizedBox(width: 24),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

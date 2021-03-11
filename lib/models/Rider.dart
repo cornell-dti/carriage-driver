@@ -1,3 +1,6 @@
+import 'package:carriage/utils/CarriageTheme.dart';
+import 'package:flutter/material.dart';
+
 ///Model for a rider. Matches the schema in the backend.
 class Rider {
   ///The rider's id in the backend.
@@ -42,6 +45,23 @@ class Rider {
         lastName: json['lastName'],
         accessibilityNeeds: List.from(json['accessibility']),
         photoLink: 'http://' + json['photoLink']
+    );
+  }
+
+  Widget profilePicture(double diameter) {
+    return Container(
+      height: diameter,
+      width: diameter,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(100),
+        child: FadeInImage(
+          fit: BoxFit.cover,
+          placeholder: AssetImage(
+            'assets/images/white.jpg',
+          ),
+          image: NetworkImage(this.photoLink),
+        ),
+      ),
     );
   }
 }

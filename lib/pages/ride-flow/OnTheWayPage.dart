@@ -70,10 +70,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                       ),
                     ),
                     SizedBox(height: 32),
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(widget.ride.rider.photoLink),
-                    ),
+                    widget.ride.rider.profilePicture(100),
                     SizedBox(height: 16),
                     Text(widget.ride.rider.firstName, style: CarriageTheme.title1),
                     widget.ride.rider.accessibilityNeeds.length > 0 ?

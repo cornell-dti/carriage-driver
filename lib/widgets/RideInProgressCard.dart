@@ -38,12 +38,7 @@ class RideInProgressCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 child: Column(mainAxisSize: MainAxisSize.max, children: [
-                  Center(
-                    child: CircleAvatar(
-                      radius: 16,
-                      backgroundImage: NetworkImage(ride.rider.photoLink),
-                    ),
-                  ),
+                  ride.rider.profilePicture(32),
                   SizedBox(height: 8),
                   Center(
                       child: Text(ride.rider.firstName,

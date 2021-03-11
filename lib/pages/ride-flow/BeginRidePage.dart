@@ -28,10 +28,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
       Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(widget.ride.rider.photoLink),
-            ),
+            widget.ride.rider.profilePicture(100),
             SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

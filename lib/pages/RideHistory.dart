@@ -108,10 +108,7 @@ class RideHistoryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        CircleAvatar(
-          radius: 27,
-          backgroundImage: NetworkImage(ride.rider.photoLink),
-        ),
+        ride.rider.profilePicture(54),
         SizedBox(width: 28),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,

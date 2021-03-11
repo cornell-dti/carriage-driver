@@ -16,10 +16,7 @@ class RideInfoCard extends StatelessWidget {
       child: Center(
         child: Column(
             children: <Widget>[
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: NetworkImage(ride.rider.photoLink),
-              ),
+              ride.rider.profilePicture(100),
               SizedBox(height: 16),
               Text(ride.rider.firstName, style: CarriageTheme.largeTitle),
               ride.rider.accessibilityNeeds.length > 0 ?
