@@ -41,7 +41,7 @@ class RideInProgressCard extends StatelessWidget {
                   Center(
                     child: CircleAvatar(
                       radius: 16,
-                      backgroundImage: AssetImage('assets/images/terry.jpg'),
+                      backgroundImage: NetworkImage(ride.rider.photoLink),
                     ),
                   ),
                   SizedBox(height: 8),

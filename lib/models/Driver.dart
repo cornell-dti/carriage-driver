@@ -1,3 +1,5 @@
+import 'package:carriage/providers/AuthProvider.dart';
+
 ///Model for a driver's info. Matches the schema in the backend.
 class Driver {
   ///The first name of the driver.
@@ -18,21 +20,21 @@ class Driver {
   ///The driver's email.
   final String email;
 
-  ///The url of the driver's profile picture.
-  final String photoUrl;
-  String fullName() => firstName + " " + lastName;
+  ///The URL of the driver's profile picture.
+  final String photoLink;
 
-  Driver(
-      {this.firstName,
-        this.lastName,
-        this.availability,
-        this.vehicle,
-        this.phoneNumber,
-        this.email,
-        this.photoUrl});
+  Driver({
+    this.firstName,
+    this.lastName,
+    this.availability,
+    this.vehicle,
+    this.phoneNumber,
+    this.email,
+    this.photoLink
+  });
 
   ///Creates driver info from JSON representation.
-  factory Driver.fromJson(Map<String, dynamic> json, String photoUrl) {
+  factory Driver.fromJson(AuthProvider authProvider, Map<String, dynamic> json) {
     return Driver(
         firstName: json['firstName'],
         lastName: json['lastName'],
@@ -40,6 +42,19 @@ class Driver {
         vehicle: json['vehicle']['name'],
         phoneNumber: json['phoneNumber'],
         email: json['email'],
-        photoUrl: photoUrl);
+        photoLink: json['photoLink'] == null ? authProvider.googleSignIn.currentUser.photoUrl : 'http://' + json['photoLink']
+    );
+  }
+
+  Driver copyWithPhoto(String newPhoto) {
+    return Driver(
+        firstName: this.firstName,
+        lastName: this.lastName,
+        availability: this.availability,
+        vehicle: this.vehicle,
+        phoneNumber: this.phoneNumber,
+        email: this.email,
+        photoLink: 'http://' + newPhoto
+    );
   }
 }

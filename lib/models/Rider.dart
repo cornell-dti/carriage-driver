@@ -19,13 +19,18 @@ class Rider {
   ///Can include 'Assistant', 'Crutches', 'Wheelchair'
   final List<String> accessibilityNeeds;
 
-  Rider(
-      {this.id,
-      this.email,
-      this.phoneNumber,
-      this.firstName,
-      this.lastName,
-      this.accessibilityNeeds});
+  ///The URL of the rider's profile picture.
+  final String photoLink;
+
+  Rider({
+    this.id,
+    this.email,
+    this.phoneNumber,
+    this.firstName,
+    this.lastName,
+    this.accessibilityNeeds,
+    this.photoLink
+  });
 
   ///Creates a rider from JSON representation.
   factory Rider.fromJson(Map<String, dynamic> json) {
@@ -35,6 +40,8 @@ class Rider {
         phoneNumber: json['phoneNumber'],
         firstName: json['firstName'],
         lastName: json['lastName'],
-        accessibilityNeeds: List.from(json['accessibility']));
+        accessibilityNeeds: List.from(json['accessibility']),
+        photoLink: 'http://' + json['photoLink']
+    );
   }
 }

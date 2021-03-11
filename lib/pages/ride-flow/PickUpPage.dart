@@ -73,8 +73,7 @@ class _PickUpPageState extends State<PickUpPage> {
                             children: [
                               CircleAvatar(
                                 radius: 50,
-                                //TODO: replace with rider image
-                                backgroundImage: AssetImage('assets/images/terry.jpg'),
+                                backgroundImage: NetworkImage(widget.ride.rider.photoLink),
                               ),
                               SizedBox(width: 24),
                               Column(

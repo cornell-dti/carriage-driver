@@ -18,7 +18,7 @@ class Greeting extends StatelessWidget {
         child: Container(
             height: 46,
             child: userInfoProvider.hasInfo()
-                ? Text('Hi ${userInfoProvider.info.firstName}!',
+                ? Text('Hi ${userInfoProvider.driver.firstName}!',
                     style: Theme.of(context).textTheme.headline4)
                 : Container()),
         padding: EdgeInsets.only(

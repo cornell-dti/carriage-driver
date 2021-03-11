@@ -110,8 +110,7 @@ class RideHistoryRow extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 27,
-          //TODO: replace with rider image
-          backgroundImage: AssetImage('assets/images/terry.jpg'),
+          backgroundImage: NetworkImage(ride.rider.photoLink),
         ),
         SizedBox(width: 28),
         Column(

@@ -14,21 +14,22 @@ class RideInfoCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Center(
-        child: Column(children: <Widget>[
-          CircleAvatar(
-            radius: 50,
-            //TODO: replace with rider image
-            backgroundImage: AssetImage('assets/images/terry.jpg'),
-          ),
-          SizedBox(height: 16),
-          Text(ride.rider.firstName, style: CarriageTheme.largeTitle),
-          ride.rider.accessibilityNeeds.length > 0 ?
-          Padding(
-            padding: EdgeInsets.only(top: 8),
-            child: Text(ride.rider.accessibilityNeeds.join(', '),
-                style: CarriageTheme.body),
-          ) : Container()
-        ]),
+        child: Column(
+            children: <Widget>[
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(ride.rider.photoLink),
+              ),
+              SizedBox(height: 16),
+              Text(ride.rider.firstName, style: CarriageTheme.largeTitle),
+              ride.rider.accessibilityNeeds.length > 0 ?
+              Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text(ride.rider.accessibilityNeeds.join(', '),
+                    style: CarriageTheme.body),
+              ) : Container()
+            ]
+        ),
       ),
     );
   }

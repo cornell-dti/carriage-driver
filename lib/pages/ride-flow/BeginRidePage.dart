@@ -25,28 +25,30 @@ class _BeginRidePageState extends State<BeginRidePage> {
   Widget _picAndName(BuildContext context) {
     return Center(
       child:
-          Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
-        CircleAvatar(
-          radius: 50,
-          backgroundImage: AssetImage('assets/images/terry.jpg'),
-        ),
-        SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.ride.rider.firstName,
-              style: CarriageTheme.title1,
+      Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: NetworkImage(widget.ride.rider.photoLink),
             ),
-            widget.ride.rider.accessibilityNeeds.length > 0
-                ? Padding(
+            SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.ride.rider.firstName,
+                  style: CarriageTheme.title1,
+                ),
+                widget.ride.rider.accessibilityNeeds.length > 0
+                    ? Padding(
                     padding: EdgeInsets.only(top: 8),
                     child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
                         style: CarriageTheme.body))
-                : Container()
-          ],
-        )
-      ]),
+                    : Container()
+              ],
+            )
+          ]),
     );
   }
 
@@ -62,7 +64,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
           child: SingleChildScrollView(
             child: Padding(
               padding:
-                  EdgeInsets.only(left: 16, right: 16, bottom: 15, top: 24),
+              EdgeInsets.only(left: 16, right: 16, bottom: 15, top: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -86,8 +88,8 @@ class _BeginRidePageState extends State<BeginRidePage> {
                             if (response.statusCode == 200) {
                               widget.ride.status = RideStatus.ON_THE_WAY;
                               RidesProvider ridesProvider =
-                                  Provider.of<RidesProvider>(context,
-                                      listen: false);
+                              Provider.of<RidesProvider>(context,
+                                  listen: false);
                               ridesProvider.changeRideToCurrent(widget.ride);
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(

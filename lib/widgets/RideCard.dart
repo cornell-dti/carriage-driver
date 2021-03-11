@@ -49,9 +49,7 @@ class _RideCardState extends State<RideCard> {
                         ),
                         child: CircleAvatar(
                           radius: 24,
-                          //TODO: replace with rider's image
-                          backgroundImage:
-                              AssetImage('assets/images/terry.jpg'),
+                          backgroundImage: NetworkImage(widget.ride.rider.photoLink)
                         ),
                       ),
                       SizedBox(width: 16),

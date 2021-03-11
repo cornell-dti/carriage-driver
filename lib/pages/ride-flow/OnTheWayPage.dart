@@ -72,8 +72,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                     SizedBox(height: 32),
                     CircleAvatar(
                       radius: 50,
-                      //TODO: replace with rider image
-                      backgroundImage: AssetImage('assets/images/terry.jpg'),
+                      backgroundImage: NetworkImage(widget.ride.rider.photoLink),
                     ),
                     SizedBox(height: 16),
                     Text(widget.ride.rider.firstName, style: CarriageTheme.title1),
