@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../Home.dart';
+import '../pages/Home.dart';
 
 class ReturnHomeBar extends StatelessWidget implements PreferredSizeWidget {
   static final double prefHeight = 80;
@@ -19,14 +19,12 @@ class ReturnHomeBar extends StatelessWidget implements PreferredSizeWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.chevron_left,
-                      size: 40,
+                  GestureDetector(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 16, right: 8),
+                      child: Image.asset('assets/images/backArrow.png', width: 12, height: 21),
                     ),
-                    padding: EdgeInsets.zero,
-                    visualDensity: VisualDensity.comfortable,
-                    onPressed: () {
+                    onTap: () {
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (BuildContext context) => Home())
                       );

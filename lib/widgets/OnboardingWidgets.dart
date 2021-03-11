@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:speech_bubble/speech_bubble.dart';
 
-final Color highlightColor = Color(0xFF1AA0EB);
+final Color highlightColor = Color.fromRGBO(26, 160, 235, 1);
 final Color overlayColor = Colors.black.withAlpha(128);
 
 class RectPositioned extends StatelessWidget {
@@ -236,7 +236,7 @@ class CarProgressBar extends StatelessWidget {
           child: LinearProgressIndicator(
             minHeight: 8,
             value: progress,
-            backgroundColor: Color(0xFFDCDCDC),
+            backgroundColor: Color.fromRGBO(220, 220, 220, 1),
             valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
           ),
         ),

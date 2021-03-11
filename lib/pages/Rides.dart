@@ -1,10 +1,12 @@
-import 'package:carriage/MeasureRect.dart';
-import 'package:carriage/RidesProvider.dart';
+import '../utils/MeasureRect.dart';
+import '../providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'CarriageTheme.dart';
-import 'Ride.dart';
+import '../utils/CarriageTheme.dart';
+import '../models/Ride.dart';
+import '../widgets/RideCard.dart';
+import '../widgets/RideInProgressCard.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
@@ -124,7 +126,7 @@ class RidesStateless extends StatelessWidget {
                               padding: const EdgeInsets.only(
                                   top: 32, left: 16, right: 16),
                               child: Text(
-                                  DateFormat('yMMMM').format(DateTime.now()),
+                                  DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
                                   style: CarriageTheme.largeTitle),
                             ),
                             SizedBox(height: 32),
@@ -207,7 +209,7 @@ class _RidesState extends State<Rides> {
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider =
-        Provider.of<RidesProvider>(context, listen: false);
+    Provider.of<RidesProvider>(context, listen: false);
 
     List<Ride> currentRides = ridesProvider.currentRides;
     List<Ride> remainingRides = ridesProvider.remainingRides;
@@ -238,7 +240,7 @@ class RideGroupTitle extends StatelessWidget {
       Text(title,
           style: CarriageTheme.title3.copyWith(color: CarriageTheme.gray1)),
       SizedBox(width: 24),
-      Icon(Icons.people),
+      Image.asset('assets/images/peopleIcon.png', width: 20, height: 12),
       SizedBox(width: 8),
       Text(numRides.toString(),
           style: TextStyle(
@@ -297,121 +299,31 @@ class RideGroup extends StatelessWidget {
   }
 }
 
-class RideInProgressCard extends StatelessWidget {
-  RideInProgressCard(Key key, this.ride, this.selected, this.selectCallback)
-      : super(key: key);
-  final Ride ride;
-  final Function selectCallback;
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        selectCallback(ride);
-      },
-      child: DecoratedBox(
-          decoration: BoxDecoration(
-              color:
-                  selected ? Color.fromRGBO(167, 167, 167, 0.4) : Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              boxShadow: [CarriageTheme.shadow]),
-          child: Stack(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 8, top: 8),
-                child: selected
-                    ? Icon(Icons.check_circle, size: 20, color: Colors.black)
-                    : Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Color(0x7FC4C4C4)),
-                      ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: Column(mainAxisSize: MainAxisSize.max, children: [
-                  Center(
-                    child: CircleAvatar(
-                      radius: 16,
-                      backgroundImage: AssetImage('assets/images/terry.jpg'),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Center(
-                      child: Text(ride.rider.firstName,
-                          style: CarriageTheme.body
-                              .copyWith(fontWeight: FontWeight.bold))),
-                  SizedBox(height: 8),
-                  RichText(
-                    text: TextSpan(
-                        text: 'To ',
-                        style: TextStyle(
-                            fontFamily: 'SFText',
-                            fontSize: 15,
-                            color: Color(0xFF848484),
-                            letterSpacing: -0.24),
-                        children: [
-                          TextSpan(
-                              text: ride.endLocation,
-                              style: TextStyle(
-                                  fontFamily: 'SFText',
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  letterSpacing: -0.24,
-                                  fontWeight: FontWeight.w600))
-                        ]),
-                  ),
-                  SizedBox(height: 8),
-                  RichText(
-                    text: TextSpan(
-                        text: 'Drop off by ',
-                        style: TextStyle(
-                            fontFamily: 'SFText',
-                            fontSize: 15,
-                            color: Color(0xFF4A4A4A),
-                            fontWeight: FontWeight.w400),
-                        children: [
-                          TextSpan(
-                              text: DateFormat('jm').format(ride.endTime),
-                              style: TextStyle(
-                                  fontFamily: 'SFText',
-                                  fontSize: 15,
-                                  color: Color(0xFF4A4A4A),
-                                  fontWeight: FontWeight.w600))
-                        ]),
-                  ),
-                ]),
-              ),
-            ],
-          )),
-    );
-  }
-}
-
-class RidesCompletedPage extends StatefulWidget {
+class RidesCompletePage extends StatefulWidget {
   @override
   _RidesCompletedPageState createState() => _RidesCompletedPageState();
 }
 
-class _RidesCompletedPageState extends State<RidesCompletedPage> {
+class _RidesCompletedPageState extends State {
   @override
   initState() {
     super.initState();
     Timer(const Duration(seconds: 5), () => Navigator.of(context).pop());
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(children: [
-          SizedBox(height: 90),
-          Text('Rides Completed', style: Theme.of(context).textTheme.headline5),
-          SizedBox(height: 120),
-          Image.asset('assets/images/townCar.png')
-        ]),
+        child: Column(
+            children: [
+              SizedBox(height: 90),
+              Text('Rides Completed', style: Theme.of(context).textTheme.headline5),
+              SizedBox(height: 120),
+              Image.asset('assets/images/townCar.png')
+            ]
+        ),
       ),
     );
   }

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'AuthProvider.dart';
-import 'Ride.dart';
-import 'app_config.dart';
+import '../models/Ride.dart';
+import '../utils/app_config.dart';
 import 'package:http/http.dart' as http;
 
 class RidesProvider with ChangeNotifier {
@@ -65,7 +65,12 @@ class RidesProvider with ChangeNotifier {
   }
 
   Future<void> requestPastRides(BuildContext context) async {
-    final response = await http.get(AppConfig.of(context).baseUrl + '/rides?type=past&driver=${Provider.of<AuthProvider>(context, listen: false).id}');
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    String token = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.get(
+        AppConfig.of(context).baseUrl + '/rides?type=past&driver=${authProvider.id}',
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"}
+    );
     if (response.statusCode == 200) {
       pastRides = ridesFromJson(response.body);
       notifyListeners();
