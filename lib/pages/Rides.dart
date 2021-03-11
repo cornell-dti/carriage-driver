@@ -126,7 +126,7 @@ class RidesStateless extends StatelessWidget {
                               padding: const EdgeInsets.only(
                                   top: 32, left: 16, right: 16),
                               child: Text(
-                                  DateFormat('yMMMM').format(DateTime.now()),
+                                  DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
                                   style: CarriageTheme.largeTitle),
                             ),
                             SizedBox(height: 32),
@@ -299,15 +299,18 @@ class RideGroup extends StatelessWidget {
   }
 }
 
-class RideInProgressCard extends StatelessWidget {
-  RideInProgressCard(Key key, this.ride, this.selected, this.selectCallback)
+class RidesCompletePage extends StatefulWidget {
+  @override
+  _RidesCompletedPageState createState() => _RidesCompletedPageState();
+}
 
-class _RidesCompletedPageState extends State<RidesCompletedPage> {
+class _RidesCompletedPageState extends State {
   @override
   initState() {
     super.initState();
     Timer(const Duration(seconds: 5), () => Navigator.of(context).pop());
   }
+
 
   @override
   Widget build(BuildContext context) {

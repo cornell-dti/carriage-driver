@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import '../../providers/RidesProvider.dart';
-import '../CarriageTheme.dart';
+import '../../utils/CarriageTheme.dart';
+import 'OnTheWayPage.dart';
 
 class BeginRidePage extends StatefulWidget {
   final OnWidgetRectChange onContinueRectChange;
