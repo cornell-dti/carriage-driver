@@ -32,10 +32,6 @@ class _ProfileState extends State<Profile> {
     double _picBtnDiameter = _picDiameter * 0.39;
 
     if (driverProvider.hasInfo()) {
-      List<String> availabilities = [];
-      driverProvider.driver.availability.forEach((key, value) {
-        availabilities.add('$key: ${value['startTime']}-${value['endTime']}');
-      });
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,13 +66,26 @@ class _ProfileState extends State<Profile> {
                     child: Stack(
                       children: [
                         Padding(
-                            padding:
-                            EdgeInsets.only(bottom: _picDiameter * 0.05),
-                            child: CircleAvatar(
+                          padding:
+                          EdgeInsets.only(bottom: _picDiameter * 0.05),
+                          /*child: CircleAvatar(
                               radius: _picRadius,
-                              backgroundImage:
-                              NetworkImage(driverProvider.driver.photoLink),
-                            )
+                              backgroundImage: image,
+                            )*/
+                          child: Container(
+                            height: _picDiameter,
+                            width: _picDiameter,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: FadeInImage(
+                                fit: BoxFit.cover,
+                                placeholder: AssetImage(
+                                  'assets/images/white.jpg',
+                                ),
+                                image: NetworkImage(driverProvider.driver.photoLink),
+                              ),
+                            ),
+                          ),
                         ),
                         Positioned(
                             child: Container(
@@ -160,23 +169,16 @@ class _ProfileState extends State<Profile> {
                   driverProvider.driver.phoneNumber)
             ],
           ),
-          SizedBox(height: 6),
-          InfoGroup(
-            "Schedule Info",
-            [
-              InfoRow("hours", Icons.schedule,
-                  availabilities.join('\n')),
-              InfoRow("vehicle", Icons.directions_car,
-                  driverProvider.driver.vehicle),
-            ],
-          )
         ],
       );
     }
     else {
       return SafeArea(
-          child: Center(
-              child: CircularProgressIndicator()
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Center(
+                child: CircularProgressIndicator()
+            ),
           )
       );
     }
@@ -286,6 +288,7 @@ class _EditProfileState extends State<EditProfile> {
     String _firstName = widget.driver.firstName;
     String _lastName = widget.driver.lastName;
     String _phoneNumber = widget.driver.phoneNumber;
+
     return Scaffold(
         body: Padding(
             padding: EdgeInsets.only(

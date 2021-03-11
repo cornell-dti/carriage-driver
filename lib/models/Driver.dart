@@ -8,12 +8,6 @@ class Driver {
   ///The last name of the driver.
   final String lastName;
 
-  ///Time that the driver works.
-  final Map<String, dynamic> availability;
-
-  ///Name of the vehicle the driver uses.
-  final String vehicle;
-
   ///The rider's phone number in format ##########.
   final String phoneNumber;
 
@@ -26,8 +20,6 @@ class Driver {
   Driver({
     this.firstName,
     this.lastName,
-    this.availability,
-    this.vehicle,
     this.phoneNumber,
     this.email,
     this.photoLink
@@ -38,11 +30,9 @@ class Driver {
     return Driver(
         firstName: json['firstName'],
         lastName: json['lastName'],
-        availability: json['availability'],
-        vehicle: json['vehicle']['name'],
         phoneNumber: json['phoneNumber'],
         email: json['email'],
-        photoLink: json['photoLink'] == null ? authProvider.googleSignIn.currentUser.photoUrl : 'http://' + json['photoLink']
+        photoLink: json['photoLink'] == null ? authProvider.googleSignIn.currentUser.photoUrl : 'http://' + json['photoLink'] + '?dummy=${DateTime.now().millisecondsSinceEpoch}'
     );
   }
 
@@ -50,8 +40,6 @@ class Driver {
     return Driver(
         firstName: this.firstName,
         lastName: this.lastName,
-        availability: this.availability,
-        vehicle: this.vehicle,
         phoneNumber: this.phoneNumber,
         email: this.email,
         photoLink: 'http://' + newPhoto

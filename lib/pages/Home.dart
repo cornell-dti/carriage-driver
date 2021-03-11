@@ -66,11 +66,6 @@ class _HomeState extends State<Home> {
       _selectedIndex = index;
     });
   }
-
-  Widget _profilePage(BuildContext context) {
-    return Profile();
-  }
-
   Widget getPage(BuildContext context, int index) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     switch (index) {
@@ -103,7 +98,7 @@ class _HomeState extends State<Home> {
             }
         );
       case (PROFILE):
-        return SingleChildScrollView(child: _profilePage(context));
+        return SingleChildScrollView(child: Profile());
       default:
         return Column();
     }

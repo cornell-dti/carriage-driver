@@ -22,8 +22,8 @@ class DriverProvider with ChangeNotifier {
     authProvider.addListener(callback);
   }
 
-  void _setInfo(Driver info) {
-    this.driver = info;
+  void _setDriver(Driver newDriver) {
+    this.driver = newDriver;
     notifyListeners();
   }
 
@@ -37,7 +37,7 @@ class DriverProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
-      _setInfo(Driver.fromJson(authProvider, json));
+      _setDriver(Driver.fromJson(authProvider, json));
     } else {
       // TODO: retry only in certain circumstances
       await Future.delayed(retryDelay);
@@ -63,7 +63,7 @@ class DriverProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
-      _setInfo(Driver.fromJson(authProvider, json));
+      _setDriver(Driver.fromJson(authProvider, json));
     } else {
       throw Exception('Failed to update driver.');
     }
@@ -87,8 +87,7 @@ class DriverProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
-      _setInfo(this.driver.copyWithPhoto(json['photoLink']));
-      notifyListeners();
+      _setDriver(Driver.fromJson(authProvider, json));
     } else {
       print(response.body);
       throw Exception('Failed to update driver.');
