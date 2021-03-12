@@ -105,8 +105,8 @@ class _PickUpPageState extends State<PickUpPage> {
                                   setState(() => _requestedContinue = false);
                                   widget.ride.status = RideStatus.PICKED_UP;
                                   Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) => Home()));
+                                      MaterialPageRoute(builder: (BuildContext context) => Home())
+                                  );
                                 } else {
                                   setState(() => _requestedContinue = false);
                                   throw Exception('Failed to update ride status');
@@ -123,8 +123,22 @@ class _PickUpPageState extends State<PickUpPage> {
                                   title: "Report No Show",
                                   content: "Would you like to report a no show to the dispatcher?",
                                   actionName: "Report",
-                                  onConfirm: () {
-                                    // TODO: report functionality
+                                  onConfirm: () async {
+                                    final noShowResponse = await updateRideStatus(context, widget.ride.id, RideStatus.NO_SHOW);
+                                    if (noShowResponse.statusCode == 200) {
+                                      final pastResponse = await setRideToPast(context, widget.ride.id);
+                                      if (pastResponse.statusCode == 200) {
+                                        Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(builder: (BuildContext context) => Home())
+                                        );
+                                      }
+                                      else {
+                                        throw 'Failed to set no-show ride to past: ' + pastResponse.body;
+                                      }
+                                    }
+                                    else {
+                                      throw 'Failed to set no-show ride status: ' + noShowResponse.body;
+                                    }
                                   },
                                 ),
                                 barrierDismissible: true);
