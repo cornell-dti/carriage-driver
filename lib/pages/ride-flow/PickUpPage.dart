@@ -4,10 +4,8 @@ import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideStops.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:provider/provider.dart';
 import '../../utils/CarriageTheme.dart';
 import '../Home.dart';
-import '../../providers/RidesProvider.dart';
 import '../../models/Ride.dart';
 
 class PickUpPage extends StatefulWidget {
@@ -25,7 +23,6 @@ class _PickUpPageState extends State<PickUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
 
     return Scaffold(
         backgroundColor: Colors.white,

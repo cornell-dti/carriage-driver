@@ -6,9 +6,7 @@ import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideDestPickupCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:provider/provider.dart';
 import '../../utils/CarriageTheme.dart';
-import '../../providers/RidesProvider.dart';
 
 class OnTheWayPage extends StatefulWidget {
   final Ride ride;
@@ -25,7 +23,6 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
   bool _requestedContinue = false;
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
 
     return Scaffold(
         backgroundColor: Colors.white,
