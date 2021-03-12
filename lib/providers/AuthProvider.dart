@@ -23,14 +23,12 @@ Future<String> auth(String baseUrl, String token, String email) async {
 }
 
 Future<String> tokenFromAccount(GoogleSignInAccount account) async {
-  GoogleSignInAuthentication auth;
-  try {
-    auth = await account.authentication;
-    print('okay');
-  } catch (error) {
+  return account.authentication.then((auth) {
+    return auth.idToken;
+  }).catchError((e) {
+    print('tokenFromAccount - $e');
     return null;
-  }
-  return auth.idToken;
+  });
 }
 
 class AuthProvider with ChangeNotifier {
@@ -54,6 +52,7 @@ class AuthProvider with ChangeNotifier {
         Map<String, dynamic> jwt = JwtDecoder.decode(token);
         id = jwt['id'];
         await secureStorage.write(key: 'token', value: token);
+        notifyListeners();
       } else {
         id = null;
       }
