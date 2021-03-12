@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../utils/CarriageTheme.dart';
 import 'Dialogs.dart';
 
@@ -74,12 +74,16 @@ class CallButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShadowedCircleButton('assets/images/phoneIcon.png', () {
-      // TODO: implement call
+    String phoneURL = 'tel:' + phoneNumber;
+    return ShadowedCircleButton('assets/images/phoneIcon.png', () async {
+      if (await canLaunch(phoneURL)) {
+        await launch(phoneURL);
+      } else {
+        throw 'Could not launch $phoneURL';
+      }
     }, diameter);
   }
 }
-
 class NotifyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -109,10 +113,10 @@ class CalendarButton extends StatelessWidget {
           children: [
             Spacer(),
             GestureDetector(
-              child: Image.asset('assets/images/calendarButton.png', width: 20, height: 20,),
-              onTap: () {
-                //TODO: view switching functionality
-              }
+                child: Image.asset('assets/images/calendarButton.png', width: 20, height: 20,),
+                onTap: () {
+                  //TODO: view switching functionality
+                }
             )
           ]
       ),
