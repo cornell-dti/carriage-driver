@@ -26,7 +26,6 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
-    int numRides = ridesProvider.currentRides.length;
 
     return Scaffold(
         backgroundColor: Colors.white,

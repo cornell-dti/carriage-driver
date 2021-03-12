@@ -26,7 +26,6 @@ class _PickUpPageState extends State<PickUpPage> {
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
-    int numRides = ridesProvider.currentRides.length;
 
     return Scaffold(
         backgroundColor: Colors.white,
