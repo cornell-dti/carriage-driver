@@ -70,11 +70,7 @@ class RidesStateless extends StatelessWidget {
       List<Widget> result = [];
       while (rideCards.length > 0) {
         List<Widget> rowCards = rideCards.take(2).toList();
-        for (int i = 0; i < rowCards.length; i++){
-          if (rideCards.length > 0) {
-            rideCards.removeAt(0);
-          }
-        }
+        rideCards.removeRange(0, rowCards.length);
         if (rowCards.length == 2) {
           rowCards.insert(1, SizedBox(width: spacing));
         }
