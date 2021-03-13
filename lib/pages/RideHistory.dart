@@ -1,7 +1,7 @@
-import 'package:carriage/CarriageTheme.dart';
-import 'package:carriage/Ride.dart';
-import 'package:carriage/Rides.dart';
-import 'package:carriage/RidesProvider.dart';
+import '../utils/CarriageTheme.dart';
+import '../models/Ride.dart';
+import '../pages/Rides.dart';
+import '../providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart' as intl;

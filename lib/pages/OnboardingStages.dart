@@ -1,11 +1,10 @@
 import 'dart:math';
-
-import 'package:carriage/Ride.dart';
-import 'package:carriage/Rider.dart';
-import 'package:carriage/Rides.dart';
-import 'package:carriage/pages/BeginRidePage.dart';
-import 'package:carriage/pages/OnTheWayPage.dart';
-import 'package:carriage/pages/PickUpPage.dart';
+import '../models/Ride.dart';
+import '../models/Rider.dart';
+import '../pages/Rides.dart';
+import '../pages/ride-flow/BeginRidePage.dart';
+import '../pages/ride-flow/OnTheWayPage.dart';
+import '../pages/ride-flow/PickUpPage.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/OnboardingWidgets.dart';
 import 'package:flutter/material.dart';

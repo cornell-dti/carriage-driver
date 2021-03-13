@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../MeasureSize.dart';
-import '../Ride.dart';
+import '../utils/MeasureSize.dart';
+import '../models/Ride.dart';
 import 'RideDestPickupCard.dart';
 
 class RideStops extends StatefulWidget {
@@ -50,7 +50,7 @@ class RideStopsState extends State<RideStops> {
         child: Container(
           width: 4,
           decoration: new BoxDecoration(
-              color: const Color(0xFFECEBED),
+              color: const Color.fromRGBO(236, 235, 237, 1),
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(8.0))
           ),
