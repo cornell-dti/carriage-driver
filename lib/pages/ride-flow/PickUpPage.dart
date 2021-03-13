@@ -93,7 +93,7 @@ class _PickUpPageState extends State<PickUpPage> {
                       onChange: widget.onContinueRectChange,
                       child: Container(
                         width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        padding: EdgeInsets.symmetric(horizontal: 34),
                         child: CButton(
                             text: "Pick up",
                             onPressed: () async {

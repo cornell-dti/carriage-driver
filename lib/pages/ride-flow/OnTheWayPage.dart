@@ -118,7 +118,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                   ),
                   Spacer(),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
+                    padding: EdgeInsets.symmetric(horizontal: 34),
                     width: MediaQuery.of(context).size.width,
                     child: MeasureRect(
                       onChange: widget.onContinueRectChange,
