@@ -21,16 +21,16 @@ class RidesStateless extends StatelessWidget {
   final OnWidgetRectChange firstRemainingRideRectCb;
   static void onChangeDefault(Rect s) {}
 
-  const RidesStateless(
-      {Key key,
-      this.currentRides,
-      this.remainingRides,
-      this.selectedRides,
-      this.onDropoff,
-      this.selectCallback,
-      this.firstCurrentRideRectCb = onChangeDefault,
-      this.firstRemainingRideRectCb = onChangeDefault})
-      : super(key: key);
+  const RidesStateless({
+    Key key,
+    this.currentRides,
+    this.remainingRides,
+    this.selectedRides,
+    this.onDropoff,
+    this.selectCallback,
+    this.firstCurrentRideRectCb = onChangeDefault,
+    this.firstRemainingRideRectCb = onChangeDefault
+  }) : super(key: key);
 
   Widget emptyPage(BuildContext context) {
     return Column(
@@ -52,33 +52,61 @@ class RidesStateless extends StatelessWidget {
   }
 
   Widget ridesInProgress(BuildContext context) {
+
+    List<Widget> buildRideGrid(BuildContext context) {
+      double spacing = 16;
+      List<Widget> rideCards = currentRides.asMap().map((i, ride) {
+        Widget card = Container(
+            width: (MediaQuery.of(context).size.width / 2) - (spacing * 1.5),
+            child: RideInProgressCard(Key(ride.id), ride,
+                selectedRides.contains(ride), selectCallback
+            )
+        );
+        if (i == 0)
+          card = MeasureRect(child: card, onChange: firstCurrentRideRectCb);
+        return MapEntry(i, card);
+      }).values.toList();
+
+      List<Widget> result = [];
+      while (rideCards.length > 0) {
+        List<Widget> rowCards = rideCards.take(2).toList();
+        for (int i = 0; i < rowCards.length; i++){
+          if (rideCards.length > 0) {
+            rideCards.removeAt(0);
+          }
+        }
+        if (rowCards.length == 2) {
+          rowCards.insert(1, SizedBox(width: spacing));
+        }
+        Widget row = IntrinsicHeight(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: rowCards,
+          ),
+        );
+        result.add(row);
+        result.add(SizedBox(height: spacing));
+      }
+      return result;
+    }
+
     return Container(
-        child: Column(children: [
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: RideGroupTitle('In Progress', currentRides.length),
-      ),
-      GridView.count(
-        padding: EdgeInsets.only(top: 24, bottom: 32, left: 16, right: 16),
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        physics: NeverScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        childAspectRatio: 1.05,
-        shrinkWrap: true,
-        children: currentRides
-            .asMap()
-            .map((i, ride) {
-              Widget w = RideInProgressCard(Key(ride.id), ride,
-                  selectedRides.contains(ride), selectCallback);
-              if (i == 0)
-                w = MeasureRect(child: w, onChange: firstCurrentRideRectCb);
-              return MapEntry(i, w);
-            })
-            .values
-            .toList(),
-      )
-    ]));
+        child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: RideGroupTitle('In Progress', currentRides.length),
+              ),
+              Padding(
+                  padding: EdgeInsets.only(top: 24, bottom: 32),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: buildRideGrid(context),
+                  )
+              )
+            ]
+        )
+    );
   }
 
   Widget rideCards(BuildContext context, List<Ride> rides) {
@@ -112,63 +140,63 @@ class RidesStateless extends StatelessWidget {
     return SafeArea(
         child: currentRides.isEmpty && remainingRides.isEmpty
             ? Container(
-                height: MediaQuery.of(context).size.height,
-                child: Center(child: emptyPage(context)))
+            height: MediaQuery.of(context).size.height,
+            child: Center(child: emptyPage(context)))
             : Stack(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    child: SingleChildScrollView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 32, left: 16, right: 16),
-                              child: Text(
-                                  DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
-                                  style: CarriageTheme.largeTitle),
-                            ),
-                            SizedBox(height: 32),
-                            currentRides.length > 0
-                                ? ridesInProgress(context)
-                                : Container(),
-                            selectedRides.isEmpty
-                                ? Padding(
-                                    padding: EdgeInsets.only(bottom: 32),
-                                    child: rideCards(context, remainingRides),
-                                  )
-                                : Container()
-                          ]),
-                    ),
-                  ),
-                  selectedRides.isNotEmpty
-                      ? Positioned(
-                          bottom: 32,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 34, right: 34),
-                              child: FlatButton(
-                                  padding: EdgeInsets.all(16),
-                                  color: Colors.black,
-                                  child: Text(
-                                      'Drop off ' +
-                                          (selectedRides.length == 1
-                                              ? selectedRides[0].rider.firstName
-                                              : 'Multiple Passengers'),
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  onPressed: onDropoff),
-                            ),
-                          ),
-                        )
-                      : Container()
-                ],
-              ));
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 32, left: 16, right: 16),
+                        child: Text(
+                            DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
+                            style: CarriageTheme.largeTitle),
+                      ),
+                      SizedBox(height: 32),
+                      currentRides.length > 0
+                          ? ridesInProgress(context)
+                          : Container(),
+                      selectedRides.isEmpty
+                          ? Padding(
+                        padding: EdgeInsets.only(bottom: 32),
+                        child: rideCards(context, remainingRides),
+                      )
+                          : Container()
+                    ]),
+              ),
+            ),
+            selectedRides.isNotEmpty
+                ? Positioned(
+              bottom: 32,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding:
+                  const EdgeInsets.only(left: 34, right: 34),
+                  child: FlatButton(
+                      padding: EdgeInsets.all(16),
+                      color: Colors.black,
+                      child: Text(
+                          'Drop off ' +
+                              (selectedRides.length == 1
+                                  ? selectedRides[0].rider.firstName
+                                  : 'Multiple Passengers'),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold)),
+                      onPressed: onDropoff),
+                ),
+              ),
+            )
+                : Container()
+          ],
+        ));
   }
 }
 
@@ -191,7 +219,7 @@ class _RidesState extends State<Rides> {
 
   void finishRide(BuildContext context, Ride ride) async {
     http.Response statusResponse =
-        await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
+    await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
     if (statusResponse.statusCode == 200) {
       http.Response typeResponse = await setRideToPast(context, ride.id);
       if (typeResponse.statusCode == 200) {
