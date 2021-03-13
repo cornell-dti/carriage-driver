@@ -124,6 +124,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                       onChange: widget.onContinueRectChange,
                       child: CButton(
                           text: "I've Arrived",
+                          hasShadow: true,
                           onPressed: () async {
                             if (_requestedContinue) return;
                             setState(() => _requestedContinue = true);

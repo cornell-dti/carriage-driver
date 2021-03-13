@@ -81,6 +81,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
                       padding: EdgeInsets.symmetric(horizontal: 18),
                       child: CButton(
                           text: "Begin Ride",
+                          hasShadow: true,
                           onPressed: () async {
                             if (_requestedContinue) return;
                             setState(() => _requestedContinue = true);

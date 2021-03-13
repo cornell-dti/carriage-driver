@@ -6,19 +6,38 @@ import 'Dialogs.dart';
 /// Black button with white text
 class CButton extends StatelessWidget {
   final String text;
+  final hasShadow;
   final void Function() onPressed;
 
-  CButton({@required this.text, @required this.onPressed});
+  CButton({@required this.text, @required this.hasShadow, @required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
+    Widget button = FlatButton(
       padding: EdgeInsets.all(16),
       color: Colors.black,
       child: Text(text,
           style: CarriageTheme.button),
       onPressed: onPressed,
     );
+
+    if (hasShadow) {
+      return Container(
+        child: button,
+        decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  offset: Offset(0, 6),
+                  blurRadius: 6,
+                  color: Colors.black.withOpacity(0.15)
+              )
+            ]
+        ),
+      );
+    }
+    else {
+      return button;
+    }
   }
 }
 

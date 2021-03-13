@@ -96,6 +96,7 @@ class _PickUpPageState extends State<PickUpPage> {
                         padding: EdgeInsets.symmetric(horizontal: 34),
                         child: CButton(
                             text: "Pick up",
+                            hasShadow: true,
                             onPressed: () async {
                               if (_requestedContinue) return;
                               setState(() => _requestedContinue = true);

@@ -34,6 +34,7 @@ class ConfirmDialog extends StatelessWidget {
             width: double.infinity,
             child: CButton(
                 text: actionName,
+                hasShadow: false,
                 onPressed: onConfirm
             ),
           ),
