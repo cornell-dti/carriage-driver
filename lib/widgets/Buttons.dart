@@ -59,7 +59,7 @@ class ShadowedCircleButton extends StatelessWidget {
               boxShadow: [CarriageTheme.shadow]
           ),
           child: Padding(
-            padding: EdgeInsets.all(diameter / 4),
+            padding: EdgeInsets.all(diameter / 3.5),
             child: Image.asset(imagePath, color: Colors.black),
           )
       ),
