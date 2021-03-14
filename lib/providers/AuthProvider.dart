@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -13,8 +14,9 @@ Future<String> auth(String baseUrl, String token, String email) async {
   Map<String, dynamic> requestBody = {
     "token": token,
     "email": email,
-    "clientId":
-        "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com",
+    "clientId": Platform.isAndroid
+        ? "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com"
+        : "241748771473-e85o2d6heucd28loiq5aacese38ln4l4.apps.googleusercontent.com",
     "table": "Drivers"
   };
   return post(endpoint, body: requestBody).then((res) {
@@ -23,14 +25,12 @@ Future<String> auth(String baseUrl, String token, String email) async {
 }
 
 Future<String> tokenFromAccount(GoogleSignInAccount account) async {
-  GoogleSignInAuthentication auth;
-  try {
-    auth = await account.authentication;
-    print('okay');
-  } catch (error) {
+  return account.authentication.then((auth) {
+    return auth.idToken;
+  }).catchError((e) {
+    print('tokenFromAccount - $e');
     return null;
-  }
-  return auth.idToken;
+  });
 }
 
 class AuthProvider with ChangeNotifier {
@@ -54,6 +54,7 @@ class AuthProvider with ChangeNotifier {
         Map<String, dynamic> jwt = JwtDecoder.decode(token);
         id = jwt['id'];
         await secureStorage.write(key: 'token', value: token);
+        notifyListeners();
       } else {
         id = null;
       }
