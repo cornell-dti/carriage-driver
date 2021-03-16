@@ -1,18 +1,19 @@
+import 'package:carriage/pages/RideHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'AuthProvider.dart';
-import 'LocationTracker.dart';
+import '../providers/AuthProvider.dart';
+import '../utils/LocationTracker.dart';
 import 'Rides.dart';
-import 'RidesProvider.dart';
-import 'main_common.dart';
+import '../providers/RidesProvider.dart';
+import '../main_common.dart';
 import 'Profile.dart';
-import 'UserInfoProvider.dart';
-import 'CarriageTheme.dart';
+import '../providers/DriverProvider.dart';
+import '../utils/CarriageTheme.dart';
 
 class Greeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
+    DriverProvider userInfoProvider = Provider.of<DriverProvider>(context);
     return Padding(
         child: Container(
             height: 46,
@@ -71,9 +72,9 @@ class _HomeState extends State<Home> {
   }
 
   Widget getPage(BuildContext context, int index) {
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     switch (index) {
       case (RIDES):
-        RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
         return FutureBuilder(
             future: ridesProvider.requestActiveRides(context),
             builder: (context, snapshot) {
@@ -88,16 +89,18 @@ class _HomeState extends State<Home> {
             }
         );
       case (HISTORY):
-        return Column(
-          children: <Widget>[
-            SizedBox(height: 50),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SignOutButton(),
-              ],
-            )
-          ],
+        return FutureBuilder(
+            future: ridesProvider.requestPastRides(context),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return SafeArea(
+                  child: Center(
+                      child: CircularProgressIndicator()
+                  ),
+                );
+              }
+              return RideHistory();
+            }
         );
       case (PROFILE):
         return SingleChildScrollView(child: _profilePage(context));
@@ -113,14 +116,15 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         body: getPage(context, _selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Colors.blue,
+          selectedItemColor: Colors.black,
+          unselectedItemColor: Colors.grey,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.star), label: 'Rides'),
+              icon: Image.asset(_selectedIndex == 0 ? 'assets/images/carIconBlack.png' : 'assets/images/carIconGrey.png', width: 20), label: 'Rides'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.history), label: 'History'),
+                icon: Image.asset(_selectedIndex == 1 ? 'assets/images/clockIconBlack.png' : 'assets/images/clockIconGrey.png', width: 20), label: 'History'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle), label: 'Profile')
+                icon: Image.asset(_selectedIndex == 2 ? 'assets/images/profileIconBlack.png' : 'assets/images/profileIconGrey.png', width: 20), label: 'Profile')
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,

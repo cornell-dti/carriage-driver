@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../CarriageTheme.dart';
-import '../Ride.dart';
+import '../utils/CarriageTheme.dart';
+import '../models/Ride.dart';
 import 'RideDestPickupCard.dart';
 
 class RideInfoCard extends StatelessWidget {

@@ -7,7 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-import 'app_config.dart';
+import '../utils/app_config.dart';
 
 Future<String> auth(String baseUrl, String token, String email) async {
   String endpoint = baseUrl + '/auth';
@@ -25,14 +25,12 @@ Future<String> auth(String baseUrl, String token, String email) async {
 }
 
 Future<String> tokenFromAccount(GoogleSignInAccount account) async {
-  GoogleSignInAuthentication auth;
-  try {
-    auth = await account.authentication;
-    print('okay');
-  } catch (error) {
+  return account.authentication.then((auth) {
+    return auth.idToken;
+  }).catchError((e) {
+    print('tokenFromAccount - $e');
     return null;
-  }
-  return auth.idToken;
+  });
 }
 
 class AuthProvider with ChangeNotifier {
@@ -50,17 +48,16 @@ class AuthProvider with ChangeNotifier {
     _userAuthSub = googleSignIn.onCurrentUserChanged.listen((newUser) async {
       if (newUser != null) {
         String googleToken = await tokenFromAccount(newUser);
-        Map<String, dynamic> authResponse = jsonDecode(await auth(AppConfig.of(context).baseUrl, googleToken, newUser.email));
+        Map<String, dynamic> authResponse = jsonDecode(await auth(
+            AppConfig.of(context).baseUrl, googleToken, newUser.email));
         String token = authResponse['jwt'];
         Map<String, dynamic> jwt = JwtDecoder.decode(token);
         id = jwt['id'];
         await secureStorage.write(key: 'token', value: token);
+        notifyListeners();
       } else {
         id = null;
       }
-      notifyListeners();
-    }, onError: (e) {
-      print('AuthProvider - GoogleSignIn - onCurrentUserChanged - $e');
     });
   }
 

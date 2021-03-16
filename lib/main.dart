@@ -1,4 +1,4 @@
-import 'app_config.dart';
+import 'utils/app_config.dart';
 import 'main_common.dart';
 import 'package:flutter/material.dart';
 

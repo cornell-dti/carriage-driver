@@ -1,11 +1,13 @@
-import 'package:carriage/app_config.dart';
+import 'package:carriage/models/Driver.dart';
+
+import '../utils/app_config.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'AuthProvider.dart';
-import 'CarriageTheme.dart';
-import 'UserInfoProvider.dart';
+import '../providers/AuthProvider.dart';
+import '../utils/CarriageTheme.dart';
+import '../providers/DriverProvider.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -13,10 +15,10 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  
+
   @override
   Widget build(BuildContext context) {
-    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
+    DriverProvider userInfoProvider = Provider.of<DriverProvider>(context);
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
     double _picRadius = _picDiameter / 2;
@@ -47,7 +49,7 @@ class _ProfileState extends State<Profile> {
                 borderRadius: BorderRadius.circular(3),
                 boxShadow: [
                   BoxShadow(
-                      color: Color.fromARGB(15, 0, 0, 0),
+                      color: Colors.black.withOpacity(0.15),
                       offset: Offset(0, 4.0),
                       blurRadius: 10.0,
                       spreadRadius: 1.0)
@@ -64,12 +66,13 @@ class _ProfileState extends State<Profile> {
                       children: [
                         Padding(
                             padding:
-                                EdgeInsets.only(bottom: _picDiameter * 0.05),
+                            EdgeInsets.only(bottom: _picDiameter * 0.05),
                             child: CircleAvatar(
                               radius: _picRadius,
                               backgroundImage:
-                                  NetworkImage(userInfoProvider.info.photoUrl),
-                            )),
+                              NetworkImage(userInfoProvider.info.photoUrl),
+                            )
+                        ),
                         Positioned(
                             child: Container(
                               height: _picBtnDiameter,
@@ -78,14 +81,18 @@ class _ProfileState extends State<Profile> {
                                 child: FloatingActionButton(
                                     backgroundColor: Colors.black,
                                     child:
-                                        Icon(Icons.add, size: _picBtnDiameter),
-                                    onPressed: () {}),
+                                    Icon(Icons.add, size: _picBtnDiameter),
+                                    onPressed: () {
+                                      // TODO: add functionality to select photo if we decide to store profile images
+                                    }),
                               ),
                             ),
                             left: _picDiameter * 0.61,
-                            top: _picDiameter * 0.66)
+                            top: _picDiameter * 0.66
+                        )
                       ],
-                    )),
+                    )
+                ),
                 Padding(
                     padding: EdgeInsets.only(bottom: 30),
                     child: Stack(
@@ -97,9 +104,9 @@ class _ProfileState extends State<Profile> {
                                   " " +
                                   userInfoProvider.info.lastName,
                               style: TextStyle(
-                                fontFamily: 'SFDisplay',
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700
+                                  fontFamily: 'SFDisplay',
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w700
                               )
                           ),
                           IconButton(
@@ -108,22 +115,28 @@ class _ProfileState extends State<Profile> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          EditProfile(userInfoProvider.info)));
+                                      builder: (context) => EditProfile(userInfoProvider.info)
+                                  )
+                              );
                             },
                           )
                         ]),
                         Positioned(
-                          child: Text("Joined 03/2020",
+                          child: Text(
+                              "Joined 03/2020",
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Color(0xFF848484),
-                              )),
+                                color: Color.fromRGBO(132, 132, 132, 1),
+                              )
+                          ),
                           top: 45,
                         )
                       ],
-                    ))
-              ])),
+                    )
+                )
+              ]
+              )
+          ),
           SizedBox(height: 6),
           InfoGroup(
             "Account Info",
@@ -149,8 +162,13 @@ class _ProfileState extends State<Profile> {
           )
         ],
       );
-    } else {
-      return SafeArea(child: Center(child: CircularProgressIndicator()));
+    }
+    else {
+      return SafeArea(
+          child: Center(
+              child: CircularProgressIndicator()
+          )
+      );
     }
   }
 }
@@ -181,12 +199,13 @@ class _InfoRowState extends State<InfoRow> {
                 widget.text,
                 style: TextStyle(
                   fontSize: 17,
-                  color: Color(0xFF4A4A4A),
+                  color: Color.fromRGBO(74, 74, 74, 1),
                 ),
               ),
             ),
           ],
-        ));
+        )
+    );
   }
 }
 
@@ -208,7 +227,7 @@ class _InfoGroupState extends State<InfoGroup> {
           borderRadius: BorderRadius.circular(3),
           boxShadow: [
             BoxShadow(
-                color: Color.fromARGB(15, 0, 0, 0),
+                color: Colors.black.withOpacity(0.15),
                 offset: Offset(0, 4.0),
                 blurRadius: 10.0,
                 spreadRadius: 1.0)
@@ -221,7 +240,7 @@ class _InfoGroupState extends State<InfoGroup> {
               children: <Widget>[
                 Text(widget.title,
                     style:
-                        TextStyle(fontFamily: 'SFDisplay', fontSize: 20, fontWeight: FontWeight.bold)),
+                    TextStyle(fontFamily: 'SFDisplay', fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,
@@ -242,7 +261,7 @@ class _InfoGroupState extends State<InfoGroup> {
 
 class EditProfile extends StatefulWidget {
   EditProfile(this.driver);
-  final UserInfo driver;
+  final Driver driver;
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -252,7 +271,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
+    DriverProvider userInfoProvider = Provider.of<DriverProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     String _firstName = widget.driver.firstName;
     String _lastName = widget.driver.lastName;
@@ -265,7 +284,7 @@ class _EditProfileState extends State<EditProfile> {
               top: 18.0 + MediaQuery.of(context).padding.top,
             ),
             child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('Edit Profile',
                   style: Theme.of(context).textTheme.headline5),
               SizedBox(height: 20),

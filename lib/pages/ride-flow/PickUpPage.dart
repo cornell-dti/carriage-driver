@@ -1,14 +1,14 @@
-import 'package:carriage/MeasureRect.dart';
-import 'package:carriage/Ride.dart';
+import '../../utils/MeasureRect.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideStops.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
-import '../CarriageTheme.dart';
+import '../../utils/CarriageTheme.dart';
 import '../Home.dart';
-import '../RidesProvider.dart';
+import '../../providers/RidesProvider.dart';
+import '../../models/Ride.dart';
 
 class PickUpPage extends StatefulWidget {
   final OnWidgetRectChange onContinueRectChange;
@@ -92,7 +92,7 @@ class _PickUpPageState extends State<PickUpPage> {
                                       children: [
                                         CallButton(),
                                         SizedBox(width: 16),
-                                        ShadowedIconButton(Icons.person_outline, () {
+                                        ShadowedCircleButton('assets/images/cancelIcon.png', () {
                                           // TODO: add no show functionality
                                         })
                                       ]

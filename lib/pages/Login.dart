@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'AuthProvider.dart';
-
-
+import '../providers/AuthProvider.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -19,14 +17,17 @@ class Login extends StatelessWidget {
             color: Colors.white,
             child: Center(
                 child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                FlutterLogo(size: 150),
-                SizedBox(height: 50),
-                SignInButton()
-              ],
-            ))));
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    FlutterLogo(size: 150),
+                    SizedBox(height: 50),
+                    SignInButton()
+                  ],
+                )
+            )
+        )
+    );
   }
 }
 
@@ -57,6 +58,8 @@ class SignInButton extends StatelessWidget {
                   ),
                 )
               ],
-            )));
+            )
+        )
+    );
   }
 }
