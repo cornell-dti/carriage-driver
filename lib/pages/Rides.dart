@@ -232,8 +232,7 @@ class _RidesState extends State<Rides> {
 
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider =
-    Provider.of<RidesProvider>(context, listen: false);
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
 
     List<Ride> currentRides = ridesProvider.currentRides;
     List<Ride> remainingRides = ridesProvider.remainingRides;

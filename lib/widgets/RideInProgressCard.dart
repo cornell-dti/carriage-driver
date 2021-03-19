@@ -18,30 +18,60 @@ class RideInProgressCard extends StatelessWidget {
       },
       child: DecoratedBox(
         decoration: BoxDecoration(
-            color:
-            selected ? Color.fromRGBO(167, 167, 167, 0.4) : Colors.white,
+            color: selected ? CarriageTheme.gray3.withOpacity(0.2) : Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(8)),
-            boxShadow: [CarriageTheme.shadow]),
+            boxShadow: selected ? [
+              BoxShadow(
+                  blurRadius: 2,
+                  color: CarriageTheme.gray3.withOpacity(0.2)
+              )
+            ] : [CarriageTheme.shadow]
+        ),
         child: Stack(
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 8, top: 8),
                 child: selected
                     ? Icon(Icons.check_circle, size: 20, color: Colors.black)
-                    : Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: Color.fromRGBO(196, 196, 196, 0.5)),
-                ),
+                    : Icon(Icons.circle, size: 20, color: Color.fromRGBO(196, 196, 196, 0.5))
               ),
               Container(
                 padding: const EdgeInsets.all(16),
                 child: Column(mainAxisSize: MainAxisSize.max, children: [
                   Center(
-                    child: CircleAvatar(
-                      radius: 16,
-                      backgroundImage: AssetImage('assets/images/terry.jpg'),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundImage: AssetImage('assets/images/terry.jpg'),
+                        ),
+                      Positioned(
+                        top: 16,
+                        left: 23,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                                width: 18,
+                                height: 18,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: Colors.white
+                                ),
+                            ),
+                            Container(
+                                width: 14,
+                                height: 14,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: Color.fromRGBO(111, 207, 151, 1)
+                                )
+                            )
+                          ],
+                        )
+                      ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 8),
