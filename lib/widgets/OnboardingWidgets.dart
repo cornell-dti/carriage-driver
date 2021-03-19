@@ -291,6 +291,7 @@ class OnboardingSheet extends StatelessWidget {
                 ),
                 CButton(
                     text: "Continue",
+                    hasShadow: false,
                     onPressed: () => state.nextStage(context)),
                 CarProgressBar(progress: progress)
               ]),

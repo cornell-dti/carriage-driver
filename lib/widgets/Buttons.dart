@@ -1,24 +1,43 @@
 import 'package:flutter/material.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../utils/CarriageTheme.dart';
 import 'Dialogs.dart';
 
 /// Black button with white text
 class CButton extends StatelessWidget {
   final String text;
+  final hasShadow;
   final void Function() onPressed;
 
-  CButton({@required this.text, @required this.onPressed});
+  CButton({@required this.text, @required this.hasShadow, @required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
+    Widget button = FlatButton(
       padding: EdgeInsets.all(16),
       color: Colors.black,
       child: Text(text,
           style: CarriageTheme.button),
       onPressed: onPressed,
     );
+
+    if (hasShadow) {
+      return Container(
+        child: button,
+        decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  offset: Offset(0, 6),
+                  blurRadius: 6,
+                  color: Colors.black.withOpacity(0.15)
+              )
+            ]
+        ),
+      );
+    }
+    else {
+      return button;
+    }
   }
 }
 
@@ -43,22 +62,23 @@ class DangerButton extends StatelessWidget {
 class ShadowedCircleButton extends StatelessWidget {
   final String imagePath;
   final Function onPressed;
-  ShadowedCircleButton(this.imagePath, this.onPressed);
+  final double diameter;
+  ShadowedCircleButton(this.imagePath, this.onPressed, this.diameter);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-          width: 40,
-          height: 40,
+          width: diameter,
+          height: diameter,
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(100),
               boxShadow: [CarriageTheme.shadow]
           ),
           child: Padding(
-            padding: EdgeInsets.all(12),
+            padding: EdgeInsets.all(diameter / 3.5),
             child: Image.asset(imagePath, color: Colors.black),
           )
       ),
@@ -67,14 +87,22 @@ class ShadowedCircleButton extends StatelessWidget {
 }
 
 class CallButton extends StatelessWidget {
+  CallButton(this.phoneNumber, this.diameter);
+  final String phoneNumber;
+  final double diameter;
+
   @override
   Widget build(BuildContext context) {
-    return ShadowedCircleButton('assets/images/phoneIcon.png', () {
-      // TODO: implement call
-    });
+    String phoneURL = 'tel:' + phoneNumber;
+    return ShadowedCircleButton('assets/images/phoneIcon.png', () async {
+      if (await canLaunch(phoneURL)) {
+        await launch(phoneURL);
+      } else {
+        throw 'Could not launch $phoneURL';
+      }
+    }, diameter);
   }
 }
-
 class NotifyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -91,7 +119,7 @@ class NotifyButton extends StatelessWidget {
           ),
           barrierDismissible: true
       );
-    });
+    }, 40);
   }
 }
 
@@ -103,12 +131,12 @@ class CalendarButton extends StatelessWidget {
       child: Row(
           children: [
             Spacer(),
-            IconButton(
-                icon: Icon(Icons.calendar_today),
-                onPressed: () {
-                  // TODO: implement button functionality
+            GestureDetector(
+                child: Image.asset('assets/images/calendarButton.png', width: 20, height: 20,),
+                onTap: () {
+                  //TODO: view switching functionality
                 }
-            ),
+            )
           ]
       ),
     );

@@ -10,7 +10,7 @@ import 'Rider.dart';
 import '../utils/app_config.dart';
 
 ///A ride's status.
-enum RideStatus { NOT_STARTED, ON_THE_WAY, ARRIVED, PICKED_UP, COMPLETED }
+enum RideStatus { NOT_STARTED, ON_THE_WAY, ARRIVED, PICKED_UP, COMPLETED, NO_SHOW}
 
 ///Converts [status] to a string.
 String toString(RideStatus status) {
@@ -20,6 +20,7 @@ String toString(RideStatus status) {
     RideStatus.ARRIVED: "arrived",
     RideStatus.PICKED_UP: "picked_up",
     RideStatus.COMPLETED: "completed",
+    RideStatus.NO_SHOW: "no_show",
   };
   return mapping[status];
 }
@@ -97,6 +98,8 @@ RideStatus getStatusEnum(String status) {
       return RideStatus.PICKED_UP;
     case ('completed'):
       return RideStatus.COMPLETED;
+    case ('no_show'):
+      return RideStatus.NO_SHOW;
     default:
       throw Exception('Ride status is invalid');
   }
