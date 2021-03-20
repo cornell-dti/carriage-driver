@@ -1,14 +1,13 @@
 import '../../utils/MeasureRect.dart';
 import '../../models/Ride.dart';
+import '../Home.dart';
 import 'PickUpPage.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideDestPickupCard.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:provider/provider.dart';
 import '../../utils/CarriageTheme.dart';
-import '../../providers/RidesProvider.dart';
 
 class OnTheWayPage extends StatefulWidget {
   final Ride ride;
@@ -25,9 +24,6 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
   bool _requestedContinue = false;
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
-    int numRides = ridesProvider.currentRides.length;
-
     return Scaffold(
         backgroundColor: Colors.white,
         body: LoadingOverlay(
@@ -37,111 +33,123 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
           child: SafeArea(
             child: Container(
               height: MediaQuery.of(context).size.height,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 40),
-                    CalendarButton(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Column(
+              child: Column(
+                children: [
+                  SizedBox(height: 16),
+                  CalendarButton(),
+                  Divider(height: 12),
+                  SizedBox(height: 12),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(children: [
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("On your way to...",
+                              style: CarriageTheme.title2)),
+                      SizedBox(height: 32),
+                      Row(children: [
+                        SizedBox(height: 32),
+                        widget.ride.rider.profilePicture(100),
+                        SizedBox(height: 16),
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            numRides > 0 ?
-                            Container(
-                              width: 25,
-                              height: 25,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle, color: Colors.black
-                              ),
-                              child: Center(
-                                child: Text(
-                                  numRides.toString(),
-                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)
-                                ),
-                              )
-                            ) : SizedBox(height: 24),
-                            Text("On your way to...", style: CarriageTheme.largeTitle)
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 32),
-                    widget.ride.rider.profilePicture(100),
-                    SizedBox(height: 16),
-                    Text(widget.ride.rider.firstName, style: CarriageTheme.title1),
-                    widget.ride.rider.accessibilityNeeds.length > 0 ?
-                    Padding(
-                      padding: EdgeInsets.only(top: 2),
-                      child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
-                          style: CarriageTheme.body),
-                    ) : Container(),
-                    SizedBox(height: 16),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CallButton(),
-                          SizedBox(width: 16),
-                          NotifyButton()
-                        ]
-                    ),
-                    SizedBox(height: 40),
-                    Container(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
-                        width: double.infinity,
-                        child: RideDestPickupCard(false, widget.ride.startTime, widget.ride.startLocation, widget.ride.startAddress)
-                    ),
-                    SizedBox(height: 40),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 32),
-                      width: MediaQuery.of(context).size.width,
-                      child: MeasureRect(
-                        onChange: widget.onContinueRectChange,
-                        child: CButton(
-                            text: "I've Arrived",
-                            onPressed: () async {
-                              if (_requestedContinue) return;
-                              setState(() => _requestedContinue = true);
-                              final response = await updateRideStatus(
-                                  context, widget.ride.id, RideStatus.ARRIVED);
-                              if (!mounted) return;
-                              if (response.statusCode == 200) {
-                                setState(() => _requestedContinue = false);
-                                widget.ride.status = RideStatus.ARRIVED;
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            PickUpPage(ride: widget.ride)));
-                              } else {
-                                setState(() => _requestedContinue = false);
-                                throw Exception('Failed to update ride status');
-                              }
-                            }
-                        ),
-                      ),
-                    ),
-                    DangerButton(
-                        text: "Cancel Ride",
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (_) => ConfirmDialog(
-                                title: "Cancel Current Ride",
-                                content: "Would you like to cancel this current ride?",
-                                actionName: "Cancel Ride",
-                                onConfirm: () {
-                                  // TODO: cancel ride functionality
+                            Text(widget.ride.rider.firstName,
+                                style: CarriageTheme.title3),
+                            widget.ride.rider.accessibilityNeeds.length > 0
+                                ? Padding(
+                                    padding: EdgeInsets.only(top: 2),
+                                    child: Text(
+                                        widget.ride.rider.accessibilityNeeds
+                                            .join(', '),
+                                        style: CarriageTheme.body),
+                                  )
+                                : Container(),
+                            SizedBox(height: 16),
+                            Row(children: [
+                              CallButton(widget.ride.rider.phoneNumber, 40),
+                              SizedBox(width: 12),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              Home()));
                                 },
-                              ),
-                              barrierDismissible: true
-                          );
-                        }
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        boxShadow: [CarriageTheme.shadow],
+                                        color: Colors.white),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 9),
+                                      child: Text('Pause Ride',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SFText',
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                          )),
+                                    )),
+                              )
+                            ]),
+                          ],
+                        )
+                      ]),
+                    ]),
+                  ),
+                  SizedBox(height: 40),
+                  Container(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
+                      width: double.infinity,
+                      child: RideDestPickupCard(false, widget.ride.startTime,
+                          widget.ride.startLocation, widget.ride.startAddress)),
+                  Spacer(),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 34),
+                    width: MediaQuery.of(context).size.width,
+                    child: MeasureRect(
+                      onChange: widget.onContinueRectChange,
+                      child: CButton(
+                          text: "I've Arrived",
+                          hasShadow: true,
+                          onPressed: () async {
+                            if (_requestedContinue) return;
+                            setState(() => _requestedContinue = true);
+                            final response = await updateRideStatus(
+                                context, widget.ride.id, RideStatus.ARRIVED);
+                            if (!mounted) return;
+                            if (response.statusCode == 200) {
+                              setState(() => _requestedContinue = false);
+                              widget.ride.status = RideStatus.ARRIVED;
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          PickUpPage(ride: widget.ride)));
+                            } else {
+                              setState(() => _requestedContinue = false);
+                              throw Exception('Failed to update ride status');
+                            }
+                          }),
                     ),
-                  ],
-                ),
+                  ),
+                  DangerButton(
+                      text: "Notify of Delay",
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (_) => ConfirmDialog(
+                                  title: "Notify Delay",
+                                  content:
+                                      "Would you like to notify the rider of a delay?",
+                                  actionName: "Notify",
+                                  onConfirm: () {
+                                    // TODO: notification functionality
+                                  },
+                                ),
+                            barrierDismissible: true);
+                      }),
+                ],
               ),
             ),
           ),

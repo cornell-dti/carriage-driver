@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'dart:math';
 
+import 'package:flutter/material.dart';
 import '../utils/MeasureSize.dart';
 import '../models/Ride.dart';
 import 'RideDestPickupCard.dart';
@@ -20,7 +20,8 @@ class RideStopsState extends State<RideStops> {
 
   @override
   Widget build(BuildContext context) {
-    double circleRadius = 13;
+    double carWidth = 34;
+    double circleRadius = 12;
 
     Widget stopCircle = Stack(
         alignment: Alignment.center,
@@ -28,14 +29,14 @@ class RideStopsState extends State<RideStops> {
         children: [
           Container(
               width: circleRadius * 2,
-              height: 26,
+              height: circleRadius * 2,
               decoration: new BoxDecoration(
                 color: Colors.black,
                 shape: BoxShape.circle,
               )),
           Container(
-              width: 8,
-              height: 8,
+              width: 7.5,
+              height: 7.5,
               decoration: new BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
@@ -44,7 +45,7 @@ class RideStopsState extends State<RideStops> {
 
     return Stack(children: [
       Container(
-        width: circleRadius * 2,
+        width:  max(carWidth, circleRadius * 2),
         height: _height,
         alignment: Alignment.topCenter,
         child: Container(
@@ -70,7 +71,10 @@ class RideStopsState extends State<RideStops> {
                   padding: const EdgeInsets.only(right: 16),
                   child: Row(
                     children: [
-                      Container(width: 26, child: widget.carIcon ? SvgPicture.asset('assets/images/carIcon.svg') : stopCircle),
+                      Container(
+                        width: max(carWidth, circleRadius * 2),
+                        child: widget.carIcon ? Image.asset('assets/images/carIcon.png', width: carWidth) : stopCircle,
+                      ),
                       Expanded(
                         child: Padding(
                           padding: EdgeInsets.only(left: 16),
@@ -81,12 +85,12 @@ class RideStopsState extends State<RideStops> {
                     ],
                   ),
                 ),
-                SizedBox(height: widget.largeSpacing ? 80 : 32),
+                SizedBox(height: widget.largeSpacing ? 24 : 12),
                 Padding(
                   padding: const EdgeInsets.only(right: 16),
                   child: Row(
                     children: [
-                      Container(width: 26, child: stopCircle),
+                      Container(width: max(carWidth, circleRadius * 2), child: stopCircle),
                       Expanded(
                         child: Padding(
                           padding: EdgeInsets.only(left: 16),

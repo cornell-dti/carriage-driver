@@ -89,7 +89,7 @@ Widget _start(OnboardingState state, BuildContext context) {
               ),
             ],
           ),
-          CButton(text: "Continue", onPressed: () => state.nextStage(context))
+          CButton(text: "Continue", hasShadow: false, onPressed: () => state.nextStage(context))
         ]),
   );
 }

@@ -61,7 +61,7 @@ class _RideCardState extends State<RideCard> {
                                 : Container()
                           ]),
                       Spacer(),
-                      CallButton(),
+                      CallButton(widget.ride.rider.phoneNumber, 40),
                       SizedBox(width: 8),
                       NotifyButton()
                     ]),

@@ -25,31 +25,28 @@ class _BeginRidePageState extends State<BeginRidePage> {
   Widget _picAndName(BuildContext context) {
     return Center(
       child:
-      Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            widget.ride.rider.profilePicture(100),
-            SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.ride.rider.firstName,
-                  style: CarriageTheme.title1,
-                ),
-                widget.ride.rider.accessibilityNeeds.length > 0
-                    ? Padding(
+          Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
+        widget.ride.rider.profilePicture(100),
+        SizedBox(width: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.ride.rider.firstName,
+              style: CarriageTheme.title2,
+            ),
+            widget.ride.rider.accessibilityNeeds.length > 0
+                ? Padding(
                     padding: EdgeInsets.only(top: 8),
                     child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
                         style: CarriageTheme.body))
-                    : Container()
-              ],
-            )
-          ]),
+                : Container()
+          ],
+        )
+      ]),
     );
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
@@ -58,24 +55,25 @@ class _BeginRidePageState extends State<BeginRidePage> {
           color: Colors.white,
           opacity: 0.3,
           isLoading: _requestedContinue,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding:
-              EdgeInsets.only(left: 16, right: 16, bottom: 15, top: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _picAndName(context),
-                  SizedBox(height: 48),
-                  RideStops(
-                      ride: widget.ride, carIcon: false, largeSpacing: true),
-                  SizedBox(height: 40),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: MeasureRect(
-                      onChange: widget.onContinueRectChange,
+          child: Padding(
+            padding: EdgeInsets.only(left: 16, right: 16, bottom: 15, top: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _picAndName(context),
+                SizedBox(height: 24),
+                RideStops(
+                    ride: widget.ride, carIcon: false, largeSpacing: true),
+                Spacer(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: MeasureRect(
+                    onChange: widget.onContinueRectChange,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 18),
                       child: CButton(
                           text: "Begin Ride",
+                          hasShadow: true,
                           onPressed: () async {
                             if (_requestedContinue) return;
                             setState(() => _requestedContinue = true);
@@ -85,8 +83,8 @@ class _BeginRidePageState extends State<BeginRidePage> {
                             if (response.statusCode == 200) {
                               widget.ride.status = RideStatus.ON_THE_WAY;
                               RidesProvider ridesProvider =
-                              Provider.of<RidesProvider>(context,
-                                  listen: false);
+                                  Provider.of<RidesProvider>(context,
+                                      listen: false);
                               ridesProvider.changeRideToCurrent(widget.ride);
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
@@ -99,8 +97,8 @@ class _BeginRidePageState extends State<BeginRidePage> {
                           }),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ));

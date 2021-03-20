@@ -4,10 +4,8 @@ import 'package:carriage/widgets/Dialogs.dart';
 import 'package:carriage/widgets/RideStops.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:provider/provider.dart';
 import '../../utils/CarriageTheme.dart';
 import '../Home.dart';
-import '../../providers/RidesProvider.dart';
 import '../../models/Ride.dart';
 
 class PickUpPage extends StatefulWidget {
@@ -25,128 +23,130 @@ class _PickUpPageState extends State<PickUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
-    int numRides = ridesProvider.currentRides.length;
-
     return Scaffold(
         backgroundColor: Colors.white,
         body: LoadingOverlay(
-          color: Colors.white,
-          opacity: 0.3,
-          isLoading: _requestedContinue,
-          child: SafeArea(
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SizedBox(height: 40),
-                        CalendarButton(),
-                        Align(
+            color: Colors.white,
+            opacity: 0.3,
+            isLoading: _requestedContinue,
+            child: SafeArea(
+                child: Container(
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 16),
+                  CalendarButton(),
+                  Divider(height: 12),
+                  SizedBox(height: 12),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(children: [
+                      Align(
                           alignment: Alignment.centerLeft,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              numRides > 0 ?
-                              Container(
-                                  width: 25,
-                                  height: 25,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle, color: Colors.black
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                        numRides.toString(),
-                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)
-                                    ),
-                                  )
-                              ) : SizedBox(height: 24),
-                              Text("Is ${widget.ride.rider.firstName} here?", style: CarriageTheme.largeTitle)
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 32),
-                        Row(
-                            children: [
-                              widget.ride.rider.profilePicture(100),
-                              SizedBox(width: 24),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(widget.ride.rider.firstName, style: CarriageTheme.title1),
-                                  widget.ride.rider.accessibilityNeeds.length > 0 ?
-                                  Padding(
+                          child: Text("Is ${widget.ride.rider.firstName} here?",
+                              style: CarriageTheme.title2)),
+                      SizedBox(height: 12),
+                      Row(children: [
+                        Stack(clipBehavior: Clip.none, children: [
+                          widget.ride.rider.profilePicture(54),
+                          Positioned(
+                              bottom: 0,
+                              left: 38,
+                              child:
+                                  CallButton(widget.ride.rider.phoneNumber, 30))
+                        ]),
+                        SizedBox(width: 24),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.ride.rider.firstName,
+                                style: CarriageTheme.title3),
+                            widget.ride.rider.accessibilityNeeds.length > 0
+                                ? Padding(
                                     padding: EdgeInsets.only(top: 2),
-                                    child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
+                                    child: Text(
+                                        widget.ride.rider.accessibilityNeeds
+                                            .join(', '),
                                         style: CarriageTheme.body),
-                                  ) : Container(),
-                                  SizedBox(height: 8),
-                                  Row(
-                                      children: [
-                                        CallButton(),
-                                        SizedBox(width: 16),
-                                        ShadowedCircleButton('assets/images/cancelIcon.png', () {
-                                          // TODO: add no show functionality
-                                        })
-                                      ]
                                   )
-                                ],
-                              )
-                            ]
-                        ),
-                        SizedBox(height: 40),
-                        RideStops(ride: widget.ride, carIcon: true, largeSpacing: false),
-                        SizedBox(height: 40),MeasureRect(
-                          onChange: widget.onContinueRectChange,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: CButton(
-                                text: "Pick up",
-                                onPressed: () async {
-                                  if (_requestedContinue) return;
-                                  setState(() => _requestedContinue = true);
-                                  final response = await updateRideStatus(
-                                      context, widget.ride.id, RideStatus.PICKED_UP);
-                                  if (!mounted) return;
-                                  if (response.statusCode == 200) {
-                                    setState(() => _requestedContinue = false);
-                                    widget.ride.status = RideStatus.PICKED_UP;
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) => Home()));
-                                  } else {
-                                    setState(() => _requestedContinue = false);
-                                    throw Exception('Failed to update ride status');
-                                  }
-                                }),
-                          ),
-                        ),
-                        DangerButton(
-                            text: "Report No Show",
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => ConfirmDialog(
-                                    title: "Report No Show",
-                                    content: "Would you like to report a no show to the dispatcher?",
-                                    actionName: "Report",
-                                    onConfirm: () {
-                                      // TODO: report functionality
-                                    },
-                                  ),
-                                  barrierDismissible: true);
+                                : Container(),
+                          ],
+                        )
+                      ]),
+                      SizedBox(height: 16),
+                      RideStops(
+                          ride: widget.ride,
+                          carIcon: true,
+                          largeSpacing: false),
+                    ]),
+                  ),
+                  Spacer(),
+                  MeasureRect(
+                    onChange: widget.onContinueRectChange,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.symmetric(horizontal: 34),
+                      child: CButton(
+                          text: "Pick up",
+                          hasShadow: true,
+                          onPressed: () async {
+                            if (_requestedContinue) return;
+                            setState(() => _requestedContinue = true);
+                            final response = await updateRideStatus(
+                                context, widget.ride.id, RideStatus.PICKED_UP);
+                            if (!mounted) return;
+                            if (response.statusCode == 200) {
+                              setState(() => _requestedContinue = false);
+                              widget.ride.status = RideStatus.PICKED_UP;
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          Home()));
+                            } else {
+                              setState(() => _requestedContinue = false);
+                              throw Exception('Failed to update ride status');
                             }
-                        ),
-                      ],
+                          }),
                     ),
                   ),
-                ),
-              )
-          )
-        ));
+                  DangerButton(
+                      text: "Report No Show",
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (_) => ConfirmDialog(
+                                  title: "Report No Show",
+                                  content:
+                                      "Would you like to report a no show to the dispatcher?",
+                                  actionName: "Report",
+                                  onConfirm: () async {
+                                    final noShowResponse =
+                                        await updateRideStatus(context,
+                                            widget.ride.id, RideStatus.NO_SHOW);
+                                    if (noShowResponse.statusCode == 200) {
+                                      final pastResponse = await setRideToPast(
+                                          context, widget.ride.id);
+                                      if (pastResponse.statusCode == 200) {
+                                        Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        Home()));
+                                      } else {
+                                        throw 'Failed to set no-show ride to past: ' +
+                                            pastResponse.body;
+                                      }
+                                    } else {
+                                      throw 'Failed to set no-show ride status: ' +
+                                          noShowResponse.body;
+                                    }
+                                  },
+                                ),
+                            barrierDismissible: true);
+                      }),
+                ],
+              ),
+            ))));
   }
 }

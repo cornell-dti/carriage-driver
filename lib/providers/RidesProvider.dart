@@ -49,7 +49,7 @@ class RidesProvider with ChangeNotifier {
       currentRides = [];
       remainingRides = [];
       for (Ride r in rides) {
-        if (r.status == RideStatus.NOT_STARTED) {
+        if (r.status == RideStatus.NOT_STARTED || r.status == RideStatus.ON_THE_WAY) {
           remainingRides.add(r);
         }
         else {
