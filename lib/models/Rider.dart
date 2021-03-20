@@ -54,13 +54,19 @@ class Rider {
       width: diameter,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100),
-        child: FadeInImage(
+        child: Image.network(
+          this.photoLink,
           fit: BoxFit.cover,
-          placeholder: AssetImage(
-            'assets/images/white.jpg',
-          ),
-          image: NetworkImage(this.photoLink),
-        ),
+          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            }else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        )
       ),
     );
   }

@@ -77,13 +77,19 @@ class _ProfileState extends State<Profile> {
                             width: _picDiameter,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(100),
-                              child: FadeInImage(
+                              child: Image.network(
+                                driverProvider.driver.photoLink,
                                 fit: BoxFit.cover,
-                                placeholder: AssetImage(
-                                  'assets/images/white.jpg',
-                                ),
-                                image: NetworkImage(driverProvider.driver.photoLink),
-                              ),
+                                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }else {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                },
+                              )
                             ),
                           ),
                         ),
