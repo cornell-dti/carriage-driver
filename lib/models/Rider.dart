@@ -1,4 +1,3 @@
-import 'package:carriage/utils/CarriageTheme.dart';
 import 'package:flutter/material.dart';
 
 ///Model for a rider. Matches the schema in the backend.
@@ -43,8 +42,8 @@ class Rider {
         phoneNumber: json['phoneNumber'],
         firstName: json['firstName'],
         lastName: json['lastName'],
-        accessibilityNeeds: List.from(json['accessibility']),
-        photoLink: 'http://' + json['photoLink']
+        accessibilityNeeds: json['accessibility'] == null ? [] : List.from(json['accessibility']),
+        photoLink: json['photoLink'] == null ? null : 'http://' + json['photoLink']
     );
   }
 
@@ -53,20 +52,24 @@ class Rider {
       height: diameter,
       width: diameter,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(100),
-        child: Image.network(
-          this.photoLink,
-          fit: BoxFit.cover,
-          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            }else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        )
+          borderRadius: BorderRadius.circular(100),
+          child: photoLink == null ? Image.asset(
+              'assets/images/person.png',
+              width: diameter,
+              height: diameter
+          ) : Image.network(
+            this.photoLink,
+            fit: BoxFit.cover,
+            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          )
       ),
     );
   }

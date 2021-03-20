@@ -26,7 +26,6 @@ class _ProfileState extends State<Profile> {
     DriverProvider driverProvider = Provider.of<DriverProvider>(context);
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
-    double _picRadius = _picDiameter / 2;
     double _picMarginLR = _picDiameter / 6.25;
     double _picMarginTB = _picDiameter / 4;
     double _picBtnDiameter = _picDiameter * 0.39;
@@ -76,20 +75,24 @@ class _ProfileState extends State<Profile> {
                             height: _picDiameter,
                             width: _picDiameter,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.network(
-                                driverProvider.driver.photoLink,
-                                fit: BoxFit.cover,
-                                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  }else {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-                                },
-                              )
+                                borderRadius: BorderRadius.circular(100),
+                                child: driverProvider.driver.photoLink == null ? Image.asset(
+                                  'assets/images/person.png',
+                                  width: _picDiameter,
+                                  height: _picDiameter,
+                                ) : Image.network(
+                                  driverProvider.driver.photoLink,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    }else {
+                                      return Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                  },
+                                )
                             ),
                           ),
                         ),
@@ -104,10 +107,9 @@ class _ProfileState extends State<Profile> {
                                     Icon(Icons.add, size: _picBtnDiameter),
                                     onPressed: () async {
                                       ImagePicker picker = ImagePicker();
-                                      PickedFile pickedFile = await picker.getImage(source: ImageSource.gallery, maxHeight: 300, maxWidth: 300);
+                                      PickedFile pickedFile = await picker.getImage(source: ImageSource.gallery, maxHeight: 200, maxWidth: 200);
                                       Uint8List bytes = await File(pickedFile.path).readAsBytes();
                                       String base64Image = base64Encode(bytes);
-                                      DriverProvider driverProvider = Provider.of<DriverProvider>(context, listen: false);
                                       driverProvider.updateDriverPhoto(AppConfig.of(context), Provider.of<AuthProvider>(context, listen: false), base64Image);
                                     }),
                               ),
