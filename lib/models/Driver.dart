@@ -1,5 +1,3 @@
-import 'package:carriage/providers/AuthProvider.dart';
-
 ///Model for a driver's info. Matches the schema in the backend.
 class Driver {
   ///The first name of the driver.
@@ -25,14 +23,16 @@ class Driver {
     this.photoLink
   });
 
-  ///Creates driver info from JSON representation.
-  factory Driver.fromJson(AuthProvider authProvider, Map<String, dynamic> json) {
+  ///Creates driver info from JSON representation. The query at the end of photoLink is to
+  // force the network images that display it to re-fetch the photo, because it won't
+  // if the URL is the same, and the URL does not change after an upload to backend.
+  factory Driver.fromJson(Map<String, dynamic> json) {
     return Driver(
         firstName: json['firstName'],
         lastName: json['lastName'],
         phoneNumber: json['phoneNumber'],
         email: json['email'],
-        photoLink: json['photoLink'] == null ? authProvider.googleSignIn.currentUser.photoUrl : 'http://' + json['photoLink'] + '?dummy=${DateTime.now().millisecondsSinceEpoch}'
+        photoLink: json['photoLink'] == null ? null : 'http://' + json['photoLink'] + '?dummy=${DateTime.now().millisecondsSinceEpoch}'
     );
   }
 

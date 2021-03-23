@@ -37,7 +37,7 @@ class DriverProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
-      _setDriver(Driver.fromJson(authProvider, json));
+      _setDriver(Driver.fromJson(json));
     } else {
       // TODO: retry only in certain circumstances
       await Future.delayed(retryDelay);
@@ -63,7 +63,7 @@ class DriverProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
-      _setDriver(Driver.fromJson(authProvider, json));
+      _setDriver(Driver.fromJson(json));
     } else {
       throw Exception('Failed to update driver.');
     }
@@ -87,7 +87,7 @@ class DriverProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
-      _setDriver(Driver.fromJson(authProvider, json));
+      _setDriver(Driver.fromJson(json));
     } else {
       print(response.body);
       throw Exception('Failed to update driver.');

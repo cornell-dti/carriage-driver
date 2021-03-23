@@ -42,7 +42,7 @@ class Rider {
         phoneNumber: json['phoneNumber'],
         firstName: json['firstName'],
         lastName: json['lastName'],
-        accessibilityNeeds: json['accessibility'] == null ? [] : List.from(json['accessibility']),
+        accessibilityNeeds: List.from(json['accessibility']),
         photoLink: json['photoLink'] == null ? null : 'http://' + json['photoLink']
     );
   }

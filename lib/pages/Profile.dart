@@ -67,10 +67,6 @@ class _ProfileState extends State<Profile> {
                         Padding(
                           padding:
                           EdgeInsets.only(bottom: _picDiameter * 0.05),
-                          /*child: CircleAvatar(
-                              radius: _picRadius,
-                              backgroundImage: image,
-                            )*/
                           child: Container(
                             height: _picDiameter,
                             width: _picDiameter,
