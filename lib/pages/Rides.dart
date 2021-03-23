@@ -1,3 +1,6 @@
+import 'package:carriage/providers/AuthProvider.dart';
+import 'package:carriage/utils/app_config.dart';
+
 import '../utils/MeasureRect.dart';
 import '../providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +47,7 @@ class RidesStateless extends StatelessWidget {
         SizedBox(height: 22),
         Text(
           'Congratulations! You are done for the day. \n'
-          'Come back tomorrow!',
+              'Come back tomorrow!',
           textAlign: TextAlign.center,
         )
       ],
@@ -133,66 +136,68 @@ class RidesStateless extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: currentRides.isEmpty && remainingRides.isEmpty
-            ? Container(
-            height: MediaQuery.of(context).size.height,
-            child: Center(child: emptyPage(context)))
-            : Stack(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height,
-              child: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 32, left: 16, right: 16),
-                        child: Text(
-                            DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
-                            style: CarriageTheme.largeTitle),
-                      ),
-                      SizedBox(height: 32),
-                      currentRides.length > 0
-                          ? ridesInProgress(context)
-                          : Container(),
-                      selectedRides.isEmpty
-                          ? Padding(
-                        padding: EdgeInsets.only(bottom: 32),
-                        child: rideCards(context, remainingRides),
-                      )
-                          : Container()
-                    ]),
-              ),
-            ),
-            selectedRides.isNotEmpty
-                ? Positioned(
-              bottom: 32,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Padding(
-                  padding:
-                  const EdgeInsets.only(left: 34, right: 34),
-                  child: FlatButton(
-                      padding: EdgeInsets.all(16),
-                      color: Colors.black,
+    return currentRides.isEmpty && remainingRides.isEmpty ? Container(
+        height: MediaQuery.of(context).size.height,
+        child: Center(child: emptyPage(context))
+    ) :
+    Stack(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height,
+          child: ListView(
+            physics: AlwaysScrollableScrollPhysics(),
+            children: [
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 32, left: 16, right: 16),
                       child: Text(
-                          'Drop off ' +
-                              (selectedRides.length == 1
-                                  ? selectedRides[0].rider.firstName
-                                  : 'Multiple Passengers'),
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold)),
-                      onPressed: onDropoff),
-                ),
-              ),
-            )
-                : Container()
-          ],
-        ));
+                          DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
+                          style: CarriageTheme.largeTitle),
+                    ),
+                    SizedBox(height: 32),
+                    currentRides.length > 0
+                        ? ridesInProgress(context)
+                        : Container(),
+                    selectedRides.isEmpty
+                        ? Padding(
+                      padding: EdgeInsets.only(bottom: 32),
+                      child: rideCards(context, remainingRides),
+                    )
+                        : Container()
+                  ])
+            ]
+          )
+        ),
+        selectedRides.isNotEmpty
+            ? Positioned(
+          bottom: 32,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Padding(
+              padding:
+              const EdgeInsets.only(left: 34, right: 34),
+              child: FlatButton(
+                  padding: EdgeInsets.all(16),
+                  color: Colors.black,
+                  child: Text(
+                      'Drop off ' +
+                          (selectedRides.length == 1
+                              ? selectedRides[0].rider.firstName
+                              : 'Multiple Passengers'),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold)),
+                  onPressed: onDropoff),
+            ),
+          ),
+        )
+            : Container()
+      ],
+    );
   }
 }
 
@@ -232,22 +237,30 @@ class _RidesState extends State<Rides> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    AppConfig appConfig = AppConfig.of(context);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
 
-    List<Ride> currentRides = ridesProvider.currentRides;
-    List<Ride> remainingRides = ridesProvider.remainingRides;
-
-    return RidesStateless(
-      currentRides: currentRides,
-      remainingRides: remainingRides,
-      selectedRides: selectedRides,
-      onDropoff: () {
-        setState(() {
-          selectedRides.forEach((Ride r) => finishRide(context, r));
-          selectedRides = [];
-        });
+    return !ridesProvider.hasActiveRides() ? Center(child: CircularProgressIndicator()) :
+    RefreshIndicator(
+      onRefresh: () async {
+        await ridesProvider.requestActiveRides(appConfig, authProvider);
+        setState(() {});
       },
-      selectCallback: _selectRide,
+      child: SafeArea(
+        child: RidesStateless(
+          currentRides: ridesProvider.currentRides,
+          remainingRides: ridesProvider.remainingRides,
+          selectedRides: selectedRides,
+          onDropoff: () {
+            setState(() {
+              selectedRides.forEach((Ride r) => finishRide(context, r));
+              selectedRides = [];
+            });
+          },
+          selectCallback: _selectRide,
+        ),
+      ),
     );
   }
 }

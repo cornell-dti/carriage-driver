@@ -72,36 +72,11 @@ class _HomeState extends State<Home> {
   }
 
   Widget getPage(BuildContext context, int index) {
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     switch (index) {
       case (RIDES):
-        return FutureBuilder(
-            future: ridesProvider.requestActiveRides(context),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return SafeArea(
-                  child: Center(
-                      child: CircularProgressIndicator()
-                  ),
-                );
-              }
-              return Rides();
-            }
-        );
+        return Rides();
       case (HISTORY):
-        return FutureBuilder(
-            future: ridesProvider.requestPastRides(context),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return SafeArea(
-                  child: Center(
-                      child: CircularProgressIndicator()
-                  ),
-                );
-              }
-              return RideHistory();
-            }
-        );
+        return RideHistory();
       case (PROFILE):
         return SingleChildScrollView(child: _profilePage(context));
       default:
