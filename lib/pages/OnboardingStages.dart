@@ -101,7 +101,7 @@ Widget _sampleRidesPage(
       child: RidesStateless(
     remainingRides: _sampleRides,
     currentRides: [],
-    selectedRides: [],
+    selectedRideIDs: [],
     firstRemainingRideRectCb: firstRemainingRideRectCb,
   ));
 }
@@ -304,7 +304,7 @@ Widget _sampleRidesInProgressPage(
       child: RidesStateless(
     currentRides: _sampleCurrentRides,
     remainingRides: _sampleRides.getRange(1, _sampleRides.length).toList(),
-    selectedRides: [],
+    selectedRideIDs: [],
     firstRemainingRideRectCb: firstRemainingRideRectCb,
   ));
 }
