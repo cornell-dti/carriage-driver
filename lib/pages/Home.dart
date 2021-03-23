@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../providers/AuthProvider.dart';
 import '../utils/LocationTracker.dart';
 import 'Rides.dart';
-import '../providers/RidesProvider.dart';
 import '../main_common.dart';
 import 'Profile.dart';
 import '../providers/DriverProvider.dart';
