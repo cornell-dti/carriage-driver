@@ -40,6 +40,13 @@ class RidesProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void pauseRide(Ride ride) {
+    currentRides.remove(ride);
+    remainingRides.add(ride);
+    notifyListeners();
+  }
+
+
   void finishCurrentRide(Ride ride) {
     currentRides.remove(ride);
     pastRides.add(ride);

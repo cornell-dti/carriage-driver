@@ -1,3 +1,6 @@
+import 'package:carriage/providers/RidesProvider.dart';
+import 'package:provider/provider.dart';
+
 import '../../utils/MeasureRect.dart';
 import '../../models/Ride.dart';
 import '../Home.dart';
@@ -79,6 +82,8 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                         SizedBox(width: 12),
                                         GestureDetector(
                                           onTap: () {
+                                            widget.ride.status = RideStatus.NOT_STARTED;
+                                            Provider.of<RidesProvider>(context, listen: false).pauseRide(widget.ride);
                                             Navigator.of(context).pushReplacement(
                                                 MaterialPageRoute(builder: (BuildContext context) => Home())
                                             );
