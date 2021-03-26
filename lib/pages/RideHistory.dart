@@ -46,7 +46,7 @@ class _RideHistoryState extends State<RideHistory> {
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () async {
-          await ridesProvider.requestActiveRides(appConfig, authProvider);
+          await ridesProvider.requestPastRides(appConfig, authProvider);
           setState(() {});
         },
         child: ListView(
