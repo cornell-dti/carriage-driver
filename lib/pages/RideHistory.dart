@@ -27,6 +27,7 @@ class _RideHistoryState extends State<RideHistory> {
     List<int> days = [];
 
     List<Ride> pastRides = ridesProvider.pastRides;
+    pastRides.sort((a, b) => b.startTime.compareTo(a.startTime));
     if (pastRides != null) {
       DateTime now = DateTime.now();
       DateTime today = DateTime(now.year, now.month, now.day);
@@ -156,6 +157,7 @@ class PastRideGroup extends StatelessWidget {
   PastRideGroup(this.date, this.rides);
   final DateTime date;
   final List<Ride> rides;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
