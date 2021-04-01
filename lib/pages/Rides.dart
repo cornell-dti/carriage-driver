@@ -240,7 +240,6 @@ class _RidesState extends State<Rides> {
     RefreshIndicator(
       onRefresh: () async {
         await ridesProvider.requestActiveRides(appConfig, authProvider);
-        setState(() {});
       },
       child: SafeArea(
         child: ridesProvider.currentRides.isEmpty && ridesProvider.remainingRides.isEmpty ? ListView(

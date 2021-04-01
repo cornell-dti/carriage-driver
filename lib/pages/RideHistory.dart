@@ -10,13 +10,7 @@ import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
 
-class RideHistory extends StatefulWidget {
-
-  @override
-  _RideHistoryState createState() => _RideHistoryState();
-}
-
-class _RideHistoryState extends State<RideHistory> {
+class RideHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
@@ -48,7 +42,6 @@ class _RideHistoryState extends State<RideHistory> {
       child: RefreshIndicator(
         onRefresh: () async {
           await ridesProvider.requestPastRides(appConfig, authProvider);
-          setState(() {});
         },
         child: ListView(
           physics: AlwaysScrollableScrollPhysics(),
