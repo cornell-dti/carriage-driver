@@ -1,3 +1,6 @@
+import 'package:carriage/providers/AuthProvider.dart';
+import 'package:carriage/utils/app_config.dart';
+
 import '../utils/MeasureRect.dart';
 import '../providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +16,7 @@ import 'package:http/http.dart' as http;
 class RidesStateless extends StatelessWidget {
   final List<Ride> currentRides;
   final List<Ride> remainingRides;
-  final List<Ride> selectedRides;
+  final List<String> selectedRideIDs;
   final void Function() onDropoff;
   final void Function(Ride r) selectCallback;
 
@@ -25,41 +28,21 @@ class RidesStateless extends StatelessWidget {
     Key key,
     this.currentRides,
     this.remainingRides,
-    this.selectedRides,
+    this.selectedRideIDs,
     this.onDropoff,
     this.selectCallback,
     this.firstCurrentRideRectCb = onChangeDefault,
     this.firstRemainingRideRectCb = onChangeDefault
   }) : super(key: key);
 
-  Widget emptyPage(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Image(
-          image: AssetImage('assets/images/steeringWheel@3x.png'),
-          width: MediaQuery.of(context).size.width * 0.2,
-          height: MediaQuery.of(context).size.width * 0.2,
-        ),
-        SizedBox(height: 22),
-        Text(
-          'Congratulations! You are done for the day. \n'
-          'Come back tomorrow!',
-          textAlign: TextAlign.center,
-        )
-      ],
-    );
-  }
-
   Widget ridesInProgress(BuildContext context) {
-
     List<Widget> buildRideGrid(BuildContext context) {
       double spacing = 16;
       List<Widget> rideCards = currentRides.asMap().map((i, ride) {
         Widget card = Container(
             width: (MediaQuery.of(context).size.width / 2) - (spacing * 1.5),
             child: RideInProgressCard(Key(ride.id), ride,
-                selectedRides.contains(ride), selectCallback
+                selectedRideIDs.contains(ride.id), selectCallback
             )
         );
         if (i == 0)
@@ -133,66 +116,64 @@ class RidesStateless extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: currentRides.isEmpty && remainingRides.isEmpty
-            ? Container(
+    return Stack(
+      children: [
+        Container(
             height: MediaQuery.of(context).size.height,
-            child: Center(child: emptyPage(context)))
-            : Stack(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height,
-              child: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 32, left: 16, right: 16),
-                        child: Text(
-                            DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
-                            style: CarriageTheme.largeTitle),
-                      ),
-                      SizedBox(height: 32),
-                      currentRides.length > 0
-                          ? ridesInProgress(context)
-                          : Container(),
-                      selectedRides.isEmpty
-                          ? Padding(
-                        padding: EdgeInsets.only(bottom: 32),
-                        child: rideCards(context, remainingRides),
-                      )
-                          : Container()
-                    ]),
-              ),
-            ),
-            selectedRides.isNotEmpty
-                ? Positioned(
-              bottom: 32,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Padding(
-                  padding:
-                  const EdgeInsets.only(left: 34, right: 34),
-                  child: FlatButton(
-                      padding: EdgeInsets.all(16),
-                      color: Colors.black,
-                      child: Text(
-                          'Drop off ' +
-                              (selectedRides.length == 1
-                                  ? selectedRides[0].rider.firstName
-                                  : 'Multiple Passengers'),
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold)),
-                      onPressed: onDropoff),
-                ),
-              ),
+            child: ListView(
+                physics: AlwaysScrollableScrollPhysics(),
+                children: [
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 32, left: 16, right: 16),
+                          child: Text(
+                              DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
+                              style: CarriageTheme.largeTitle),
+                        ),
+                        SizedBox(height: 32),
+                        currentRides.length > 0
+                            ? ridesInProgress(context)
+                            : Container(),
+                        selectedRideIDs.isEmpty
+                            ? Padding(
+                          padding: EdgeInsets.only(bottom: 32),
+                          child: rideCards(context, remainingRides),
+                        )
+                            : Container()
+                      ])
+                ]
             )
-                : Container()
-          ],
-        ));
+        ),
+        selectedRideIDs.isNotEmpty
+            ? Positioned(
+          bottom: 32,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Padding(
+              padding:
+              const EdgeInsets.only(left: 34, right: 34),
+              child: FlatButton(
+                  padding: EdgeInsets.all(16),
+                  color: Colors.black,
+                  child: Text(
+                      'Drop off ' +
+                          (selectedRideIDs.length == 1
+                              ? currentRides.where((ride) => ride.id == selectedRideIDs.single).single.rider.firstName
+                              : 'Multiple Passengers'),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold)),
+                  onPressed: onDropoff),
+            ),
+          ),
+        )
+            : Container()
+      ],
+    );
   }
 }
 
@@ -202,14 +183,14 @@ class Rides extends StatefulWidget {
 }
 
 class _RidesState extends State<Rides> {
-  List<Ride> selectedRides = [];
+  List<String> selectedRideIDs = [];
 
   void _selectRide(Ride ride) {
     setState(() {
-      if (!selectedRides.contains(ride))
-        selectedRides.add(ride);
+      if (!selectedRideIDs.contains(ride.id))
+        selectedRideIDs.add(ride.id);
       else
-        selectedRides.remove(ride);
+        selectedRideIDs.remove(ride.id);
     });
   }
 
@@ -230,24 +211,58 @@ class _RidesState extends State<Rides> {
     }
   }
 
+  Widget emptyPage(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Image(
+          image: AssetImage('assets/images/steeringWheel@3x.png'),
+          width: MediaQuery.of(context).size.width * 0.2,
+          height: MediaQuery.of(context).size.width * 0.2,
+        ),
+        SizedBox(height: 22),
+        Text(
+          'Congratulations! You are done for the day. \n'
+              'Come back tomorrow!',
+          textAlign: TextAlign.center,
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    AppConfig appConfig = AppConfig.of(context);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
 
-    List<Ride> currentRides = ridesProvider.currentRides;
-    List<Ride> remainingRides = ridesProvider.remainingRides;
-
-    return RidesStateless(
-      currentRides: currentRides,
-      remainingRides: remainingRides,
-      selectedRides: selectedRides,
-      onDropoff: () {
-        setState(() {
-          selectedRides.forEach((Ride r) => finishRide(context, r));
-          selectedRides = [];
-        });
+    return !ridesProvider.hasActiveRides() ? Center(child: CircularProgressIndicator()) :
+    RefreshIndicator(
+      onRefresh: () async {
+        await ridesProvider.requestActiveRides(appConfig, authProvider);
       },
-      selectCallback: _selectRide,
+      child: SafeArea(
+        child: ridesProvider.currentRides.isEmpty && ridesProvider.remainingRides.isEmpty ? ListView(
+          physics: AlwaysScrollableScrollPhysics(),
+          children: [
+            Container(
+                height: MediaQuery.of(context).size.height,
+                child: Center(child: emptyPage(context))
+            ),
+          ],
+        ) : RidesStateless(
+          currentRides: ridesProvider.currentRides,
+          remainingRides: ridesProvider.remainingRides,
+          selectedRideIDs: selectedRideIDs,
+          onDropoff: () {
+            setState(() {
+              selectedRideIDs.forEach((String id) => finishRide(context, ridesProvider.currentRides.where((ride) => ride.id == id).single));
+              selectedRideIDs = [];
+            });
+          },
+          selectCallback: _selectRide,
+        ),
+      ),
     );
   }
 }

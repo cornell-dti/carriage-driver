@@ -1,3 +1,6 @@
+import 'package:carriage/providers/AuthProvider.dart';
+import 'package:carriage/utils/app_config.dart';
+
 import '../utils/CarriageTheme.dart';
 import '../models/Ride.dart';
 import '../pages/Rides.dart';
@@ -8,53 +11,67 @@ import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
 
 class RideHistory extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    AppConfig appConfig = AppConfig.of(context);
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+
+    Map<int, List<Ride>> rideGroups = Map();
+    List<int> days = [];
 
     List<Ride> pastRides = ridesProvider.pastRides;
-    Map<int, List<Ride>> rideGroups = Map();
-    DateTime now = DateTime.now();
-    DateTime today = DateTime(now.year, now.month, now.day);
-    for (Ride ride in pastRides) {
-      DateTime rideDate = DateTime(ride.startTime.year, ride.startTime.month, ride.startTime.day);
-      int daysAgo = today.difference(rideDate).inDays;
-      if (rideGroups.containsKey(daysAgo)) {
-        rideGroups[daysAgo].add(ride);
+    pastRides.sort((a, b) => b.startTime.compareTo(a.startTime));
+    if (pastRides != null) {
+      DateTime now = DateTime.now();
+      DateTime today = DateTime(now.year, now.month, now.day);
+      for (Ride ride in pastRides) {
+        DateTime rideDate = DateTime(ride.startTime.year, ride.startTime.month, ride.startTime.day);
+        int daysAgo = today.difference(rideDate).inDays;
+        if (rideGroups.containsKey(daysAgo)) {
+          rideGroups[daysAgo].add(ride);
+        }
+        else {
+          rideGroups[daysAgo] = [ride];
+        }
       }
-      else {
-        rideGroups[daysAgo] = [ride];
-      }
+      days = rideGroups.keys.toList()..sort((a, b) => a - b);
     }
-    List<int> days = rideGroups.keys.toList()..sort((a, b) => a - b);
 
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await ridesProvider.requestPastRides(appConfig, authProvider);
+        },
+        child: ListView(
+          physics: AlwaysScrollableScrollPhysics(),
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
-              child: Text('History', style: CarriageTheme.largeTitle),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+                  child: Text('History', style: CarriageTheme.largeTitle),
+                ),
+                SizedBox(height: 22),
+                ListView.separated(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: days.length,
+                  itemBuilder: (context, index) {
+                    int daysAgo = days[index];
+                    return PastRideGroup(
+                        rideGroups[daysAgo].first.startTime, rideGroups[daysAgo]
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: 48);
+                  },
+                ),
+                SizedBox(height: 32)
+              ],
             ),
-            SizedBox(height: 22),
-            ListView.separated(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: days.length,
-              itemBuilder: (context, index) {
-                int daysAgo = days[index];
-                return PastRideGroup(
-                    rideGroups[daysAgo].first.startTime, rideGroups[daysAgo]
-                );
-              },
-              separatorBuilder: (context, index) {
-                return SizedBox(height: 48);
-              },
-            ),
-            SizedBox(height: 32)
-          ],
+          ]
         ),
       ),
     );
@@ -133,6 +150,7 @@ class PastRideGroup extends StatelessWidget {
   PastRideGroup(this.date, this.rides);
   final DateTime date;
   final List<Ride> rides;
+
   @override
   Widget build(BuildContext context) {
     return Padding(

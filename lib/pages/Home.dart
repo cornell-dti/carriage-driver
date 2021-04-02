@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../providers/AuthProvider.dart';
 import '../utils/LocationTracker.dart';
 import 'Rides.dart';
-import '../providers/RidesProvider.dart';
 import '../main_common.dart';
 import 'Profile.dart';
 import '../providers/DriverProvider.dart';
@@ -72,36 +71,11 @@ class _HomeState extends State<Home> {
   }
 
   Widget getPage(BuildContext context, int index) {
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     switch (index) {
       case (RIDES):
-        return FutureBuilder(
-            future: ridesProvider.requestActiveRides(context),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return SafeArea(
-                  child: Center(
-                      child: CircularProgressIndicator()
-                  ),
-                );
-              }
-              return Rides();
-            }
-        );
+        return Rides();
       case (HISTORY):
-        return FutureBuilder(
-            future: ridesProvider.requestPastRides(context),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return SafeArea(
-                  child: Center(
-                      child: CircularProgressIndicator()
-                  ),
-                );
-              }
-              return RideHistory();
-            }
-        );
+        return RideHistory();
       case (PROFILE):
         return SingleChildScrollView(child: _profilePage(context));
       default:
