@@ -1,3 +1,6 @@
+import 'package:carriage/providers/RidesProvider.dart';
+import 'package:provider/provider.dart';
+
 import '../../utils/MeasureRect.dart';
 import '../../models/Ride.dart';
 import '../Home.dart';
@@ -63,34 +66,41 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                         widget.ride.rider.accessibilityNeeds
                                             .join(', '),
                                         style: CarriageTheme.body),
-                                  )
-                                : Container(),
-                            SizedBox(height: 16),
-                            Row(children: [
-                              CallButton(widget.ride.rider.phoneNumber, 40),
-                              SizedBox(width: 12),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              Home()));
-                                },
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        boxShadow: [CarriageTheme.shadow],
-                                        color: Colors.white),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 8, horizontal: 9),
-                                      child: Text('Pause Ride',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SFText',
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 14,
-                                          )),
-                                    )),
+                                  ) : Container(),
+                                  SizedBox(height: 16),
+                                  Row(
+                                      children: [
+                                        CallButton(widget.ride.rider.phoneNumber, 40),
+                                        SizedBox(width: 12),
+                                        GestureDetector(
+                                          onTap: () {
+                                            widget.ride.status = RideStatus.NOT_STARTED;
+                                            Provider.of<RidesProvider>(context, listen: false).pauseRide(widget.ride);
+                                            Navigator.of(context).pushReplacement(
+                                                MaterialPageRoute(builder: (BuildContext context) => Home())
+                                            );
+                                          },
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                  boxShadow: [CarriageTheme.shadow],
+                                                  color: Colors.white
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 9),
+                                                child: Text('Pause Ride',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontFamily: 'SFText',
+                                                      fontWeight: FontWeight.w700,
+                                                      fontSize: 14,
+                                                    )
+                                                ),
+                                              )
+                                          ),
+                                        )
+                                      ]
+                                  ),
+                                ],
                               )
                             ]),
                           ],
