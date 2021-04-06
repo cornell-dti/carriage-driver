@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:carriage/models/Driver.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../utils/app_config.dart';
 import 'dart:ui';
@@ -18,19 +23,14 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    DriverProvider userInfoProvider = Provider.of<DriverProvider>(context);
+    DriverProvider driverProvider = Provider.of<DriverProvider>(context);
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
-    double _picRadius = _picDiameter / 2;
     double _picMarginLR = _picDiameter / 6.25;
     double _picMarginTB = _picDiameter / 4;
     double _picBtnDiameter = _picDiameter * 0.39;
 
-    if (userInfoProvider.hasInfo()) {
-      List<String> availabilities = [];
-      userInfoProvider.info.availability.forEach((key, value) {
-        availabilities.add('$key: ${value['startTime']}-${value['endTime']}');
-      });
+    if (driverProvider.hasInfo()) {
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,13 +65,32 @@ class _ProfileState extends State<Profile> {
                     child: Stack(
                       children: [
                         Padding(
-                            padding:
-                            EdgeInsets.only(bottom: _picDiameter * 0.05),
-                            child: CircleAvatar(
-                              radius: _picRadius,
-                              backgroundImage:
-                              NetworkImage(userInfoProvider.info.photoUrl),
-                            )
+                          padding:
+                          EdgeInsets.only(bottom: _picDiameter * 0.05),
+                          child: Container(
+                            height: _picDiameter,
+                            width: _picDiameter,
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: driverProvider.driver.photoLink == null ? Image.asset(
+                                  'assets/images/person.png',
+                                  width: _picDiameter,
+                                  height: _picDiameter,
+                                ) : Image.network(
+                                  driverProvider.driver.photoLink,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    }else {
+                                      return Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                  },
+                                )
+                            ),
+                          ),
                         ),
                         Positioned(
                             child: Container(
@@ -82,8 +101,12 @@ class _ProfileState extends State<Profile> {
                                     backgroundColor: Colors.black,
                                     child:
                                     Icon(Icons.add, size: _picBtnDiameter),
-                                    onPressed: () {
-                                      // TODO: add functionality to select photo if we decide to store profile images
+                                    onPressed: () async {
+                                      ImagePicker picker = ImagePicker();
+                                      PickedFile pickedFile = await picker.getImage(source: ImageSource.gallery, maxHeight: 200, maxWidth: 200);
+                                      Uint8List bytes = await File(pickedFile.path).readAsBytes();
+                                      String base64Image = base64Encode(bytes);
+                                      driverProvider.updateDriverPhoto(AppConfig.of(context), Provider.of<AuthProvider>(context, listen: false), base64Image);
                                     }),
                               ),
                             ),
@@ -100,9 +123,9 @@ class _ProfileState extends State<Profile> {
                       children: [
                         Row(children: [
                           Text(
-                              userInfoProvider.info.firstName +
+                              driverProvider.driver.firstName +
                                   " " +
-                                  userInfoProvider.info.lastName,
+                                  driverProvider.driver.lastName,
                               style: TextStyle(
                                   fontFamily: 'SFDisplay',
                                   fontSize: 22,
@@ -115,7 +138,7 @@ class _ProfileState extends State<Profile> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => EditProfile(userInfoProvider.info)
+                                      builder: (context) => EditProfile(driverProvider.driver)
                                   )
                               );
                             },
@@ -144,29 +167,22 @@ class _ProfileState extends State<Profile> {
               InfoRow(
                 "email",
                 Icons.mail_outline,
-                userInfoProvider.info.email,
+                driverProvider.driver.email,
               ),
               InfoRow("phone number", Icons.phone,
-                  userInfoProvider.info.phoneNumber)
+                  driverProvider.driver.phoneNumber)
             ],
           ),
-          SizedBox(height: 6),
-          InfoGroup(
-            "Schedule Info",
-            [
-              InfoRow("hours", Icons.schedule,
-                  availabilities.join('\n')),
-              InfoRow("vehicle", Icons.directions_car,
-                  userInfoProvider.info.vehicle),
-            ],
-          )
         ],
       );
     }
     else {
       return SafeArea(
-          child: Center(
-              child: CircularProgressIndicator()
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Center(
+                child: CircularProgressIndicator()
+            ),
           )
       );
     }
@@ -276,6 +292,7 @@ class _EditProfileState extends State<EditProfile> {
     String _firstName = widget.driver.firstName;
     String _lastName = widget.driver.lastName;
     String _phoneNumber = widget.driver.phoneNumber;
+
     return Scaffold(
         body: Padding(
             padding: EdgeInsets.only(
@@ -353,25 +370,30 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                       ])),
               SizedBox(height: 20),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                RaisedButton(
-                  child: Text("Save"),
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
-                      userInfoProvider.updateDriver(AppConfig.of(context),
-                          authProvider, _firstName, _lastName, _phoneNumber);
-                      Navigator.pop(context);
-                    }
-                  },
-                ),
-                SizedBox(width: 30),
-                RaisedButton(
-                    child: Text("Cancel"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    })
-              ])
-            ])));
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RaisedButton(
+                      child: Text("Save"),
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          _formKey.currentState.save();
+                          userInfoProvider.updateDriver(AppConfig.of(context),
+                              authProvider, _firstName, _lastName, _phoneNumber);
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                    SizedBox(width: 30),
+                    RaisedButton(
+                        child: Text("Cancel"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        })
+                  ])
+            ]
+            )
+        )
+    );
   }
 }

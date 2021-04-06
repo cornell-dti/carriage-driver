@@ -17,7 +17,7 @@ class Greeting extends StatelessWidget {
         child: Container(
             height: 46,
             child: userInfoProvider.hasInfo()
-                ? Text('Hi ${userInfoProvider.info.firstName}!',
+                ? Text('Hi ${userInfoProvider.driver.firstName}!',
                     style: Theme.of(context).textTheme.headline4)
                 : Container()),
         padding: EdgeInsets.only(
@@ -65,11 +65,6 @@ class _HomeState extends State<Home> {
       _selectedIndex = index;
     });
   }
-
-  Widget _profilePage(BuildContext context) {
-    return Profile();
-  }
-
   Widget getPage(BuildContext context, int index) {
     switch (index) {
       case (RIDES):
@@ -77,7 +72,7 @@ class _HomeState extends State<Home> {
       case (HISTORY):
         return RideHistory();
       case (PROFILE):
-        return SingleChildScrollView(child: _profilePage(context));
+        return SingleChildScrollView(child: Profile());
       default:
         return Column();
     }

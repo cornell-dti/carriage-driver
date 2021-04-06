@@ -8,8 +8,8 @@ import '../utils/app_config.dart';
 import 'package:http/http.dart' as http;
 
 class DriverProvider with ChangeNotifier {
-  Driver info;
-  bool hasInfo() => info != null;
+  Driver driver;
+  bool hasInfo() => driver != null;
 
   final retryDelay = Duration(seconds: 30);
 
@@ -22,12 +22,12 @@ class DriverProvider with ChangeNotifier {
     authProvider.addListener(callback);
   }
 
-  void _setInfo(Driver info) {
-    this.info = info;
+  void _setDriver(Driver newDriver) {
+    this.driver = newDriver;
     notifyListeners();
   }
 
-  /// Fetches the logged in driver's data and updates [info] with the
+  /// Fetches the logged in driver's data and updates [driver] with the
   /// retrieved data. Retries continuously if the request fails.
   Future<void> requestInfo(AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
@@ -37,8 +37,7 @@ class DriverProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
-      _setInfo(Driver.fromJson(
-          json, authProvider.googleSignIn.currentUser.photoUrl));
+      _setDriver(Driver.fromJson(json));
     } else {
       // TODO: retry only in certain circumstances
       await Future.delayed(retryDelay);
@@ -64,9 +63,33 @@ class DriverProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
-      _setInfo(Driver.fromJson(
-          json, authProvider.googleSignIn.currentUser.photoUrl));
+      _setDriver(Driver.fromJson(json));
     } else {
+      throw Exception('Failed to update driver.');
+    }
+  }
+
+  /// Updates the logged in driver's profile picture.
+  Future<void> updateDriverPhoto(AppConfig config, AuthProvider authProvider,
+      String base64Photo) async {
+    String token = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.post(
+      "${config.baseUrl}/upload",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      },
+      body: jsonEncode(<String, String>{
+        'id': authProvider.id,
+        'tableName': 'Drivers',
+        'fileBuffer': base64Photo,
+      }),
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> json = jsonDecode(response.body);
+      _setDriver(Driver.fromJson(json));
+    } else {
+      print(response.body);
       throw Exception('Failed to update driver.');
     }
   }
