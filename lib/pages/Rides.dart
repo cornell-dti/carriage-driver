@@ -24,6 +24,8 @@ class RidesStateless extends StatelessWidget {
   final OnWidgetRectChange firstRemainingRideRectCb;
   static void onChangeDefault(Rect s) {}
 
+  final bool interactive;
+
   const RidesStateless({
     Key key,
     this.currentRides,
@@ -32,8 +34,29 @@ class RidesStateless extends StatelessWidget {
     this.onDropoff,
     this.selectCallback,
     this.firstCurrentRideRectCb = onChangeDefault,
-    this.firstRemainingRideRectCb = onChangeDefault
+    this.firstRemainingRideRectCb = onChangeDefault,
+    this.interactive
+
   }) : super(key: key);
+
+  Widget emptyPage(BuildContext context) {
+    double imageSize = MediaQuery.of(context).size.width * 0.2;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Image.asset('assets/images/steeringWheel@3x.png',
+            width: imageSize,
+            height: imageSize
+        ),
+        SizedBox(height: 22),
+        Text(
+          'Congratulations! You are done for the day. \n'
+              'Come back tomorrow!',
+          textAlign: TextAlign.center,
+        )
+      ],
+    );
+  }
 
   Widget ridesInProgress(BuildContext context) {
     List<Widget> buildRideGrid(BuildContext context) {
@@ -106,7 +129,7 @@ class RidesStateless extends StatelessWidget {
       itemBuilder: (context, index) {
         int hour = hours[index];
         return RideGroup(
-            rideGroups[hour], hour, index, firstRemainingRideRectCb);
+            rideGroups[hour], hour, index, firstRemainingRideRectCb, interactive);
       },
       separatorBuilder: (context, index) {
         return SizedBox(height: 32);
@@ -116,6 +139,8 @@ class RidesStateless extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool emptyMainPage = interactive && currentRides.isEmpty && remainingRides.isEmpty; // no current or remaining
+    bool emptyPreviewPage = !interactive && remainingRides.isEmpty; // the ride we're switching from will be a current ride
     return Stack(
       children: [
         Container(
@@ -128,22 +153,35 @@ class RidesStateless extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 32, left: 16, right: 16),
-                          child: Text(
-                              DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
-                              style: CarriageTheme.largeTitle),
+                              top: 32, left: 16, right: 16, bottom: 32),
+                          child: Row(
+                              children: [
+                                Text(
+                                    DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
+                                    style: CarriageTheme.largeTitle
+                                ),
+                                interactive ? Container() : Spacer(),
+                                interactive ?
+                                Container() : GestureDetector(
+                                  child: Image.asset('assets/images/carButton.png', width: 24, height: 21),
+                                  onTap: () => Navigator.of(context).pop(),
+                                )
+                              ]
+                          ),
                         ),
-                        SizedBox(height: 32),
-                        currentRides.length > 0
+                        emptyMainPage || emptyPreviewPage ? Container(
+                          height: MediaQuery.of(context).size.height / 2,
+                            child: Center(child: emptyPage(context))
+                        ) : Container(),
+                        interactive && currentRides.length > 0
                             ? ridesInProgress(context)
                             : Container(),
                         selectedRideIDs.isEmpty
                             ? Padding(
                           padding: EdgeInsets.only(bottom: 32),
                           child: rideCards(context, remainingRides),
-                        )
-                            : Container()
-                      ])
+                        ) : Container()]
+                  )
                 ]
             )
         ),
@@ -178,6 +216,9 @@ class RidesStateless extends StatelessWidget {
 }
 
 class Rides extends StatefulWidget {
+  Rides({@required this.interactive});
+  final bool interactive;
+
   @override
   _RidesState createState() => _RidesState();
 }
@@ -211,46 +252,14 @@ class _RidesState extends State<Rides> {
     }
   }
 
-  Widget emptyPage(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Image(
-          image: AssetImage('assets/images/steeringWheel@3x.png'),
-          width: MediaQuery.of(context).size.width * 0.2,
-          height: MediaQuery.of(context).size.width * 0.2,
-        ),
-        SizedBox(height: 22),
-        Text(
-          'Congratulations! You are done for the day. \n'
-              'Come back tomorrow!',
-          textAlign: TextAlign.center,
-        )
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     AppConfig appConfig = AppConfig.of(context);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
 
-    return !ridesProvider.hasActiveRides() ? Center(child: CircularProgressIndicator()) :
-    RefreshIndicator(
-      onRefresh: () async {
-        await ridesProvider.requestActiveRides(appConfig, authProvider);
-      },
-      child: SafeArea(
-        child: ridesProvider.currentRides.isEmpty && ridesProvider.remainingRides.isEmpty ? ListView(
-          physics: AlwaysScrollableScrollPhysics(),
-          children: [
-            Container(
-                height: MediaQuery.of(context).size.height,
-                child: Center(child: emptyPage(context))
-            ),
-          ],
-        ) : RidesStateless(
+    Widget page = SafeArea(
+      child: RidesStateless(
           currentRides: ridesProvider.currentRides,
           remainingRides: ridesProvider.remainingRides,
           selectedRideIDs: selectedRideIDs,
@@ -261,9 +270,19 @@ class _RidesState extends State<Rides> {
             });
           },
           selectCallback: _selectRide,
-        ),
+          interactive: widget.interactive
       ),
     );
+
+    return !ridesProvider.hasActiveRides() ? Center(child: CircularProgressIndicator()) :
+    widget.interactive ? RefreshIndicator(
+        onRefresh: () async {
+          if (widget.interactive) {
+            await ridesProvider.requestActiveRides(appConfig, authProvider);
+          }
+        },
+        child: page
+    ) : page;
   }
 }
 
@@ -289,11 +308,12 @@ class RideGroupTitle extends StatelessWidget {
 
 class RideGroup extends StatelessWidget {
   RideGroup(
-      this.rides, this.hour, this.groupIndex, this.firstRemainingRideRectCb);
+      this.rides, this.hour, this.groupIndex, this.firstRemainingRideRectCb, this.interactive);
   final int hour;
   final List<Ride> rides;
   final int groupIndex;
   final Function firstRemainingRideRectCb;
+  final bool interactive;
 
   @override
   Widget build(BuildContext context) {
@@ -322,7 +342,13 @@ class RideGroup extends StatelessWidget {
               child: RideGroupTitle(title, rides.length),
             );
           }
-          Widget w = RideCard(rides[index]);
+          Widget w = Opacity(
+              opacity: interactive ? 1 : 0.5,
+              child: RideCard(rides[index])
+          );
+          if (!interactive) {
+            w = IgnorePointer(child: w);
+          }
           if (index == 0 && groupIndex == 0)
             w = MeasureRect(child: w, onChange: firstRemainingRideRectCb);
           return w;
@@ -332,36 +358,6 @@ class RideGroup extends StatelessWidget {
         },
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-      ),
-    );
-  }
-}
-
-class RidesCompletePage extends StatefulWidget {
-  @override
-  _RidesCompletedPageState createState() => _RidesCompletedPageState();
-}
-
-class _RidesCompletedPageState extends State {
-  @override
-  initState() {
-    super.initState();
-    Timer(const Duration(seconds: 5), () => Navigator.of(context).pop());
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-            children: [
-              SizedBox(height: 90),
-              Text('Rides Completed', style: Theme.of(context).textTheme.headline5),
-              SizedBox(height: 120),
-              Image.asset('assets/images/townCar.png')
-            ]
-        ),
       ),
     );
   }
