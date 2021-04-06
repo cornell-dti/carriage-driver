@@ -6,40 +6,43 @@ class Driver {
   ///The last name of the driver.
   final String lastName;
 
-  ///Time that the driver works.
-  final Map<String, dynamic> availability;
-
-  ///Name of the vehicle the driver uses.
-  final String vehicle;
-
   ///The rider's phone number in format ##########.
   final String phoneNumber;
 
   ///The driver's email.
   final String email;
 
-  ///The url of the driver's profile picture.
-  final String photoUrl;
-  String fullName() => firstName + " " + lastName;
+  ///The URL of the driver's profile picture.
+  final String photoLink;
 
-  Driver(
-      {this.firstName,
-        this.lastName,
-        this.availability,
-        this.vehicle,
-        this.phoneNumber,
-        this.email,
-        this.photoUrl});
+  Driver({
+    this.firstName,
+    this.lastName,
+    this.phoneNumber,
+    this.email,
+    this.photoLink
+  });
 
-  ///Creates driver info from JSON representation.
-  factory Driver.fromJson(Map<String, dynamic> json, String photoUrl) {
+  ///Creates driver info from JSON representation. The query at the end of photoLink is to
+  // force the network images that display it to re-fetch the photo, because it won't
+  // if the URL is the same, and the URL does not change after an upload to backend.
+  factory Driver.fromJson(Map<String, dynamic> json) {
     return Driver(
         firstName: json['firstName'],
         lastName: json['lastName'],
-        availability: json['availability'],
-        vehicle: json['vehicle']['name'],
         phoneNumber: json['phoneNumber'],
         email: json['email'],
-        photoUrl: photoUrl);
+        photoLink: json['photoLink'] == null ? null : 'https://' + json['photoLink'] + '?dummy=${DateTime.now().millisecondsSinceEpoch}'
+    );
+  }
+
+  Driver copyWithPhoto(String newPhoto) {
+    return Driver(
+        firstName: this.firstName,
+        lastName: this.lastName,
+        phoneNumber: this.phoneNumber,
+        email: this.email,
+        photoLink: 'http://' + newPhoto
+    );
   }
 }

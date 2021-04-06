@@ -27,7 +27,6 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
   bool _requestedContinue = false;
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         backgroundColor: Colors.white,
         body: LoadingOverlay(
@@ -41,86 +40,80 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                 children: [
                   SizedBox(height: 16),
                   CalendarButton(),
-                  Divider(
-                      height: 12
-                  ),
+                  Divider(height: 12),
                   SizedBox(height: 12),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("On your way to...", style: CarriageTheme.title2)
-                        ),
-                        SizedBox(height: 32),
-                        Row(
-                            children: [
-                              Container(
-                                width: 100,
-                                child: CircleAvatar(
-                                  radius: 50,
-                                  //TODO: replace with rider image
-                                  backgroundImage: AssetImage('assets/images/terry.jpg'),
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(widget.ride.rider.firstName, style: CarriageTheme.title3),
-                                  widget.ride.rider.accessibilityNeeds.length > 0 ?
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 2),
-                                    child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
-                                        style: CarriageTheme.body),
-                                  ) : Container(),
-                                  SizedBox(height: 16),
-                                  Row(
-                                      children: [
-                                        CallButton(widget.ride.rider.phoneNumber, 40),
-                                        SizedBox(width: 12),
-                                        GestureDetector(
-                                          onTap: () {
-                                            widget.ride.status = RideStatus.NOT_STARTED;
-                                            Provider.of<RidesProvider>(context, listen: false).pauseRide(widget.ride);
-                                            Navigator.of(context).pushReplacement(
-                                                MaterialPageRoute(builder: (BuildContext context) => Home())
-                                            );
-                                          },
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [CarriageTheme.shadow],
-                                                  color: Colors.white
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 9),
-                                                child: Text('Pause Ride',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontFamily: 'SFText',
-                                                      fontWeight: FontWeight.w700,
-                                                      fontSize: 14,
-                                                    )
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text("On your way to...",
+                                  style: CarriageTheme.title2)),
+                          SizedBox(height: 32),
+                          Row(
+                              children: [
+                                widget.ride.rider.profilePicture(100),
+                                SizedBox(width: 16),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(widget.ride.rider.firstName,
+                                        style: CarriageTheme.title3),
+                                    widget.ride.rider.accessibilityNeeds.length > 0
+                                        ? Padding(
+                                      padding: EdgeInsets.only(top: 2),
+                                      child: Text(
+                                          widget.ride.rider.accessibilityNeeds
+                                              .join(', '),
+                                          style: CarriageTheme.body),
+                                    ) : Container(),
+                                    SizedBox(height: 16),
+                                    Row(
+                                        children: [
+                                          CallButton(widget.ride.rider.phoneNumber, 40),
+                                          SizedBox(width: 12),
+                                          GestureDetector(
+                                            onTap: () {
+                                              widget.ride.status = RideStatus.NOT_STARTED;
+                                              Provider.of<RidesProvider>(context, listen: false).pauseRide(widget.ride);
+                                              Navigator.of(context).pushReplacement(
+                                                  MaterialPageRoute(builder: (BuildContext context) => Home())
+                                              );
+                                            },
+                                            child: Container(
+                                                decoration: BoxDecoration(
+                                                    boxShadow: [CarriageTheme.shadow],
+                                                    color: Colors.white
                                                 ),
-                                              )
-                                          ),
-                                        )
-                                      ]
-                                  ),
-                                ],
-                              )
-                            ]
-                        ),
-                      ]
-                    ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 9),
+                                                  child: Text('Pause Ride',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontFamily: 'SFText',
+                                                        fontWeight: FontWeight.w700,
+                                                        fontSize: 14,
+                                                      )
+                                                  ),
+                                                )
+                                            ),
+                                          )
+                                        ]
+                                    ),
+                                  ],
+                                )
+                              ]),
+                        ],
+                      )
                   ),
+
                   SizedBox(height: 40),
                   Container(
                       padding: EdgeInsets.symmetric(horizontal: 40),
                       width: double.infinity,
-                      child: RideDestPickupCard(false, widget.ride.startTime, widget.ride.startLocation, widget.ride.startAddress)
-                  ),
+                      child: RideDestPickupCard(false, widget.ride.startTime,
+                          widget.ride.startLocation, widget.ride.startAddress)),
                   Spacer(),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 34),
@@ -147,8 +140,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                               setState(() => _requestedContinue = false);
                               throw Exception('Failed to update ride status');
                             }
-                          }
-                      ),
+                          }),
                     ),
                   ),
                   DangerButton(
@@ -158,16 +150,15 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                             context: context,
                             builder: (_) => ConfirmDialog(
                               title: "Notify Delay",
-                              content: "Would you like to notify the rider of a delay?",
+                              content:
+                              "Would you like to notify the rider of a delay?",
                               actionName: "Notify",
                               onConfirm: () {
                                 // TODO: notification functionality
                               },
                             ),
-                            barrierDismissible: true
-                        );
-                      }
-                  ),
+                            barrierDismissible: true);
+                      }),
                 ],
               ),
             ),

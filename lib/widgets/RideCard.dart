@@ -41,41 +41,32 @@ class _RideCardState extends State<RideCard> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [CarriageTheme.shadow],
-                        ),
-                        child: CircleAvatar(
-                          radius: 24,
-                          //TODO: replace with rider's image
-                          backgroundImage:
-                              AssetImage('assets/images/terry.jpg'),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(widget.ride.rider.firstName,
-                                style: CarriageTheme.title3),
-                            SizedBox(height: 4),
-                            widget.ride.rider.accessibilityNeeds.length > 0
-                                ? Text(
+                    Row(
+                        children: [
+                          widget.ride.rider.profilePicture(48),
+                          SizedBox(width: 16),
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(widget.ride.rider.firstName,
+                                    style: CarriageTheme.title3),
+                                SizedBox(height: 4),
+                                widget.ride.rider.accessibilityNeeds.length > 0
+                                    ? Text(
                                     widget.ride.rider.accessibilityNeeds
                                         .join(', '),
                                     style: TextStyle(
                                         color: CarriageTheme.gray2,
                                         fontStyle: FontStyle.italic,
-                                        fontSize: 15))
-                                : Container()
-                          ]),
-                      Spacer(),
-                      CallButton(widget.ride.rider.phoneNumber, 40),
-                      SizedBox(width: 8),
-                      NotifyButton()
-                    ]),
+                                        fontSize: 15)
+                                ) : Container()
+                              ]
+                          ),
+                          Spacer(),
+                          CallButton(widget.ride.rider.phoneNumber, 40),
+                          SizedBox(width: 8),
+                          NotifyButton()
+                        ]),
                     SizedBox(height: 32),
                     TimeLine(widget.ride)
                   ]),
@@ -150,14 +141,14 @@ class _TimeLineState extends State<TimeLine> {
 
     Widget buildLine() {
       return timelineHeight != null &&
-              firstRowKey.currentContext != null &&
-              lastRowKey.currentContext != null
+          firstRowKey.currentContext != null &&
+          lastRowKey.currentContext != null
           ? Container(
-              margin: EdgeInsets.only(left: size / 2 - (lineWidth / 2)),
-              width: 4,
-              height: getLastRowPos() - getFirstRowPos(),
-              color: Color(0xFFECEBED),
-            )
+        margin: EdgeInsets.only(left: size / 2 - (lineWidth / 2)),
+        width: 4,
+        height: getLastRowPos() - getFirstRowPos(),
+        color: Color(0xFFECEBED),
+      )
           : CircularProgressIndicator();
     }
 
@@ -187,7 +178,7 @@ class _TimeLineState extends State<TimeLine> {
             Container(
                 key: lastRowKey,
                 child:
-                    Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   locationCircle(),
                   SizedBox(width: 16),
                   Expanded(
