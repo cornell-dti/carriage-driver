@@ -10,7 +10,6 @@ import '../utils/CarriageTheme.dart';
 import '../models/Ride.dart';
 import '../widgets/RideCard.dart';
 import '../widgets/RideInProgressCard.dart';
-import 'dart:async';
 import 'package:http/http.dart' as http;
 
 class RidesStateless extends StatelessWidget {
