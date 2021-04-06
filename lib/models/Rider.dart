@@ -43,7 +43,7 @@ class Rider {
         firstName: json['firstName'],
         lastName: json['lastName'],
         accessibilityNeeds: List.from(json['accessibility']),
-        photoLink: json['photoLink'] == null ? null : 'http://' + json['photoLink']
+        photoLink: json['photoLink'] == null ? null : 'https://' + json['photoLink']
     );
   }
 

@@ -32,7 +32,7 @@ class Driver {
         lastName: json['lastName'],
         phoneNumber: json['phoneNumber'],
         email: json['email'],
-        photoLink: json['photoLink'] == null ? null : 'http://' + json['photoLink'] + '?dummy=${DateTime.now().millisecondsSinceEpoch}'
+        photoLink: json['photoLink'] == null ? null : 'https://' + json['photoLink'] + '?dummy=${DateTime.now().millisecondsSinceEpoch}'
     );
   }
 
