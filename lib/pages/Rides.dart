@@ -1,6 +1,6 @@
 import 'package:carriage/providers/AuthProvider.dart';
 import 'package:carriage/utils/app_config.dart';
-
+import 'package:loading_overlay/loading_overlay.dart';
 import '../utils/MeasureRect.dart';
 import '../providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
@@ -40,20 +40,21 @@ class RidesStateless extends StatelessWidget {
 
   Widget emptyPage(BuildContext context) {
     double imageSize = MediaQuery.of(context).size.width * 0.2;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Image.asset('assets/images/steeringWheel@3x.png',
-            width: imageSize,
-            height: imageSize
-        ),
-        SizedBox(height: 22),
-        Text(
-          'Congratulations! You are done for the day. \n'
-              'Come back tomorrow!',
-          textAlign: TextAlign.center,
-        )
-      ],
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Image.asset('assets/images/steeringWheel@3x.png',
+              width: imageSize,
+              height: imageSize
+          ),
+          SizedBox(height: 22),
+          Text(
+            'Congratulations! You are done for the day. \n'
+                'Come back tomorrow!',
+            textAlign: TextAlign.center,
+          )
+        ],
+      ),
     );
   }
 
@@ -140,12 +141,14 @@ class RidesStateless extends StatelessWidget {
   Widget build(BuildContext context) {
     bool emptyMainPage = interactive && currentRides.isEmpty && remainingRides.isEmpty; // no current or remaining
     bool emptyPreviewPage = !interactive && remainingRides.isEmpty; // the ride we're switching from will be a current ride
+    
     return Stack(
       children: [
         Container(
             height: MediaQuery.of(context).size.height,
             child: ListView(
                 physics: AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
                 children: [
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,10 +171,7 @@ class RidesStateless extends StatelessWidget {
                               ]
                           ),
                         ),
-                        emptyMainPage || emptyPreviewPage ? Container(
-                          height: MediaQuery.of(context).size.height / 2,
-                            child: Center(child: emptyPage(context))
-                        ) : Container(),
+                        emptyMainPage || emptyPreviewPage ? emptyPage(context) : Container(),
                         interactive && currentRides.length > 0
                             ? ridesInProgress(context)
                             : Container(),
@@ -224,6 +224,7 @@ class Rides extends StatefulWidget {
 
 class _RidesState extends State<Rides> {
   List<String> selectedRideIDs = [];
+  bool requestedDropOff = false;
 
   void _selectRide(Ride ride) {
     setState(() {
@@ -234,7 +235,7 @@ class _RidesState extends State<Rides> {
     });
   }
 
-  void finishRide(BuildContext context, Ride ride) async {
+  Future<void> finishRide(BuildContext context, Ride ride) async {
     http.Response statusResponse =
     await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
     if (statusResponse.statusCode == 200) {
@@ -258,18 +259,29 @@ class _RidesState extends State<Rides> {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
 
     Widget page = SafeArea(
-      child: RidesStateless(
-          currentRides: ridesProvider.currentRides,
-          remainingRides: ridesProvider.remainingRides,
-          selectedRideIDs: selectedRideIDs,
-          onDropoff: () {
-            setState(() {
-              selectedRideIDs.forEach((String id) => finishRide(context, ridesProvider.currentRides.where((ride) => ride.id == id).single));
-              selectedRideIDs = [];
-            });
-          },
-          selectCallback: _selectRide,
-          interactive: widget.interactive
+      child: LoadingOverlay(
+        color: Colors.white,
+        opacity: 0.3,
+        isLoading: requestedDropOff,
+        child: RidesStateless(
+              currentRides: ridesProvider.currentRides,
+              remainingRides: ridesProvider.remainingRides,
+              selectedRideIDs: selectedRideIDs,
+              onDropoff: () async {
+                setState(() {
+                  requestedDropOff = true;
+                });
+                for (String id in selectedRideIDs) {
+                  await finishRide(context, ridesProvider.currentRides.where((ride) => ride.id == id).single);
+                }
+                setState(() {
+                  selectedRideIDs = [];
+                  requestedDropOff = false;
+                });
+              },
+              selectCallback: _selectRide,
+              interactive: widget.interactive
+          ),
       ),
     );
 
