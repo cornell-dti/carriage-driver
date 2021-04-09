@@ -5,13 +5,14 @@ import 'package:intl/intl.dart';
 
 // TODO: only show notifs from past week
 class DispatcherNotification extends StatelessWidget {
-  DispatcherNotification(this.ride, this.notifTime, this.color, this.iconData, this.text);
+  DispatcherNotification(this.ride, this.notifTime, this.color, this.iconData, this.text, this.showDate);
 
   final Ride ride;
   final DateTime notifTime;
   final Color color;
   final IconData iconData;
   final String text;
+  final bool showDate;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +72,22 @@ class DispatcherNotification extends StatelessWidget {
                     ]
                 ),
                 SizedBox(height: 4),
-                Text(text, style: TextStyle(fontSize: 15, color: Colors.black))
+                RichText(
+                  text: TextSpan(
+                      text: text + (showDate ? '' : '.'),
+                      style: TextStyle(fontSize: 15, color: Colors.black),
+                      children: showDate ? [
+                        TextSpan(
+                            text: ' for',
+                            style: TextStyle(fontSize: 15, color: Colors.black)
+                        ),
+                        TextSpan(
+                            text: ' ${DateFormat('MM/dd/yyyy').format(ride.startTime)}.',
+                            style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)
+                        ),
+                      ] : []
+                  ),
+                ),
               ],
             ),
           ),

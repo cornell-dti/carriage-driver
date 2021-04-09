@@ -15,14 +15,14 @@ class NotificationsPage extends StatefulWidget {
 
 class _NotificationsPageState extends State<NotificationsPage> {
 
-  DispatcherNotification rideEditedNotif(Ride ride, DateTime notifTime) {
-    return DispatcherNotification(ride, notifTime, Colors.black, Icons.edit, 'Ride information has been edited in your schedule for ${DateFormat('MM/dd/yyyy').format(ride.startTime)}');
+  DispatcherNotification rideEditedNotif(Ride ride, DateTime notifTime, bool showDate) {
+    return DispatcherNotification(ride, notifTime, Colors.black, Icons.edit, 'Ride information has been edited in your schedule', showDate);
   }
-  DispatcherNotification ridesAddedNotif(Ride ride, DateTime notifTime) {
-    return DispatcherNotification(ride, notifTime, Colors.green, Icons.person_add, 'Rides have been added to your schedule for ${DateFormat('MM/dd/yyyy').format(ride.startTime)}.');
+  DispatcherNotification ridesAddedNotif(Ride ride, DateTime notifTime, bool showDate) {
+    return DispatcherNotification(ride, notifTime, Colors.green, Icons.person_add, 'Rides have been added to your schedule', showDate);
   }
-  DispatcherNotification ridesRemovedNotif(Ride ride, DateTime notifTime) {
-    return DispatcherNotification(ride, notifTime, Colors.red, Icons.close, 'Rides have been removed from your schedule for ${DateFormat('MM/dd/yyyy').format(ride.startTime)}.');
+  DispatcherNotification ridesRemovedNotif(Ride ride, DateTime notifTime, bool showDate) {
+    return DispatcherNotification(ride, notifTime, Colors.red, Icons.close, 'Rides have been removed from your schedule', showDate);
   }
 
   @override
@@ -42,16 +42,21 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     color: Colors.white,
                     child: Column(
                         children: [
-                          rideEditedNotif(ride, DateTime.now().subtract(Duration(days: 1))),
-                          ridesRemovedNotif(ride, DateTime.now().subtract(Duration(days: 1))),
-                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(days: 7))),
-                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(days: 3))),
-                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(days: 2))),
-                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(days: 1))),
-                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(hours: 7))),
-                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(hours: 1))),
-                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(minutes: 7))),
-                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(minutes: 1))),
+                          rideEditedNotif(ride, DateTime.now().subtract(Duration(days: 1)), true),
+                          ridesRemovedNotif(ride, DateTime.now().subtract(Duration(days: 1)), true),
+                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(days: 7)), true),
+
+                          rideEditedNotif(ride, DateTime.now().subtract(Duration(days: 1)), false),
+                          ridesRemovedNotif(ride, DateTime.now().subtract(Duration(days: 1)), false),
+                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(days: 7)), false),
+
+                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(days: 3)), true),
+                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(days: 2)), true),
+                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(days: 1)), true),
+                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(hours: 7)), true),
+                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(hours: 1)), true),
+                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(minutes: 7)), true),
+                          ridesAddedNotif(ride, DateTime.now().subtract(Duration(minutes: 1)), true),
                         ]
                     ),
                   )
