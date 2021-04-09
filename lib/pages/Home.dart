@@ -1,3 +1,4 @@
+import 'package:carriage/pages/Notifications.dart';
 import 'package:carriage/pages/RideHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,7 @@ class Greeting extends StatelessWidget {
             height: 46,
             child: userInfoProvider.hasInfo()
                 ? Text('Hi ${userInfoProvider.driver.firstName}!',
-                    style: Theme.of(context).textTheme.headline4)
+                style: Theme.of(context).textTheme.headline4)
                 : Container()),
         padding: EdgeInsets.only(
             left: 24.0,
@@ -49,7 +50,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   static const int RIDES = 0;
   static const int HISTORY = 1;
-  static const int PROFILE = 2;
+  static const int NOTIFS = 2;
+  static const int PROFILE = 3;
 
   int _selectedIndex = RIDES;
 
@@ -71,6 +73,8 @@ class _HomeState extends State<Home> {
         return Rides();
       case (HISTORY):
         return RideHistory();
+      case (NOTIFS):
+        return NotificationsPage();
       case (PROFILE):
         return SingleChildScrollView(child: Profile());
       default:
@@ -85,18 +89,22 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         body: getPage(context, _selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           selectedItemColor: Colors.black,
           unselectedItemColor: Colors.grey,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Image.asset(_selectedIndex == 0 ? 'assets/images/carIconBlack.png' : 'assets/images/carIconGrey.png', width: 20), label: 'Rides'),
+                icon: Icon(Icons.directions_car), label: 'Rides'),
             BottomNavigationBarItem(
-                icon: Image.asset(_selectedIndex == 1 ? 'assets/images/clockIconBlack.png' : 'assets/images/clockIconGrey.png', width: 20), label: 'History'),
+                icon: Icon(Icons.schedule), label: 'History'),
             BottomNavigationBarItem(
-                icon: Image.asset(_selectedIndex == 2 ? 'assets/images/profileIconBlack.png' : 'assets/images/profileIconGrey.png', width: 20), label: 'Profile')
+                icon: Icon(Icons.notifications), label: 'Notifications'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person), label: 'Profile')
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
+          showUnselectedLabels: true,
         ),
       ),
     );
