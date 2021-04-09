@@ -140,10 +140,19 @@ class RidesStateless extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool emptyMainPage = interactive && currentRides.isEmpty && remainingRides.isEmpty; // no current or remaining
-    bool emptyPreviewPage = !interactive && remainingRides.isEmpty; // the ride we're switching from will be a current ride
+    bool emptyPreviewPage = !interactive && remainingRides.isEmpty; // the ride we're switching from will be a current ride, so just check remaining
     
     return Stack(
       children: [
+        emptyMainPage || emptyPreviewPage ? Container(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              emptyPage(context),
+            ],
+          ),
+        ) : Container(),
         Container(
             height: MediaQuery.of(context).size.height,
             child: ListView(
@@ -171,7 +180,6 @@ class RidesStateless extends StatelessWidget {
                               ]
                           ),
                         ),
-                        emptyMainPage || emptyPreviewPage ? emptyPage(context) : Container(),
                         interactive && currentRides.length > 0
                             ? ridesInProgress(context)
                             : Container(),
@@ -207,8 +215,7 @@ class RidesStateless extends StatelessWidget {
                   onPressed: onDropoff),
             ),
           ),
-        )
-            : Container()
+        ) : Container()
       ],
     );
   }
@@ -288,9 +295,7 @@ class _RidesState extends State<Rides> {
     return !ridesProvider.hasActiveRides() ? Center(child: CircularProgressIndicator()) :
     widget.interactive ? RefreshIndicator(
         onRefresh: () async {
-          if (widget.interactive) {
-            await ridesProvider.requestActiveRides(appConfig, authProvider);
-          }
+          await ridesProvider.requestActiveRides(appConfig, authProvider);
         },
         child: page
     ) : page;
