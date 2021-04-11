@@ -54,6 +54,8 @@ class _HomeState extends State<Home> {
   static const int PROFILE = 3;
 
   int _selectedIndex = RIDES;
+  //TODO: figure out if there's been a new notification
+  bool hasNewNotification = true;
 
   @override
   void initState() {
@@ -84,6 +86,27 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    Widget notifIcon = Icon(Icons.notifications);
+    Widget notifWidget = hasNewNotification ?
+    Stack(
+        children: [
+          notifIcon,
+          Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                  width: 9,
+                  height: 9,
+                  padding: EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(100),
+                  )
+              )
+          )
+        ]
+    ) : notifIcon;
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -98,7 +121,7 @@ class _HomeState extends State<Home> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.schedule), label: 'History'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), label: 'Notifications'),
+                icon: notifWidget, label: 'Notifications'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.person), label: 'Profile')
           ],
