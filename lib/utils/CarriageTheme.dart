@@ -77,6 +77,7 @@ class CarriageTheme {
   static Color gray1 = Color.fromRGBO(74, 74, 74, 1);
   static Color gray2 = Color.fromRGBO(132, 132, 132, 1);
   static Color gray3 = Color.fromRGBO(167, 167, 167, 1);
+  static Color backgroundColor = Color.fromRGBO(250, 250, 250, 0.9);
 
   static BoxShadow shadow = BoxShadow(
       blurRadius: 2,

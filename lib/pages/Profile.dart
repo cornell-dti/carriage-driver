@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
-import 'package:carriage/models/Driver.dart';
+import 'package:carriage/pages/NotificationSettings.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-
 import '../main_common.dart';
 import '../utils/app_config.dart';
 import 'dart:ui';
@@ -28,10 +26,9 @@ class Profile extends StatelessWidget {
     double _picMarginTB = _picDiameter / 4;
     double _picBtnDiameter = _picDiameter * 0.39;
 
-    Color backgroundColor = Color.fromRGBO(250, 250, 250, 0.9);
     Widget sectionDivider = Container(
         height: 6,
-        color: backgroundColor
+        color: CarriageTheme.backgroundColor
     );
 
     if (driverProvider.hasInfo()) {
@@ -42,7 +39,7 @@ class Profile extends StatelessWidget {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
-                color: backgroundColor,
+                color: CarriageTheme.backgroundColor,
                 child: Padding(
                   padding: EdgeInsets.only(
                       left: 24,
@@ -155,7 +152,7 @@ class Profile extends StatelessWidget {
               sectionDivider,
               SizedBox(height: 8),
               //TODO: implement these pages
-              SettingRow('Notifications', 'Set your notification preferences', Container()),
+              SettingRow('Notifications', 'Set your notification preferences', NotificationSettings()),
               SettingRow('Privacy', 'Choose what data you share with us', Container()),
               SettingRow('Legal', 'Terms of Service & Privacy Policy', Container()),
               sectionDivider,
@@ -296,8 +293,8 @@ class InfoGroup extends StatelessWidget {
 
 class EditName extends StatefulWidget {
   EditName(this.initialFirstName, this.initialLastName);
-  String initialFirstName;
-  String initialLastName;
+  final String initialFirstName;
+  final String initialLastName;
   @override
   _EditNameState createState() => _EditNameState();
 }
@@ -437,7 +434,6 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
   @override
   Widget build(BuildContext context) {
     DriverProvider driverProvider = Provider.of<DriverProvider>(context);
-    FocusScopeNode focus = FocusScope.of(context);
 
     return Scaffold(
         body: LoadingOverlay(

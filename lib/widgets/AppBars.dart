@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../pages/Home.dart';
 
-class ReturnHomeBar extends StatelessWidget implements PreferredSizeWidget {
+class BackBar extends StatelessWidget implements PreferredSizeWidget {
+  BackBar(this.text, this.backgroundColor);
+  final String text;
+  final Color backgroundColor;
+
   static final double prefHeight = 80;
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: backgroundColor,
       height: prefHeight,
       child: Column(
         children: [
@@ -30,7 +35,7 @@ class ReturnHomeBar extends StatelessWidget implements PreferredSizeWidget {
                       );
                     },
                   ),
-                  Text("Home", style: TextStyle(fontSize: 17))
+                  Text(text, style: TextStyle(fontSize: 17))
                 ]),
           ),
         ],

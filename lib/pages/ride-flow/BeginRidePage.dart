@@ -50,7 +50,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: ReturnHomeBar(),
+        appBar: BackBar('Home', Colors.white),
         body: LoadingOverlay(
           color: Colors.white,
           opacity: 0.3,

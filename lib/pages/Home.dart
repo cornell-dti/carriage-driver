@@ -1,10 +1,8 @@
 import 'package:carriage/pages/RideHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/AuthProvider.dart';
 import '../utils/LocationTracker.dart';
 import 'Rides.dart';
-import '../main_common.dart';
 import 'Profile.dart';
 import '../providers/DriverProvider.dart';
 import '../utils/CarriageTheme.dart';
