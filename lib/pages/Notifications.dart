@@ -2,7 +2,6 @@ import 'package:carriage/models/Ride.dart';
 import 'package:carriage/providers/RidesProvider.dart';
 import 'package:carriage/utils/CarriageTheme.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage/widgets/Notification.dart';
 
