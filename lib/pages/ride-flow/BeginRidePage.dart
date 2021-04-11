@@ -8,6 +8,7 @@ import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import '../../providers/RidesProvider.dart';
 import '../../utils/CarriageTheme.dart';
+import '../Home.dart';
 import 'OnTheWayPage.dart';
 
 class BeginRidePage extends StatefulWidget {
@@ -50,7 +51,9 @@ class _BeginRidePageState extends State<BeginRidePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: BackBar('Home', Colors.white),
+        appBar: BackBar('Home', Colors.white, action: () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) => Home())
+        )),
         body: LoadingOverlay(
           color: Colors.white,
           opacity: 0.3,

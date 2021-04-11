@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../pages/Home.dart';
 
 class BackBar extends StatelessWidget implements PreferredSizeWidget {
-  BackBar(this.text, this.backgroundColor);
+  BackBar(this.text, this.backgroundColor, {this.action});
   final String text;
   final Color backgroundColor;
+  final Function action;
 
   static final double prefHeight = 80;
   @override
@@ -17,9 +18,7 @@ class BackBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Expanded(child: SizedBox()),
           GestureDetector(
-            onTap: () => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (BuildContext context) => Home())
-            ),
+            onTap: () => action != null ? action : Navigator.of(context).pop(),
             child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,

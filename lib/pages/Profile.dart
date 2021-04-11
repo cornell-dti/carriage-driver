@@ -330,15 +330,7 @@ class _EditNameState extends State<EditName> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      GestureDetector(
-                        child: Container(
-                            width: 32, height: 32,
-                            child: Icon(Icons.arrow_back_ios, size: 16)
-                        ),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
+                      ProfileBackButton(),
                       SizedBox(height: MediaQuery.of(context).size.height / 8),
                       Form(
                           key: _formKey,
@@ -448,15 +440,7 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      GestureDetector(
-                        child: Container(
-                            width: 32, height: 32,
-                            child: Icon(Icons.arrow_back_ios, size: 16)
-                        ),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
+                      ProfileBackButton(),
                       SizedBox(height: MediaQuery.of(context).size.height / 8),
                       Form(
                           key: _formKey,
@@ -546,6 +530,21 @@ class SignOutButton extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class ProfileBackButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child: Container(
+          width: 24, height: 24,
+          child: Icon(Icons.arrow_back_ios, size: 16)
+      ),
+      onTap: () {
+        Navigator.of(context).pop();
+      },
     );
   }
 }
