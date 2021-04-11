@@ -72,7 +72,7 @@ class _HomeState extends State<Home> {
       case (HISTORY):
         return RideHistory();
       case (PROFILE):
-        return SingleChildScrollView(child: Profile());
+        return Profile();
       default:
         return Column();
     }
@@ -99,21 +99,6 @@ class _HomeState extends State<Home> {
           onTap: _onItemTapped,
         ),
       ),
-    );
-  }
-}
-
-class SignOutButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    return RaisedButton(
-      child: Text('Sign out', textAlign: TextAlign.start),
-      onPressed: () {
-        authProvider.signOut();
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => HomeOrLogin()));
-      },
     );
   }
 }
