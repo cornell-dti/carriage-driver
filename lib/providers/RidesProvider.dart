@@ -72,6 +72,7 @@ class RidesProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       List<Ride> rides = ridesFromJson(response.body);
+      print(rides);
       currentRides = [];
       remainingRides = [];
       for (Ride r in rides) {

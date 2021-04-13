@@ -1,5 +1,7 @@
 import 'package:carriage/providers/AuthProvider.dart';
+import 'package:carriage/providers/PageNavigationProvider.dart';
 import 'package:carriage/utils/app_config.dart';
+import 'package:carriage/widgets/Buttons.dart';
 
 import '../utils/MeasureRect.dart';
 import '../providers/RidesProvider.dart';
@@ -12,6 +14,7 @@ import '../widgets/RideCard.dart';
 import '../widgets/RideInProgressCard.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class RidesStateless extends StatelessWidget {
   final List<Ride> currentRides;
@@ -19,9 +22,10 @@ class RidesStateless extends StatelessWidget {
   final List<String> selectedRideIDs;
   final void Function() onDropoff;
   final void Function(Ride r) selectCallback;
-
   final OnWidgetRectChange firstCurrentRideRectCb;
   final OnWidgetRectChange firstRemainingRideRectCb;
+  final int scrollToHour;
+
   static void onChangeDefault(Rect s) {}
 
   const RidesStateless({
@@ -32,7 +36,8 @@ class RidesStateless extends StatelessWidget {
     this.onDropoff,
     this.selectCallback,
     this.firstCurrentRideRectCb = onChangeDefault,
-    this.firstRemainingRideRectCb = onChangeDefault
+    this.firstRemainingRideRectCb = onChangeDefault,
+    this.scrollToHour
   }) : super(key: key);
 
   Widget ridesInProgress(BuildContext context) {
@@ -68,7 +73,6 @@ class RidesStateless extends StatelessWidget {
       }
       return result;
     }
-
     return Container(
         child: Column(
             children: [
@@ -88,34 +92,35 @@ class RidesStateless extends StatelessWidget {
     );
   }
 
-  Widget rideCards(BuildContext context, List<Ride> rides) {
-    Map<int, List<Ride>> rideGroups = Map();
-    for (Ride ride in rides) {
-      int hour = ride.startTime.hour;
-      if (rideGroups.containsKey(hour)) {
-        rideGroups[hour].add(ride);
-      } else {
-        rideGroups[hour] = [ride];
-      }
-    }
-    List<int> hours = rideGroups.keys.toList();
-    return ListView.separated(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: hours.length,
-      itemBuilder: (context, index) {
-        int hour = hours[index];
-        return RideGroup(
-            rideGroups[hour], hour, index, firstRemainingRideRectCb);
-      },
-      separatorBuilder: (context, index) {
-        return SizedBox(height: 32);
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    Map<int, List<Ride>> groupsByHour = Map();
+    for (Ride ride in remainingRides) {
+      int hour = ride.startTime.hour;
+      if (groupsByHour.containsKey(hour)) {
+        groupsByHour[hour].add(ride);
+      } else {
+        groupsByHour[hour] = [ride];
+      }
+    }
+    List<int> hours = groupsByHour.keys.toList();
+    List<RideGroup> rideGroups = [];
+    Map<int, GlobalKey> keysByHour = Map();
+    hours.forEach((hour) {
+      keysByHour[hour] = GlobalKey();
+    });
+    hours.asMap().forEach((index, hour) {
+      rideGroups.add(
+          RideGroup(keysByHour[hour], groupsByHour[hour], hour, index, firstRemainingRideRectCb)
+      );
+    });
+
+    Widget rideCards = SingleChildScrollView(
+      child: Column(
+          children: rideGroups
+      ),
+    );
+
     return Stack(
       children: [
         Container(
@@ -140,7 +145,7 @@ class RidesStateless extends StatelessWidget {
                         selectedRideIDs.isEmpty
                             ? Padding(
                           padding: EdgeInsets.only(bottom: 32),
-                          child: rideCards(context, remainingRides),
+                          child: rideCards,
                         )
                             : Container()
                       ])
@@ -170,14 +175,34 @@ class RidesStateless extends StatelessWidget {
                   onPressed: onDropoff),
             ),
           ),
-        )
-            : Container()
+        ) : Container(),
+        Positioned(top: 0, left: 0, child: CButton(
+            hasShadow: true,
+            text: 'test',
+            onPressed: () {
+              PageNavigationProvider pageNavProvider = Provider.of<PageNavigationProvider>(context, listen: false);
+              int hourToScrollTo = pageNavProvider.getHourToScrollTo();
+              if (hourToScrollTo != null) {
+                print('trying to scroll to $hourToScrollTo');
+                Future.delayed(Duration(milliseconds: 500), () {
+                  print(keysByHour[hourToScrollTo].currentContext);
+                  print(keysByHour);
+                  Scrollable.ensureVisible(keysByHour[hourToScrollTo].currentContext, duration: Duration(milliseconds: 300));
+                  print(keysByHour[hourToScrollTo].currentContext);
+                  //pageNavProvider.finishScroll();
+                });
+              }
+            }
+        ),)
       ],
     );
   }
 }
 
 class Rides extends StatefulWidget {
+  Rides({this.scrollToHour});
+  final int scrollToHour;
+
   @override
   _RidesState createState() => _RidesState();
 }
@@ -261,6 +286,7 @@ class _RidesState extends State<Rides> {
             });
           },
           selectCallback: _selectRide,
+          scrollToHour: widget.scrollToHour,
         ),
       ),
     );
@@ -288,8 +314,8 @@ class RideGroupTitle extends StatelessWidget {
 }
 
 class RideGroup extends StatelessWidget {
-  RideGroup(
-      this.rides, this.hour, this.groupIndex, this.firstRemainingRideRectCb);
+  RideGroup(this.key, this.rides, this.hour, this.groupIndex, this.firstRemainingRideRectCb): super(key: key);
+  final GlobalKey key;
   final int hour;
   final List<Ride> rides;
   final int groupIndex;
@@ -310,7 +336,7 @@ class RideGroup extends StatelessWidget {
     String title = '$hour12:00 ~ $hour12:50 ' + period;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.only(left: 16, right: 16, bottom: 24),
       child: ListView.separated(
         itemCount: rides.length + 1,
         itemBuilder: (context, index) {

@@ -26,7 +26,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
-    Ride ride = Provider.of<RidesProvider>(context, listen: false).pastRides.first;
+    Ride ride = Provider.of<RidesProvider>(context, listen: false).remainingRides.last;
     return Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
