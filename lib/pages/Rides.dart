@@ -94,7 +94,9 @@ class RidesStateless extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController scrollCtrl = ScrollController();
     Map<int, List<Ride>> groupsByHour = Map();
+
     for (Ride ride in remainingRides) {
       int hour = ride.startTime.hour;
       if (groupsByHour.containsKey(hour)) {
@@ -115,10 +117,20 @@ class RidesStateless extends StatelessWidget {
       );
     });
 
-    Widget rideCards = SingleChildScrollView(
-      child: Column(
-          children: rideGroups
-      ),
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      PageNavigationProvider pageNavProvider = Provider.of<PageNavigationProvider>(context, listen: false);
+      int hourToScrollTo = pageNavProvider.getHourToScrollTo();
+      if (hourToScrollTo != null) {
+        RenderBox renderBox = keysByHour[hourToScrollTo].currentContext.findRenderObject();
+        double yPos = renderBox.localToGlobal(Offset(0, -50)).dy;
+        scrollCtrl.animateTo(yPos, duration: Duration(milliseconds: 500), curve: Curves.ease);
+      }
+    });
+
+    Widget rideCards = ListView(
+      shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        children: rideGroups
     );
 
     return Stack(
@@ -126,6 +138,7 @@ class RidesStateless extends StatelessWidget {
         Container(
             height: MediaQuery.of(context).size.height,
             child: ListView(
+                controller: scrollCtrl,
                 physics: AlwaysScrollableScrollPhysics(),
                 children: [
                   Column(
@@ -176,24 +189,6 @@ class RidesStateless extends StatelessWidget {
             ),
           ),
         ) : Container(),
-        Positioned(top: 0, left: 0, child: CButton(
-            hasShadow: true,
-            text: 'test',
-            onPressed: () {
-              PageNavigationProvider pageNavProvider = Provider.of<PageNavigationProvider>(context, listen: false);
-              int hourToScrollTo = pageNavProvider.getHourToScrollTo();
-              if (hourToScrollTo != null) {
-                print('trying to scroll to $hourToScrollTo');
-                Future.delayed(Duration(milliseconds: 500), () {
-                  print(keysByHour[hourToScrollTo].currentContext);
-                  print(keysByHour);
-                  Scrollable.ensureVisible(keysByHour[hourToScrollTo].currentContext, duration: Duration(milliseconds: 300));
-                  print(keysByHour[hourToScrollTo].currentContext);
-                  //pageNavProvider.finishScroll();
-                });
-              }
-            }
-        ),)
       ],
     );
   }
