@@ -345,10 +345,12 @@ class _EditNameState extends State<EditName> {
                                   onFieldSubmitted: (value) { focus.nextFocus(); },
                                   decoration: InputDecoration(
                                     labelText: 'First Name',
-
+                                    labelStyle: TextStyle(color: CarriageTheme.gray2),
+                                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                                     suffixIcon: IconButton(
                                       onPressed: firstNameCtrl.clear,
-                                      icon: Icon(Icons.cancel_outlined, size: 16),
+                                      icon: Icon(Icons.cancel_outlined, size: 16, color: Colors.black),
                                     ),
                                   ),
                                   validator: (input) {
@@ -364,9 +366,12 @@ class _EditNameState extends State<EditName> {
                                   textInputAction: TextInputAction.go,
                                   decoration: InputDecoration(
                                     labelText: 'Last Name',
+                                    labelStyle: TextStyle(color: CarriageTheme.gray2),
+                                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                                     suffixIcon: IconButton(
                                       onPressed: lastNameCtrl.clear,
-                                      icon: Icon(Icons.cancel_outlined, size: 16),
+                                      icon: Icon(Icons.cancel_outlined, size: 16, color: Colors.black),
                                     ),
                                   ),
                                   validator: (input) {
@@ -452,9 +457,12 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               labelText: 'Phone Number',
+                              labelStyle: TextStyle(color: CarriageTheme.gray2),
+                              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                               suffixIcon: IconButton(
                                 onPressed: phoneNumberCtrl.clear,
-                                icon: Icon(Icons.cancel_outlined, size: 16),
+                                icon: Icon(Icons.cancel_outlined, size: 16, color: Colors.black),
                               ),
                             ),
                             validator: (input) {
