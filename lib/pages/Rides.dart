@@ -1,8 +1,6 @@
 import 'package:carriage/providers/AuthProvider.dart';
 import 'package:carriage/providers/PageNavigationProvider.dart';
 import 'package:carriage/utils/app_config.dart';
-import 'package:carriage/widgets/Buttons.dart';
-
 import '../utils/MeasureRect.dart';
 import '../providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +12,6 @@ import '../widgets/RideCard.dart';
 import '../widgets/RideInProgressCard.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class RidesStateless extends StatelessWidget {
   final List<Ride> currentRides;

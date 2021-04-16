@@ -29,7 +29,6 @@ class PageNavigationProvider extends ChangeNotifier {
 
   void setScrollHour(int hour) {
     scrollHour = hour;
-    print('scrollToRideGroup: $hour');
     notifyListeners();
   }
 
