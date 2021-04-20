@@ -54,6 +54,7 @@ class AuthProvider with ChangeNotifier {
         Map<String, dynamic> jwt = JwtDecoder.decode(token);
         id = jwt['id'];
         await secureStorage.write(key: 'token', value: token);
+
         notifyListeners();
       } else {
         id = null;

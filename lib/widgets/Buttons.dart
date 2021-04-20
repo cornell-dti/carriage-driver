@@ -126,19 +126,11 @@ class NotifyButton extends StatelessWidget {
 class CalendarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16),
-      child: Row(
-          children: [
-            Spacer(),
-            GestureDetector(
-                child: Image.asset('assets/images/calendarButton.png', width: 20, height: 20,),
-                onTap: () {
-                  //TODO: view switching functionality
-                }
-            )
-          ]
-      ),
+    return GestureDetector(
+        child: Image.asset('assets/images/calendarButton.png', width: 20, height: 20,),
+        onTap: () {
+          //TODO: view switching functionality
+        }
     );
   }
 }

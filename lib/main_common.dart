@@ -1,3 +1,4 @@
+import 'package:carriage/pages/Onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
                     bodyText2: TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal),
                   )
               ),
-              home: HomeOrLogin()),
+              home: Onboarding()),
         ),
       ),
     );

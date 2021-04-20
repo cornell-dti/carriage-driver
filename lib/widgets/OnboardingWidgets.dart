@@ -1,4 +1,5 @@
 import 'package:carriage/pages/Onboarding.dart';
+import 'package:carriage/utils/CarriageTheme.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -25,27 +26,30 @@ class RectPositioned extends StatelessWidget {
 }
 
 class OnboardingBubble extends StatelessWidget {
-  final Widget heading;
-  final String text;
+  final String title;
+  final String body;
   final NipLocation nipLocation;
 
   static double borderRadius = 11;
 
   const OnboardingBubble(
-      {Key key, @required this.text, @required this.heading, this.nipLocation})
+      {Key key, @required this.title, @required this.body, this.nipLocation})
       : super(key: key);
 
   Widget _inner() {
     return Padding(
-        padding: const EdgeInsets.only(left: 8, right: 8, top: 11),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 20),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              heading,
-              SizedBox(height: 3),
-              Text(text, style: TextStyle(fontSize: 14, color: Colors.white))
-            ]));
+              Text(title, style: CarriageTheme.title3.copyWith(color: Colors.white)),
+              SizedBox(height: 16),
+              Text(body, style: TextStyle(fontSize: 15, color: Colors.white))
+            ]
+        )
+    );
   }
 
   @override
@@ -60,37 +64,15 @@ class OnboardingBubble extends StatelessWidget {
         ]),
         child: nipLocation == null
             ? Container(
-                decoration: BoxDecoration(
-                    color: highlightColor,
-                    borderRadius: BorderRadius.circular(borderRadius)),
-                child: Padding(padding: EdgeInsets.all(6.0), child: _inner()))
-            : SpeechBubble(
+            decoration: BoxDecoration(
                 color: highlightColor,
-                borderRadius: borderRadius,
-                nipLocation: nipLocation,
-                child: _inner()));
-  }
-}
-
-class TryItBubble extends StatelessWidget {
-  final String text;
-  final bool down;
-
-  const TryItBubble({Key key, @required this.text, @required this.down})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return OnboardingBubble(
-        nipLocation: down ? NipLocation.BOTTOM : NipLocation.TOP,
-        heading: RichText(
-            text: TextSpan(
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                children: [
-              TextSpan(text: "Try it "),
-              TextSpan(text: down ? "👇" : "☝️")
-            ])),
-        text: text);
+                borderRadius: BorderRadius.circular(borderRadius)),
+            child: Padding(padding: EdgeInsets.all(6.0), child: _inner()))
+            : SpeechBubble(
+            color: highlightColor,
+            borderRadius: borderRadius,
+            nipLocation: nipLocation,
+            child: _inner()));
   }
 }
 
@@ -104,43 +86,28 @@ class CallbackPiper<T> {
   }
 }
 
-class OverlayShadow extends StatelessWidget {
-  final Widget child;
-  final Widget overlay;
-
-  const OverlayShadow({Key key, this.overlay, this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [child, Container(color: overlayColor), overlay],
-    );
-  }
-}
-
-class OverlayWithHighlight extends StatefulWidget {
+class OnboardingOverlay extends StatefulWidget {
   final Widget child;
   final Widget Function(BuildContext context, Rect highlightRect)
-      overlayBuilder;
+  overlayBuilder;
   final double radius;
   final CallbackPiper<Rect> highlightPiper;
 
-  const OverlayWithHighlight(
+  const OnboardingOverlay(
       {Key key,
-      this.overlayBuilder,
-      this.child,
-      this.highlightPiper,
-      this.radius = 5})
+        this.overlayBuilder,
+        this.child,
+        this.highlightPiper,
+        this.radius = 5})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return OverlayWithHighlightState();
+    return OnboardingOverlayState();
   }
 }
 
-class OverlayWithHighlightState extends State<OverlayWithHighlight> {
+class OnboardingOverlayState extends State<OnboardingOverlay> {
   Rect highlightRect = Rect.largest;
 
   void setRect(Rect s) {
@@ -158,7 +125,7 @@ class OverlayWithHighlightState extends State<OverlayWithHighlight> {
   }
 
   @override
-  void didUpdateWidget(OverlayWithHighlight oldWidget) {
+  void didUpdateWidget(OnboardingOverlay oldWidget) {
     super.didUpdateWidget(oldWidget);
     highlightRect = Rect.largest;
     widget.highlightPiper.onCallback = (rect) {
@@ -166,31 +133,11 @@ class OverlayWithHighlightState extends State<OverlayWithHighlight> {
     };
   }
 
-  Widget _shadow() {
-    return ColorFiltered(
-        colorFilter: ColorFilter.mode(overlayColor, BlendMode.srcOut),
-        child: Stack(children: [
-          Container(decoration: BoxDecoration(color: Colors.transparent)),
-          Positioned(
-              top: highlightRect.top,
-              left: highlightRect.left,
-              width: highlightRect.width,
-              height: highlightRect.height,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    border: Border.all(color: highlightColor, width: 10),
-                    borderRadius: BorderRadius.circular(widget.radius)),
-              )),
-        ]));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         widget.child,
-        _shadow(),
         Positioned(
             top: 0,
             left: 0,
@@ -198,7 +145,8 @@ class OverlayWithHighlightState extends State<OverlayWithHighlight> {
             right: 0,
             child: highlightRect != Rect.largest
                 ? widget.overlayBuilder(context, highlightRect)
-                : SizedBox())
+                : SizedBox()
+        )
       ],
     );
   }
