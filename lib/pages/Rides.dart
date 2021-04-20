@@ -297,17 +297,10 @@ class RideGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int hour12 = hour;
-    String period;
-    if (hour < 12) {
-      period = 'AM';
-    } else {
-      period = 'PM';
-      if (hour > 12) {
-        hour12 -= 12;
-      }
-    }
-    String title = '$hour12:00 ~ $hour12:50 ' + period;
+    DateTime startHour = DateTime(0, 0, 0, hour, 0);
+    DateTime endHour = startHour.add(Duration(hours: 1));
+
+    String title = DateFormat('jm').format(startHour) + ' ~ ' + DateFormat('jm').format(endHour);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
