@@ -12,16 +12,22 @@ class CButton extends StatelessWidget {
 
   CButton(
       {@required this.text,
-      @required this.hasShadow,
-      @required this.onPressed});
+        @required this.hasShadow,
+        @required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    Widget button = FlatButton(
-      padding: EdgeInsets.all(16),
-      color: Colors.black,
-      child: Text(text, style: CarriageTheme.button),
-      onPressed: onPressed,
+    Widget button = GestureDetector(
+      child: Container(
+          decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(3)
+          ),
+          width: double.infinity,
+          padding: EdgeInsets.all(16),
+          child: Center(child: Text(text, style: CarriageTheme.button))
+      ),
+      onTap: onPressed,
     );
 
     if (hasShadow) {
@@ -106,26 +112,29 @@ class NotifyButton extends StatelessWidget {
       showDialog(
           context: context,
           builder: (_) => ConfirmDialog(
-                title: "Notify Delay",
-                content: "Would you like to notify the rider of a delay?",
-                actionName: "Notify",
-                onConfirm: () {
-                  // TODO: notify delay functionality
-                },
-              ),
+            title: "Notify Delay",
+            content: "Would you like to notify the rider of a delay?",
+            actionName: "Notify",
+            onConfirm: () {
+              // TODO: notify delay functionality
+            },
+          ),
           barrierDismissible: true);
     }, 40);
   }
 }
 
 class CalendarButton extends StatelessWidget {
+  CalendarButton({this.highlight = false});
+  final bool highlight;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         child: Image.asset(
-          'assets/images/calendarButton.png',
-          width: 20,
-          height: 20,
+          highlight ? 'assets/images/highlightedCalendarButton.png' : 'assets/images/calendarButton.png',
+          width: highlight ? 24 : 20,
+          height: highlight ? 24 : 20,
         ),
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(

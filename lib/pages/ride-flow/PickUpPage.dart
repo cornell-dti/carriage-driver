@@ -70,7 +70,7 @@ class _PickUpPageState extends State<PickUpPage> {
                               Spacer(),
                               MeasureRect(
                                   onChange: widget.onContinueRectChange,
-                                  child: CalendarButton()
+                                  child: CalendarButton(highlight: true)
                               )
                             ]
                         ),
@@ -131,10 +131,10 @@ class _PickUpPageState extends State<PickUpPage> {
                       Container(
                         width: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.symmetric(horizontal: 34),
-                        child: widget.highlightScheduleButton ? pickUpButton: MeasureRect(
+                        child: widget.highlightPickUpButton ? MeasureRect(
                             onChange: widget.onContinueRectChange,
                             child: pickUpButton
-                        ),
+                        ) : pickUpButton
                       ),
                       DangerButton(
                           text: "Report No Show",
