@@ -1,3 +1,4 @@
+import 'package:carriage/pages/Rides.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../utils/CarriageTheme.dart';
@@ -134,7 +135,15 @@ class CalendarButton extends StatelessWidget {
             GestureDetector(
                 child: Image.asset('assets/images/calendarButton.png', width: 20, height: 20,),
                 onTap: () {
-                  //TODO: view switching functionality
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => Scaffold(
+                              body: SafeArea(
+                                  child: Rides(interactive: false)
+                              )
+                          )
+                      )
+                  );
                 }
             )
           ]

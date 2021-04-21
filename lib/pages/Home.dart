@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
   Widget getPage(BuildContext context, int index) {
     switch (index) {
       case (RIDES):
-        return Rides();
+        return Rides(interactive: true);
       case (HISTORY):
         return RideHistory();
       case (PROFILE):
