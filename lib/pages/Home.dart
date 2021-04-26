@@ -5,14 +5,12 @@ import '../providers/AuthProvider.dart';
 import '../utils/LocationTracker.dart';
 import '../main_common.dart';
 
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-
   //TODO: figure out if there's been a new notification
   bool hasNewNotification = true;
 
@@ -25,27 +23,25 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     Widget notifIcon = Icon(Icons.notifications);
-    Widget notifWidget = hasNewNotification ?
-    Stack(
-        children: [
-          notifIcon,
-          Positioned(
-              top: 0,
-              right: 0,
-              child: Container(
-                  width: 9,
-                  height: 9,
-                  padding: EdgeInsets.all(1),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(100),
-                  )
-              )
-          )
-        ]
-    ) : notifIcon;
+    Widget notifWidget = hasNewNotification
+        ? Stack(children: [
+            notifIcon,
+            Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                    width: 9,
+                    height: 9,
+                    padding: EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(100),
+                    )))
+          ])
+        : notifIcon;
 
-    PageNavigationProvider pageNavProvider = Provider.of<PageNavigationProvider>(context);
+    PageNavigationProvider pageNavProvider =
+        Provider.of<PageNavigationProvider>(context);
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -60,10 +56,8 @@ class _HomeState extends State<Home> {
                 icon: Icon(Icons.directions_car), label: 'Rides'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.schedule), label: 'History'),
-            BottomNavigationBarItem(
-                icon: notifWidget, label: 'Notifications'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person), label: 'Profile')
+            BottomNavigationBarItem(icon: notifWidget, label: 'Notifications'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
           ],
           currentIndex: pageNavProvider.getPageIndex(),
           onTap: (index) => pageNavProvider.changePage(index),
