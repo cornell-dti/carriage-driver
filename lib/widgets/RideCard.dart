@@ -18,13 +18,18 @@ class RideCard extends StatefulWidget {
 
 class _RideCardState extends State<RideCard> {
   final imageRadius = 24;
-  Size spacerSize;
   GlobalKey stackKey = GlobalKey();
   GlobalKey dropoffKey = GlobalKey();
-  Size pickupTextSize;
+  double accessibilityWidth = 0;
+  double buttonsWidth;
 
   @override
   Widget build(BuildContext context) {
+    double padding = 24;
+    double margin = 16;
+    double profilePictureSize = 48;
+    double picNameSpacing = 16;
+
     return GestureDetector(
         onTap: () {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -37,35 +42,50 @@ class _RideCardState extends State<RideCard> {
                 boxShadow: [CarriageTheme.shadow],
                 borderRadius: BorderRadius.circular(12)),
             child: Padding(
-              padding: EdgeInsets.all(24),
+              padding: EdgeInsets.all(padding),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                         children: [
-                          widget.ride.rider.profilePicture(48),
-                          SizedBox(width: 16),
+                          widget.ride.rider.profilePicture(profilePictureSize),
+                          SizedBox(width: picNameSpacing),
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(widget.ride.rider.firstName,
                                     style: CarriageTheme.title3),
                                 SizedBox(height: 4),
-                                widget.ride.rider.accessibilityNeeds.length > 0
-                                    ? Text(
-                                    widget.ride.rider.accessibilityNeeds
-                                        .join(', '),
-                                    style: TextStyle(
-                                        color: CarriageTheme.gray2,
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 15)
+                                widget.ride.rider.accessibilityNeeds.length > 0 && accessibilityWidth > 0 ?
+                                Container(
+                                  width: accessibilityWidth,
+                                  child: Text(
+                                      widget.ride.rider.accessibilityNeeds
+                                          .join(', '),
+                                      style: TextStyle(
+                                          color: CarriageTheme.gray2,
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 15)
+                                  ),
                                 ) : Container()
                               ]
                           ),
-                          Spacer(),
-                          CallButton(widget.ride.rider.phoneNumber, 40),
-                          SizedBox(width: 8),
-                          NotifyButton()
+                          accessibilityWidth == 0 || widget.ride.rider.accessibilityNeeds.length == 0 ? Spacer() : Container(),
+                          MeasureSize(
+                            onChange: (size) {
+                              setState(() {
+                                buttonsWidth = size.width;
+                                accessibilityWidth = MediaQuery.of(context).size.width - (2*margin) - (2*padding) - buttonsWidth - profilePictureSize - picNameSpacing;
+                              });
+                            },
+                            child: Row(
+                                children: [
+                                  CallButton(widget.ride.rider.phoneNumber, 40),
+                                  SizedBox(width: 8),
+                                  NotifyButton()
+                                ]
+                            ),
+                          )
                         ]),
                     SizedBox(height: 32),
                     TimeLine(widget.ride)
