@@ -40,7 +40,7 @@ class PageNavigationProvider extends ChangeNotifier {
   Widget getPage() {
     switch (_pageIndex) {
       case (RIDES):
-        return Rides(scrollToHour: scrollHour);
+        return Rides(scrollToHour: scrollHour, interactive: true);
       case (HISTORY):
         return RideHistory();
       case (NOTIFS):

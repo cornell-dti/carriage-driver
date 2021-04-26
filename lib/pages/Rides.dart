@@ -36,13 +36,16 @@ class RidesStateless extends StatelessWidget {
     this.selectCallback,
     this.firstCurrentRideRectCb = onChangeDefault,
     this.firstRemainingRideRectCb = onChangeDefault,
-    this.scrollToHour
+    this.scrollToHour,
     this.interactive
 
   }) : super(key: key);
 
   Widget emptyPage(BuildContext context) {
-    double imageSize = MediaQuery.of(context).size.width * 0.2;
+    double imageSize = MediaQuery
+        .of(context)
+        .size
+        .width * 0.2;
     return Center(
       child: Column(
         children: <Widget>[
@@ -66,7 +69,10 @@ class RidesStateless extends StatelessWidget {
       double spacing = 16;
       List<Widget> rideCards = currentRides.asMap().map((i, ride) {
         Widget card = Container(
-            width: (MediaQuery.of(context).size.width / 2) - (spacing * 1.5),
+            width: (MediaQuery
+                .of(context)
+                .size
+                .width / 2) - (spacing * 1.5),
             child: RideInProgressCard(Key(ride.id), ride,
                 selectedRideIDs.contains(ride.id), selectCallback
             )
@@ -134,44 +140,56 @@ class RidesStateless extends StatelessWidget {
     });
     hours.asMap().forEach((index, hour) {
       rideGroups.add(
-          RideGroup(keysByHour[hour], groupsByHour[hour], hour, index, firstRemainingRideRectCb)
+          RideGroup(keysByHour[hour], groupsByHour[hour], hour, index,
+              firstRemainingRideRectCb, interactive)
       );
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      PageNavigationProvider pageNavProvider = Provider.of<PageNavigationProvider>(context, listen: false);
+      PageNavigationProvider pageNavProvider = Provider.of<
+          PageNavigationProvider>(context, listen: false);
       int hourToScrollTo = pageNavProvider.getHourToScrollTo();
       if (hourToScrollTo != null) {
-        RenderBox renderBox = keysByHour[hourToScrollTo].currentContext.findRenderObject();
-        double yPos = renderBox.localToGlobal(Offset(0, -50)).dy;
-        scrollCtrl.animateTo(yPos, duration: Duration(milliseconds: 500), curve: Curves.ease);
+        RenderBox renderBox = keysByHour[hourToScrollTo].currentContext
+            .findRenderObject();
+        double yPos = renderBox
+            .localToGlobal(Offset(0, -50))
+            .dy;
+        scrollCtrl.animateTo(
+            yPos, duration: Duration(milliseconds: 500), curve: Curves.ease);
         pageNavProvider.finishScroll();
       }
     });
 
-    Widget rideCards = ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: hours.length,
-      itemBuilder: (context, index) {
-        int hour = hours[index];
-        return RideGroup(
-            rideGroups[hour], hour, index, firstRemainingRideRectCb, interactive);
-      },
-      separatorBuilder: (context, index) {
-        return SizedBox(height: 32);
-      },
-    );
+    Widget rideCards() {
+      return ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: hours.length,
+        itemBuilder: (context, index) {
+          int hour = hours[index];
+          return RideGroup(
+              keysByHour[hour], groupsByHour[hour], hour, index, firstRemainingRideRectCb, interactive
+          );
+        },
+        separatorBuilder: (context, index) {
+          return SizedBox(height: 32);
+        },
+      );
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    bool emptyMainPage = interactive && currentRides.isEmpty && remainingRides.isEmpty; // no current or remaining
-    bool emptyPreviewPage = !interactive && remainingRides.isEmpty; // the ride we're switching from will be a current ride, so just check remaining
-    
+    bool emptyMainPage = interactive && currentRides.isEmpty &&
+        remainingRides.isEmpty; // no current or remaining
+    bool emptyPreviewPage = !interactive && remainingRides
+        .isEmpty; // the ride we're switching from will be a current ride, so just check remaining
+
     return Stack(
       children: [
         emptyMainPage || emptyPreviewPage ? Container(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -180,7 +198,10 @@ class RidesStateless extends StatelessWidget {
           ),
         ) : Container(),
         Container(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery
+                .of(context)
+                .size
+                .height,
             child: ListView(
                 controller: scrollCtrl,
                 physics: AlwaysScrollableScrollPhysics(),
@@ -195,13 +216,17 @@ class RidesStateless extends StatelessWidget {
                           child: Row(
                               children: [
                                 Text(
-                                    DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
+                                    DateFormat('E').format(DateTime.now()) +
+                                        '. ' + DateFormat('Md').format(
+                                        DateTime.now()),
                                     style: CarriageTheme.largeTitle
                                 ),
                                 interactive ? Container() : Spacer(),
                                 interactive ?
                                 Container() : GestureDetector(
-                                  child: Image.asset('assets/images/carButton.png', width: 24, height: 21),
+                                  child: Image.asset(
+                                      'assets/images/carButton.png',
+                                      width: 24, height: 21),
                                   onTap: () => Navigator.of(context).pop(),
                                 )
                               ]
@@ -213,8 +238,9 @@ class RidesStateless extends StatelessWidget {
                         selectedRideIDs.isEmpty
                             ? Padding(
                           padding: EdgeInsets.only(bottom: 32),
-                          child: rideCards(context, remainingRides),
-                        ) : Container()]
+                          child: rideCards(),
+                        ) : Container()
+                      ]
                   )
                 ]
             )
@@ -223,7 +249,10 @@ class RidesStateless extends StatelessWidget {
             ? Positioned(
           bottom: 32,
           child: SizedBox(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             child: Padding(
               padding:
               const EdgeInsets.only(left: 34, right: 34),
@@ -233,7 +262,12 @@ class RidesStateless extends StatelessWidget {
                   child: Text(
                       'Drop off ' +
                           (selectedRideIDs.length == 1
-                              ? currentRides.where((ride) => ride.id == selectedRideIDs.single).single.rider.firstName
+                              ? currentRides
+                              .where((ride) =>
+                          ride.id == selectedRideIDs.single)
+                              .single
+                              .rider
+                              .firstName
                               : 'Multiple Passengers'),
                       style: TextStyle(
                           color: Colors.white,
@@ -299,24 +333,24 @@ class _RidesState extends State<Rides> {
         opacity: 0.3,
         isLoading: requestedDropOff,
         child: RidesStateless(
-              currentRides: ridesProvider.currentRides,
-              remainingRides: ridesProvider.remainingRides,
-              selectedRideIDs: selectedRideIDs,
-              onDropoff: () async {
-                setState(() {
-                  requestedDropOff = true;
-                });
-                for (String id in selectedRideIDs) {
-                  await finishRide(context, ridesProvider.currentRides.where((ride) => ride.id == id).single);
-                }
-                setState(() {
-                  selectedRideIDs = [];
-                  requestedDropOff = false;
-                });
-              },
-              selectCallback: _selectRide,
-              interactive: widget.interactive
-          ),
+            currentRides: ridesProvider.currentRides,
+            remainingRides: ridesProvider.remainingRides,
+            selectedRideIDs: selectedRideIDs,
+            onDropoff: () async {
+              setState(() {
+                requestedDropOff = true;
+              });
+              for (String id in selectedRideIDs) {
+                await finishRide(context, ridesProvider.currentRides.where((ride) => ride.id == id).single);
+              }
+              setState(() {
+                selectedRideIDs = [];
+                requestedDropOff = false;
+              });
+            },
+            selectCallback: _selectRide,
+            interactive: widget.interactive
+        ),
       ),
     );
 
