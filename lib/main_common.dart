@@ -78,7 +78,6 @@ class HomeOrOnboarding extends StatelessWidget {
     Future<bool> checkAndSetFirstLogin() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       bool firstLogin = prefs.getBool('loggedInPreviously') == null;
-      print(firstLogin);
       if (firstLogin) {
         await prefs.setBool('loggedInPreviously', true);
       }

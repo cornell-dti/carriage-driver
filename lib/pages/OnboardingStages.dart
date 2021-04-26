@@ -379,7 +379,6 @@ Widget startRideCard2(OnboardingState state, BuildContext context) {
           remaining: true
       ),
       overlayBuilder: (context, highlightRect) {
-        print(highlightRect);
         return Stack(
             children: [
               RectPositioned(
@@ -531,7 +530,7 @@ Widget checkYourSchedule(OnboardingState state, BuildContext context) {
 
 Widget _sampleSchedulePage(
     {void Function(Rect) carButtonRectCb =
-        RidesStateless.onChangeDefault}) {
+        RidesStateless.onChangeDefault, bool highlightCarButton}) {
   return IgnorePointer(
       child: RidesStateless(
         remainingRides: _sampleRides.sublist(2,4),
@@ -541,36 +540,68 @@ Widget _sampleSchedulePage(
         interactive: false,
         highlightRemainingRide: false,
         highlightFirstCurrentRide: false,
-        highlightCarButton: true,
+        highlightCarButton: highlightCarButton,
       )
   );
 }
 
-Widget schedulePage(OnboardingState state, BuildContext context) {
+Widget viewSchedulePage(OnboardingState state, BuildContext context) {
+  final piper = CallbackPiper<Rect>();
+  return OnboardingOverlay(
+      highlightPiper: piper,
+      noButton: true,
+      child: _sampleSchedulePage(
+          carButtonRectCb: (rect) {
+            piper.onCallback(rect);
+          },
+          highlightCarButton: false
+      ),
+      overlayBuilder: (context, highlightRect) {
+        return SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: Column(
+                        children: [
+                          OnboardingBubble(
+                            title: 'View Schedule',
+                            body: 'Check your schedule to make sure you are on track!',
+                          ),
+                          SizedBox(height: 16),
+                          CButton(text: 'Next', hasShadow: false, onPressed: () {
+                            state.nextStage(context);
+                          })
+                        ]
+                    )
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+  );
+}
+
+Widget scheduleButtonPage(OnboardingState state, BuildContext context) {
   final piper = CallbackPiper<Rect>();
   return OnboardingOverlay(
       highlightPiper: piper,
       child: _sampleSchedulePage(
-        carButtonRectCb: (rect) {
-          piper.onCallback(rect);
-        },
+          carButtonRectCb: (rect) {
+            piper.onCallback(rect);
+          },
+          highlightCarButton: true
       ),
       overlayBuilder: (context, highlightRect) {
-        print(highlightRect);
         return Stack(
             children: [
               RectPositioned(
                   rect: highlightRect,
                   child: highlightRegion(state, context, hide: true)
-              ),
-              Center(
-                  child: Container(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      child: OnboardingBubble(
-                        title: 'View Schedule',
-                        body: 'Check your schedule to make sure you are on track!',
-                      )
-                  )
               ),
               Positioned(
                 top: highlightRect.bottom + 8,
@@ -850,45 +881,41 @@ Widget refreshed(OnboardingState state, BuildContext context) {
         },
       ),
       overlayBuilder: (context, highlightRect) {
-        return Stack(
-            children: [
-              FutureBuilder(
-                  future: Future.delayed(Duration(seconds: 2)),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                  width: MediaQuery.of(context).size.width * 0.75,
-                                  child: Column(
-                                      children: [
-                                        OnboardingBubble(
-                                          title: "That's all!",
-                                          body: "You're ready to start using Carriage!",
-                                        ),
-                                        SizedBox(height: 16),
-                                        CButton(text: 'Start', hasShadow: false, onPressed: () {
-                                          Navigator.of(context).pushReplacement(
-                                              MaterialPageRoute(
-                                                  builder: (BuildContext context) => Home())
-                                          );
-                                        })
-                                      ]
-                                  )
-                              ),
-                            ],
-                          ),
+        return FutureBuilder(
+            future: Future.delayed(Duration(seconds: 2)),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            width: MediaQuery.of(context).size.width * 0.75,
+                            child: Column(
+                                children: [
+                                  OnboardingBubble(
+                                    title: "That's all!",
+                                    body: "You're ready to start using Carriage!",
+                                  ),
+                                  SizedBox(height: 16),
+                                  CButton(text: 'Start', hasShadow: false, onPressed: () {
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) => Home())
+                                    );
+                                  })
+                                ]
+                            )
                         ),
-                      );
-                    }
-                    return Container();
-                  }
-              ),
-            ]
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return Container();
+            }
         );
       }
   );
@@ -905,7 +932,8 @@ stageBuilders = [
   beginRidePage2,
   onTheWayPage2,
   checkYourSchedule,
-  schedulePage,
+  viewSchedulePage,
+  scheduleButtonPage,
   pickUpPage2,
   selectFirstCurrent,
   selectSecondCurrent,
