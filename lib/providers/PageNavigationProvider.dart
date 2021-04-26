@@ -34,6 +34,7 @@ class PageNavigationProvider extends ChangeNotifier {
 
   void finishScroll() {
     scrollHour = null;
+    notifyListeners();
   }
 
   Widget getPage() {

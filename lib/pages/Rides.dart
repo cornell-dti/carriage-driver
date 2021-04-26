@@ -121,6 +121,7 @@ class RidesStateless extends StatelessWidget {
         RenderBox renderBox = keysByHour[hourToScrollTo].currentContext.findRenderObject();
         double yPos = renderBox.localToGlobal(Offset(0, -50)).dy;
         scrollCtrl.animateTo(yPos, duration: Duration(milliseconds: 500), curve: Curves.ease);
+        pageNavProvider.finishScroll();
       }
     });
 
