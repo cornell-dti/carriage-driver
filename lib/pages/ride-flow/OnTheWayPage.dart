@@ -39,7 +39,15 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
               child: Column(
                 children: [
                   SizedBox(height: 16),
-                  CalendarButton(),
+                  Padding(
+                    padding: EdgeInsets.only(right: 16),
+                    child: Row(
+                        children: [
+                          Spacer(),
+                          CalendarButton()
+                        ]
+                    ),
+                  ),
                   Divider(height: 12),
                   SizedBox(height: 12),
                   Padding(
