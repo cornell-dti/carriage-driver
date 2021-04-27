@@ -153,7 +153,6 @@ class Profile extends StatelessWidget {
               SizedBox(height: 8),
               //TODO: implement these pages
               SettingRow('Notifications', 'Set your notification preferences', NotificationSettings()),
-              SettingRow('Privacy', 'Choose what data you share with us', Container()),
               SettingRow('Legal', 'Terms of Service & Privacy Policy', Container()),
               sectionDivider,
               SignOutButton()
