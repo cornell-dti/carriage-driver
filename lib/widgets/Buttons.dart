@@ -68,20 +68,24 @@ class ShadowedCircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-          width: diameter,
-          height: diameter,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(100),
-              boxShadow: [CarriageTheme.shadow]),
-          child: Padding(
-            padding: EdgeInsets.all(diameter / 3.5),
-            child: Image.asset(imagePath, color: Colors.black),
-          )),
-    );
+    return Container(
+        width: diameter,
+        height: diameter,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(100),
+            boxShadow: [CarriageTheme.shadow]),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+            onTap: onPressed,
+            child: Padding(
+              padding: EdgeInsets.all(diameter / 3.5),
+              child: Image.asset(imagePath, color: Colors.black),
+            )
+          ),
+        ));
   }
 }
 
