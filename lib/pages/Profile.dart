@@ -114,17 +114,24 @@ class Profile extends StatelessWidget {
                               ],
                             )
                         ),
-                        Expanded(
-                          child: Text(
-                              driverProvider.driver.firstName +
-                                  " " +
-                                  driverProvider.driver.lastName,
-                              style: TextStyle(
-                                  fontFamily: 'SFDisplay',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700
-                              )
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(driverProvider.driver.firstName + ' ' + driverProvider.driver.lastName,
+                                style: TextStyle(
+                                    fontFamily: 'SFDisplay',
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700
+                                )
+                            ),
+                            SizedBox(height: 4),
+                            Text('Joined ' + driverProvider.driver.startDate,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context).accentColor,
+                                )
+                            )
+                          ],
                         )
                       ]
                   )
