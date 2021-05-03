@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../pages/Home.dart';
-
 class BackBar extends StatelessWidget implements PreferredSizeWidget {
   BackBar(this.text, this.backgroundColor, {this.action});
   final String text;
@@ -28,11 +26,7 @@ class BackBar extends StatelessWidget implements PreferredSizeWidget {
                       padding: EdgeInsets.only(left: 16, right: 8),
                       child: Image.asset('assets/images/backArrow.png', width: 12, height: 21),
                     ),
-                    onTap: () {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (BuildContext context) => Home())
-                      );
-                    },
+                    onTap: () => action != null ? action : Navigator.of(context).pop()
                   ),
                   Text(text, style: TextStyle(fontSize: 17))
                 ]),
