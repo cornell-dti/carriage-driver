@@ -165,9 +165,9 @@ class RidesStateless extends StatelessWidget {
   Widget build(BuildContext context) {
     bool emptyMainPage = interactive && currentRides.isEmpty && remainingRides.isEmpty; // no current or remaining
     bool emptyPreviewPage = !interactive && remainingRides.isEmpty; // the ride we're switching from will be a current ride, so just check remaining
-    Widget carButton = GestureDetector(
-      child: highlightCarButton ? Image.asset('assets/images/highlightedCarButton.png', width: 28, height: 25) : Image.asset('assets/images/carButton.png', width: 24, height: 21),
-      onTap: () => Navigator.of(context).pop(),
+    Widget carButton = IconButton(
+      icon: highlightCarButton ? Image.asset('assets/images/highlightedCarButton.png', width: 28, height: 25) : Image.asset('assets/images/carButton.png', width: 24, height: 21),
+      onPressed: () => Navigator.of(context).pop(),
     );
 
     Widget dropOffButton = CButton(
