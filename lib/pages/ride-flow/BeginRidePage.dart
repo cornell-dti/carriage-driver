@@ -1,8 +1,6 @@
 import 'package:carriage/pages/Home.dart';
-
 import '../../utils/MeasureRect.dart';
 import '../../models/Ride.dart';
-import 'package:carriage/widgets/AppBars.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/RideStops.dart';
 import 'package:flutter/material.dart';
