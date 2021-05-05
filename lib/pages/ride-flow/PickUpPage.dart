@@ -123,8 +123,8 @@ class _PickUpPageState extends State<PickUpPage> {
                           SizedBox(height: 16),
                           RideStops(
                               ride: widget.ride,
-                              carIcon: true,
-                              largeSpacing: false),
+                              carIcon: true
+                          ),
                         ]),
                       ),
                       Spacer(),

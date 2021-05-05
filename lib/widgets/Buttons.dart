@@ -17,8 +17,9 @@ class CButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget button = GestureDetector(
+    return GestureDetector(
       child: Container(
+          height: 50,
           decoration: BoxDecoration(
               color: Colors.black,
               borderRadius: BorderRadius.circular(3)
@@ -29,20 +30,6 @@ class CButton extends StatelessWidget {
       ),
       onTap: onPressed,
     );
-
-    if (hasShadow) {
-      return Container(
-        child: button,
-        decoration: BoxDecoration(boxShadow: [
-          BoxShadow(
-              offset: Offset(0, 6),
-              blurRadius: 6,
-              color: Colors.black.withOpacity(0.15))
-        ]),
-      );
-    } else {
-      return button;
-    }
   }
 }
 
