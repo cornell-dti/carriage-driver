@@ -73,7 +73,6 @@ class _BeginRidePageState extends State<BeginRidePage> {
   Widget build(BuildContext context) {
     double buttonVerticalPadding = 32;
     double buttonHeight = 48;
-
     return Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
