@@ -25,52 +25,60 @@ class _RideCardState extends State<RideCard> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  BeginRidePage(ride: widget.ride)));
-        },
-        child: Container(
-            decoration: BoxDecoration(
+    return Container(
+      decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [CarriageTheme.shadow],
                 borderRadius: BorderRadius.circular(12)),
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+            customBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        BeginRidePage(ride: widget.ride)));
+              },
             child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                        children: [
-                          widget.ride.rider.profilePicture(48),
-                          SizedBox(width: 16),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(widget.ride.rider.firstName,
-                                    style: CarriageTheme.title3),
-                                SizedBox(height: 4),
-                                widget.ride.rider.accessibilityNeeds.length > 0
-                                    ? Text(
-                                    widget.ride.rider.accessibilityNeeds
-                                        .join(', '),
-                                    style: TextStyle(
-                                        color: CarriageTheme.gray2,
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 15)
-                                ) : Container()
-                              ]
-                          ),
-                          Spacer(),
-                          CallButton(widget.ride.rider.phoneNumber, 40),
-                          SizedBox(width: 8),
-                          NotifyButton(widget.ride, 40)
-                        ]),
-                    SizedBox(height: 32),
-                    TimeLine(widget.ride)
-                  ]),
-            )));
+                  padding: EdgeInsets.all(24),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                            children: [
+                              widget.ride.rider.profilePicture(48),
+                              SizedBox(width: 16),
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(widget.ride.rider.firstName,
+                                        style: CarriageTheme.title3),
+                                    SizedBox(height: 4),
+                                    widget.ride.rider.accessibilityNeeds.length > 0
+                                        ? Text(
+                                        widget.ride.rider.accessibilityNeeds
+                                            .join(', '),
+                                        style: TextStyle(
+                                            color: CarriageTheme.gray2,
+                                            fontStyle: FontStyle.italic,
+                                            fontSize: 15)
+                                    ) : Container()
+                                  ]
+                              ),
+                              Spacer(),
+                              CallButton(widget.ride.rider.phoneNumber, 40),
+                              SizedBox(width: 8),
+                              NotifyButton(widget.ride, 40)
+                            ]),
+                        SizedBox(height: 32),
+                        TimeLine(widget.ride)
+                      ]),
+                ),
+          ),
+      ),
+    );
   }
 }
 
