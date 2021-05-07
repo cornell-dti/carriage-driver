@@ -157,9 +157,9 @@ class Profile extends StatelessWidget {
                 ],
               ),
               sectionDivider,
-              SizedBox(height: 8),
-              //TODO: implement these pages
-              SettingRow('Notifications', 'Set your notification preferences', NotificationSettings()),
+              // commenting out right now because this is likely being removed or pushed to v2
+              //SettingRow('Notifications', 'Set your notification preferences', NotificationSettings()),
+              //TODO: implement this
               SettingRow('Legal', 'Terms of Service & Privacy Policy', Container()),
               sectionDivider,
               SignOutButton()
@@ -187,15 +187,24 @@ class ArrowButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return GestureDetector(
-      child: Padding(
-        padding: EdgeInsets.only(right: 8),
-        child: Icon(Icons.arrow_forward_ios, size: 16),
-      ),
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => page));
-      },
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(100),
+        ),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Icon(Icons.arrow_forward_ios, size: 20),
+            ),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+            },
+          ),
+        )
     );
   }
 }
@@ -208,10 +217,8 @@ class InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double paddingTB = 16;
-
     return Padding(
-        padding: EdgeInsets.only(top: paddingTB, bottom: paddingTB),
+        padding: EdgeInsets.symmetric(vertical: editPage == null ? 16 : 8),
         child: Row(
           children: <Widget>[
             Icon(icon),
@@ -241,7 +248,7 @@ class SettingRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
         children: [
           Column(
@@ -328,88 +335,98 @@ class _EditNameState extends State<EditName> {
           isLoading: requestedUpdate,
           color: Colors.white,
           child: SafeArea(
-            child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 24
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: ProfileBackButton(),
                 ),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ProfileBackButton(),
-                      SizedBox(height: MediaQuery.of(context).size.height / 8),
-                      Form(
-                          key: _formKey,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFormField(
-                                  autofocus: true,
-                                  controller: firstNameCtrl,
-                                  textInputAction: TextInputAction.next,
-                                  onFieldSubmitted: (value) { focus.nextFocus(); },
-                                  decoration: InputDecoration(
-                                    labelText: 'First Name',
-                                    labelStyle: TextStyle(color: CarriageTheme.gray2),
-                                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                                    suffixIcon: IconButton(
-                                      onPressed: firstNameCtrl.clear,
-                                      icon: Icon(Icons.cancel_outlined, size: 16, color: Colors.black),
-                                    ),
-                                  ),
-                                  validator: (input) {
-                                    if (input.isEmpty) {
-                                      return 'Please enter your first name.';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                SizedBox(height: 10),
-                                TextFormField(
-                                  controller: lastNameCtrl,
-                                  textInputAction: TextInputAction.go,
-                                  decoration: InputDecoration(
-                                    labelText: 'Last Name',
-                                    labelStyle: TextStyle(color: CarriageTheme.gray2),
-                                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                                    suffixIcon: IconButton(
-                                      onPressed: lastNameCtrl.clear,
-                                      icon: Icon(Icons.cancel_outlined, size: 16, color: Colors.black),
-                                    ),
-                                  ),
-                                  validator: (input) {
-                                    if (input.isEmpty) {
-                                      return 'Please enter your last name.';
-                                    }
-                                    return null;
-                                  },
-                                )
-                              ]
-                          )
+                Flexible(
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 24
                       ),
-                      Spacer(),
-                      Container(
-                        width: double.infinity,
-                        child: CButton(
-                          text: 'Update Name',
-                          hasShadow: true,
-                          onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              _formKey.currentState.save();
-                              setState(() {
-                                requestedUpdate = true;
-                              });
-                              await userInfoProvider.updateName(AppConfig.of(context), Provider.of<AuthProvider>(context, listen: false), firstNameCtrl.text, lastNameCtrl.text);
-                              Navigator.pop(context);
-                            }
-                          },
-                        ),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: MediaQuery.of(context).size.height / 8),
+                            Form(
+                                key: _formKey,
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      TextFormField(
+                                        autofocus: true,
+                                        controller: firstNameCtrl,
+                                        textInputAction: TextInputAction.next,
+                                        onFieldSubmitted: (value) { focus.nextFocus(); },
+                                        decoration: InputDecoration(
+                                          labelText: 'First Name',
+                                          labelStyle: TextStyle(color: CarriageTheme.gray2),
+                                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                                          suffixIcon: IconButton(
+                                            onPressed: firstNameCtrl.clear,
+                                            icon: Icon(Icons.cancel_outlined, size: 16, color: Colors.black),
+                                          ),
+                                        ),
+                                        validator: (input) {
+                                          if (input.isEmpty) {
+                                            return 'Please enter your first name.';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      SizedBox(height: 10),
+                                      TextFormField(
+                                        controller: lastNameCtrl,
+                                        textInputAction: TextInputAction.go,
+                                        decoration: InputDecoration(
+                                          labelText: 'Last Name',
+                                          labelStyle: TextStyle(color: CarriageTheme.gray2),
+                                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                                          suffixIcon: IconButton(
+                                            onPressed: lastNameCtrl.clear,
+                                            icon: Icon(Icons.cancel_outlined, size: 16, color: Colors.black),
+                                          ),
+                                        ),
+                                        validator: (input) {
+                                          if (input.isEmpty) {
+                                            return 'Please enter your last name.';
+                                          }
+                                          return null;
+                                        },
+                                      )
+                                    ]
+                                )
+                            ),
+                            Spacer(),
+                            Container(
+                              width: double.infinity,
+                              child: CButton(
+                                text: 'Update Name',
+                                hasShadow: true,
+                                onPressed: () async {
+                                  if (_formKey.currentState.validate()) {
+                                    _formKey.currentState.save();
+                                    setState(() {
+                                      requestedUpdate = true;
+                                    });
+                                    await userInfoProvider.updateName(AppConfig.of(context), Provider.of<AuthProvider>(context, listen: false), firstNameCtrl.text, lastNameCtrl.text);
+                                    Navigator.pop(context);
+                                  }
+                                },
+                              ),
+                            )
+                          ]
                       )
-                    ]
-                )
+                  ),
+                ),
+              ],
             ),
           ),
         )
@@ -443,68 +460,78 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
           isLoading: requestedUpdate,
           color: Colors.white,
           child: SafeArea(
-            child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 24
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: ProfileBackButton(),
                 ),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ProfileBackButton(),
-                      SizedBox(height: MediaQuery.of(context).size.height / 8),
-                      Form(
-                          key: _formKey,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          child: TextFormField(
-                            autofocus: true,
-                            controller: phoneNumberCtrl,
-                            textInputAction: TextInputAction.go,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: 'Phone Number',
-                              labelStyle: TextStyle(color: CarriageTheme.gray2),
-                              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                              suffixIcon: IconButton(
-                                onPressed: phoneNumberCtrl.clear,
-                                icon: Icon(Icons.cancel_outlined, size: 16, color: Colors.black),
-                              ),
-                            ),
-                            validator: (input) {
-                              if (input.isEmpty) {
-                                return 'Please enter your phone number.';
-                              }
-                              else if (input.length != 10) {
-                                return 'Phone number should be 10 digits.';
-                              }
-                              else if (int.tryParse(input) == null) {
-                                return 'Phone number should be all numbers.';
-                              }
-                              return null;
-                            },
-                          )
+                Flexible(
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 24
                       ),
-                      Spacer(),
-                      Container(
-                        width: double.infinity,
-                        child: CButton(
-                          text: 'Update Phone Number',
-                          hasShadow: true,
-                          onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              _formKey.currentState.save();
-                              setState(() {
-                                requestedUpdate = true;
-                              });
-                              await driverProvider.updatePhoneNumber(AppConfig.of(context), Provider.of<AuthProvider>(context, listen: false), phoneNumberCtrl.text);
-                              Navigator.pop(context);
-                            }
-                          },
-                        ),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: MediaQuery.of(context).size.height / 8),
+                            Form(
+                                key: _formKey,
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                child: TextFormField(
+                                  autofocus: true,
+                                  controller: phoneNumberCtrl,
+                                  textInputAction: TextInputAction.go,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    labelText: 'Phone Number',
+                                    labelStyle: TextStyle(color: CarriageTheme.gray2),
+                                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                                    suffixIcon: IconButton(
+                                      onPressed: phoneNumberCtrl.clear,
+                                      icon: Icon(Icons.cancel_outlined, size: 16, color: Colors.black),
+                                    ),
+                                  ),
+                                  validator: (input) {
+                                    if (input.isEmpty) {
+                                      return 'Please enter your phone number.';
+                                    }
+                                    else if (input.length != 10) {
+                                      return 'Phone number should be 10 digits.';
+                                    }
+                                    else if (int.tryParse(input) == null) {
+                                      return 'Phone number should be all numbers.';
+                                    }
+                                    return null;
+                                  },
+                                )
+                            ),
+                            Spacer(),
+                            Container(
+                              width: double.infinity,
+                              child: CButton(
+                                text: 'Update Phone Number',
+                                hasShadow: true,
+                                onPressed: () async {
+                                  if (_formKey.currentState.validate()) {
+                                    _formKey.currentState.save();
+                                    setState(() {
+                                      requestedUpdate = true;
+                                    });
+                                    await driverProvider.updatePhoneNumber(AppConfig.of(context), Provider.of<AuthProvider>(context, listen: false), phoneNumberCtrl.text);
+                                    Navigator.pop(context);
+                                  }
+                                },
+                              ),
+                            )
+                          ]
                       )
-                    ]
-                )
+                  ),
+                ),
+              ],
             ),
           ),
         )
@@ -516,34 +543,37 @@ class SignOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 24),
-          child: GestureDetector(
-            child: Row(
-              children: [
-                Icon(Icons.exit_to_app),
-                SizedBox(width: 12),
-                Text(
-                    'Sign out',
-                    style: TextStyle(
-                        fontFamily: 'SFDisplay',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700
-                    )
-                ),
-              ],
-            ),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          InkWell(
             onTap: () {
               authProvider.signOut();
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (BuildContext context) => HomeOrLogin()));
             },
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              child: Row(
+                children: [
+                  Icon(Icons.exit_to_app),
+                  SizedBox(width: 12),
+                  Text(
+                      'Sign out',
+                      style: TextStyle(
+                          fontFamily: 'SFDisplay',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700
+                      )
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -551,14 +581,9 @@ class SignOutButton extends StatelessWidget {
 class ProfileBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-          width: 24, height: 24,
-          child: Icon(Icons.arrow_back_ios, size: 16)
-      ),
-      onTap: () {
-        Navigator.of(context).pop();
-      },
+    return IconButton(
+      icon: Icon(Icons.arrow_back_ios, size: 16),
+      onPressed: () => Navigator.of(context).pop()
     );
   }
 }
