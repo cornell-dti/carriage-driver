@@ -49,10 +49,9 @@ class _PickUpPageState extends State<PickUpPage> {
         }
     );
 
-    double buttonVerticalPadding = 24;
+    double buttonVerticalPadding = 16;
     double buttonHeight = 48;
     double noShowButtonHeight = 48;
-    double buttonSpacing = 8;
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -65,7 +64,7 @@ class _PickUpPageState extends State<PickUpPage> {
                   children: [
                     SingleChildScrollView(
                       child: Container(
-                        padding: EdgeInsets.only(bottom: buttonHeight + 2*buttonVerticalPadding + noShowButtonHeight + buttonSpacing),
+                        padding: EdgeInsets.only(bottom: buttonHeight + 2*buttonVerticalPadding + noShowButtonHeight),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -200,7 +199,6 @@ class _PickUpPageState extends State<PickUpPage> {
                                         );
                                       }
                                   ),
-                                  SizedBox(height: 8),
                                 ]
                             )
                         )

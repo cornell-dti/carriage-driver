@@ -27,10 +27,9 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
   bool _requestedContinue = false;
   @override
   Widget build(BuildContext context) {
-    double buttonVerticalPadding = 24;
+    double buttonVerticalPadding = 16;
     double buttonHeight = 48;
     double delayButtonHeight = 48;
-    double buttonSpacing = 8;
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -43,7 +42,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                 children: [
                   SingleChildScrollView(
                     child: Container(
-                      padding: EdgeInsets.only(left: 16, right: 16, bottom: buttonHeight + 2*buttonVerticalPadding + delayButtonHeight + buttonSpacing + 16),
+                      padding: EdgeInsets.only(left: 16, right: 16, bottom: buttonHeight + 2*buttonVerticalPadding + delayButtonHeight + 16),
                       child: Column(
                         children: [
                           SizedBox(height: 16),
@@ -173,7 +172,6 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                         }
                                       }),
                                 ),
-                                SizedBox(height: buttonSpacing),
                                 Container(
                                   height: delayButtonHeight,
                                   child: DangerButton(
