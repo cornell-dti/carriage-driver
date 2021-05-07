@@ -1,3 +1,4 @@
+import 'package:carriage/pages/Rides.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../utils/CarriageTheme.dart';
@@ -9,33 +10,37 @@ class CButton extends StatelessWidget {
   final hasShadow;
   final void Function() onPressed;
 
-  CButton({@required this.text, @required this.hasShadow, @required this.onPressed});
+  CButton(
+      {@required this.text,
+        @required this.hasShadow,
+        @required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    Widget button = FlatButton(
-      padding: EdgeInsets.all(16),
-      color: Colors.black,
-      child: Text(text,
-          style: CarriageTheme.button),
-      onPressed: onPressed,
+    Widget button = GestureDetector(
+      child: Container(
+          decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(3)
+          ),
+          width: double.infinity,
+          padding: EdgeInsets.all(16),
+          child: Center(child: Text(text, style: CarriageTheme.button))
+      ),
+      onTap: onPressed,
     );
 
     if (hasShadow) {
       return Container(
         child: button,
-        decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                  offset: Offset(0, 6),
-                  blurRadius: 6,
-                  color: Colors.black.withOpacity(0.15)
-              )
-            ]
-        ),
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+              offset: Offset(0, 6),
+              blurRadius: 6,
+              color: Colors.black.withOpacity(0.15))
+        ]),
       );
-    }
-    else {
+    } else {
       return button;
     }
   }
@@ -53,9 +58,7 @@ class DangerButton extends StatelessWidget {
         child: FlatButton(
             textColor: Color.fromRGBO(240, 134, 134, 1),
             child: Text(text, style: TextStyle(fontWeight: FontWeight.bold)),
-            onPressed: onPressed
-        )
-    );
+            onPressed: onPressed));
   }
 }
 
@@ -75,13 +78,11 @@ class ShadowedCircleButton extends StatelessWidget {
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(100),
-              boxShadow: [CarriageTheme.shadow]
-          ),
+              boxShadow: [CarriageTheme.shadow]),
           child: Padding(
             padding: EdgeInsets.all(diameter / 3.5),
             child: Image.asset(imagePath, color: Colors.black),
-          )
-      ),
+          )),
     );
   }
 }
@@ -103,6 +104,7 @@ class CallButton extends StatelessWidget {
     }, diameter);
   }
 }
+
 class NotifyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -117,28 +119,27 @@ class NotifyButton extends StatelessWidget {
               // TODO: notify delay functionality
             },
           ),
-          barrierDismissible: true
-      );
+          barrierDismissible: true);
     }, 40);
   }
 }
 
 class CalendarButton extends StatelessWidget {
+  CalendarButton({this.highlight = false});
+  final bool highlight;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16),
-      child: Row(
-          children: [
-            Spacer(),
-            GestureDetector(
-                child: Image.asset('assets/images/calendarButton.png', width: 20, height: 20,),
-                onTap: () {
-                  //TODO: view switching functionality
-                }
-            )
-          ]
-      ),
-    );
+    return GestureDetector(
+        child: Image.asset(
+          highlight ? 'assets/images/highlightedCalendarButton.png' : 'assets/images/calendarButton.png',
+          width: highlight ? 24 : 20,
+          height: highlight ? 24 : 20,
+        ),
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  Scaffold(body: SafeArea(child: Rides(interactive: false)))));
+        });
   }
 }

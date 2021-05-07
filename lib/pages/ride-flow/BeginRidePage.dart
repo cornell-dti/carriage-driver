@@ -72,33 +72,30 @@ class _BeginRidePageState extends State<BeginRidePage> {
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: MeasureRect(
                     onChange: widget.onContinueRectChange,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 18),
-                      child: CButton(
-                          text: "Begin Ride",
-                          hasShadow: true,
-                          onPressed: () async {
-                            if (_requestedContinue) return;
-                            setState(() => _requestedContinue = true);
-                            final response = await updateRideStatus(
-                                context, widget.ride.id, RideStatus.ON_THE_WAY);
-                            if (!mounted) return;
-                            if (response.statusCode == 200) {
-                              widget.ride.status = RideStatus.ON_THE_WAY;
-                              RidesProvider ridesProvider =
-                                  Provider.of<RidesProvider>(context,
-                                      listen: false);
-                              ridesProvider.changeRideToCurrent(widget.ride);
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          OnTheWayPage(ride: widget.ride)));
-                            } else {
-                              setState(() => _requestedContinue = false);
-                              throw Exception('Failed to update ride status');
-                            }
-                          }),
-                    ),
+                    child: CButton(
+                        text: "Begin Ride",
+                        hasShadow: true,
+                        onPressed: () async {
+                          if (_requestedContinue) return;
+                          setState(() => _requestedContinue = true);
+                          final response = await updateRideStatus(
+                              context, widget.ride.id, RideStatus.ON_THE_WAY);
+                          if (!mounted) return;
+                          if (response.statusCode == 200) {
+                            widget.ride.status = RideStatus.ON_THE_WAY;
+                            RidesProvider ridesProvider =
+                                Provider.of<RidesProvider>(context,
+                                    listen: false);
+                            ridesProvider.changeRideToCurrent(widget.ride);
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        OnTheWayPage(ride: widget.ride)));
+                          } else {
+                            setState(() => _requestedContinue = false);
+                            throw Exception('Failed to update ride status');
+                          }
+                        }),
                   ),
                 ),
               ],
