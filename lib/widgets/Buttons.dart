@@ -1,3 +1,4 @@
+import 'package:carriage/models/Ride.dart';
 import 'package:carriage/pages/Rides.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -58,20 +59,24 @@ class ShadowedCircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-          width: diameter,
-          height: diameter,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(100),
-              boxShadow: [CarriageTheme.shadow]),
-          child: Padding(
-            padding: EdgeInsets.all(diameter / 3.5),
-            child: Image.asset(imagePath, color: Colors.black),
-          )),
-    );
+    return Container(
+        width: diameter,
+        height: diameter,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(100),
+            boxShadow: [CarriageTheme.shadow]),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+            onTap: onPressed,
+            child: Padding(
+              padding: EdgeInsets.all(diameter / 3.5),
+              child: Image.asset(imagePath, color: Colors.black),
+            )
+          ),
+        ));
   }
 }
 
@@ -94,6 +99,10 @@ class CallButton extends StatelessWidget {
 }
 
 class NotifyButton extends StatelessWidget {
+  NotifyButton(this.ride, this.diameter);
+  final Ride ride;
+  final double diameter;
+
   @override
   Widget build(BuildContext context) {
     return ShadowedCircleButton('assets/images/bellIcon.png', () {
@@ -108,7 +117,7 @@ class NotifyButton extends StatelessWidget {
             },
           ),
           barrierDismissible: true);
-    }, 40);
+    }, diameter);
   }
 }
 
@@ -118,16 +127,20 @@ class CalendarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        child: Image.asset(
-          highlight ? 'assets/images/highlightedCalendarButton.png' : 'assets/images/calendarButton.png',
-          width: highlight ? 24 : 20,
-          height: highlight ? 24 : 20,
-        ),
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  Scaffold(body: SafeArea(child: Rides(interactive: false)))));
-        });
+    return Container(
+      width: 40,
+      height: 40,
+      child: IconButton(
+          icon: Image.asset(
+            highlight ? 'assets/images/highlightedCalendarButton.png' : 'assets/images/calendarButton.png',
+            width: highlight ? 24 : 20,
+            height: highlight ? 24 : 20,
+          ),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    Scaffold(body: SafeArea(child: Rides(interactive: false)))));
+          }),
+    );
   }
 }

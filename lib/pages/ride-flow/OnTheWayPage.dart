@@ -60,9 +60,10 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                   alignment: Alignment.centerLeft,
                                   child: Text("On your way to...",
                                       style: CarriageTheme.title1)),
-                              SizedBox(height: 32),
+                              SizedBox(height: 48),
                               Row(
                                   children: [
+
                                     widget.ride.rider.profilePicture(100),
                                     SizedBox(width: 16),
                                     Column(
@@ -83,34 +84,38 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                             children: [
                                               CallButton(widget.ride.rider.phoneNumber, 48),
                                               SizedBox(width: 12),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  widget.ride.status = RideStatus.NOT_STARTED;
-                                                  Provider.of<RidesProvider>(context, listen: false).pauseRide(widget.ride);
-                                                  Navigator.of(context).pushReplacement(
-                                                      MaterialPageRoute(builder: (BuildContext context) => Home())
-                                                  );
-                                                },
-                                                child: Container(
-                                                    height: 48,
-                                                    decoration: BoxDecoration(
-                                                        boxShadow: [CarriageTheme.shadow],
-                                                        color: Colors.white
-                                                    ),
-                                                    child: Padding(
-                                                      padding: EdgeInsets.symmetric(horizontal: 16),
-                                                      child: Center(
-                                                        child: Text('Pause Ride',
-                                                            style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontFamily: 'SFText',
-                                                              fontWeight: FontWeight.w700,
-                                                              fontSize: 16,
-                                                            )
+                                              Container(
+                                                  height: 48,
+                                                  decoration: BoxDecoration(
+                                                      boxShadow: [CarriageTheme.shadow],
+                                                      color: Colors.white
+                                                  ),
+                                                  child: Material(
+                                                    type: MaterialType.transparency,
+
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        widget.ride.status = RideStatus.NOT_STARTED;
+                                                        Provider.of<RidesProvider>(context, listen: false).pauseRide(widget.ride);
+                                                        Navigator.of(context).pushReplacement(
+                                                            MaterialPageRoute(builder: (BuildContext context) => Home())
+                                                        );
+                                                      },
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(horizontal: 16),
+                                                        child: Center(
+                                                          child: Text('Pause Ride',
+                                                              style: TextStyle(
+                                                                color: Colors.black,
+                                                                fontFamily: 'SFText',
+                                                                fontWeight: FontWeight.w700,
+                                                                fontSize: 16,
+                                                              )
+                                                          ),
                                                         ),
                                                       ),
-                                                    )
-                                                ),
+                                                    ),
+                                                  )
                                               )
                                             ]
                                         ),
