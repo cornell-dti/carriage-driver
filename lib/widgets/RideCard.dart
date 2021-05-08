@@ -20,7 +20,7 @@ class _RideCardState extends State<RideCard> {
   final imageRadius = 24;
   GlobalKey stackKey = GlobalKey();
   GlobalKey dropoffKey = GlobalKey();
-  double accessibilityWidth = 0;
+  double textWidth = 0;
   double buttonsWidth;
 
   @override
@@ -29,6 +29,7 @@ class _RideCardState extends State<RideCard> {
     double margin = 16;
     double profilePictureSize = 48;
     double picNameSpacing = 16;
+    double nameButtonSpacing = 16;
 
     return GestureDetector(
         onTap: () {
@@ -64,12 +65,19 @@ class _RideCardState extends State<RideCard> {
                                   Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(widget.ride.rider.firstName,
-                                            style: CarriageTheme.title3),
-                                        SizedBox(height: 4),
-                                        widget.ride.rider.accessibilityNeeds.length > 0 && accessibilityWidth > 0 ?
                                         Container(
-                                          width: accessibilityWidth,
+                                          width: textWidth,
+                                          child: FittedBox(
+                                            alignment: Alignment.centerLeft,
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(widget.ride.rider.firstName,
+                                                style: CarriageTheme.title3),
+                                          ),
+                                        ),
+                                        SizedBox(height: 4),
+                                        widget.ride.rider.accessibilityNeeds.length > 0 && textWidth > 0 ?
+                                        Container(
+                                          width: textWidth,
                                           child: Text(
                                               widget.ride.rider.accessibilityNeeds
                                                   .join(', '),
@@ -81,12 +89,13 @@ class _RideCardState extends State<RideCard> {
                                         ) : Container()
                                       ]
                                   ),
-                                  accessibilityWidth == 0 || widget.ride.rider.accessibilityNeeds.length == 0 ? Spacer() : Container(),
+                                  SizedBox(width: nameButtonSpacing),
+                                  textWidth == 0 || widget.ride.rider.accessibilityNeeds.length == 0 ? Spacer() : Container(),
                                   MeasureSize(
                                     onChange: (size) {
                                       setState(() {
                                         buttonsWidth = size.width;
-                                        accessibilityWidth = MediaQuery.of(context).size.width - (2*margin) - (2*padding) - buttonsWidth - profilePictureSize - picNameSpacing;
+                                        textWidth = MediaQuery.of(context).size.width - (2*margin) - (2*padding) - buttonsWidth - profilePictureSize - picNameSpacing - nameButtonSpacing;
                                       });
                                     },
                                     child: Row(
