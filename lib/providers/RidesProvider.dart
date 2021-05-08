@@ -70,7 +70,6 @@ class RidesProvider with ChangeNotifier {
         config.baseUrl + '/rides?type=active&date=${dateFormat.format(now)}&driver=${authProvider.id}',
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"}
     );
-    print(response.body);
     if (response.statusCode == 200) {
       List<Ride> rides = ridesFromJson(response.body);
       currentRides = [];
