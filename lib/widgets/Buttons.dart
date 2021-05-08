@@ -17,32 +17,21 @@ class CButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget button = GestureDetector(
-      child: Container(
-          decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(3)
-          ),
-          width: double.infinity,
-          padding: EdgeInsets.all(16),
-          child: Center(child: Text(text, style: CarriageTheme.button))
+    return Container(
+      width: double.infinity,
+      child: ButtonTheme(
+          height: 50,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+          child: RaisedButton(
+            padding: EdgeInsets.all(16),
+            color: Colors.black,
+            textColor: Colors.white,
+            child: Text(text,
+                style: CarriageTheme.button),
+            onPressed: onPressed,
+          )
       ),
-      onTap: onPressed,
     );
-
-    if (hasShadow) {
-      return Container(
-        child: button,
-        decoration: BoxDecoration(boxShadow: [
-          BoxShadow(
-              offset: Offset(0, 6),
-              blurRadius: 6,
-              color: Colors.black.withOpacity(0.15))
-        ]),
-      );
-    } else {
-      return button;
-    }
   }
 }
 
@@ -56,8 +45,7 @@ class DangerButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: FlatButton(
-            textColor: Color.fromRGBO(240, 134, 134, 1),
-            child: Text(text, style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(text, style: CarriageTheme.button.copyWith(color: Color.fromRGBO(240, 134, 134, 1))),
             onPressed: onPressed));
   }
 }

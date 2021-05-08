@@ -127,18 +127,19 @@ final List<Ride> _sampleRides = [
 
 Widget _start(OnboardingState state, BuildContext context) {
   double width = MediaQuery.of(context).size.width;
+  double height = MediaQuery.of(context).size.height;
   return Padding(
-    padding: EdgeInsets.only(left: 34.0, right: 34.0, bottom: 77.0, top: 97.0),
+    padding: EdgeInsets.only(left: 34.0, right: 34.0, top: height * 0.2),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.asset('assets/images/carScene.png', width: width * 0.6, height: width * 0.6),
-        SizedBox(height: 75),
+        SizedBox(height: height * 0.01),
         Text(
             'Welcome to Carriage',
             style: CarriageTheme.largeTitle, textAlign: TextAlign.center
         ),
-        SizedBox(height: 20),
+        SizedBox(height: height * 0.01),
         Text(
           "Let's take a tour.",
           style: CarriageTheme.body,
@@ -147,7 +148,8 @@ Widget _start(OnboardingState state, BuildContext context) {
         Container(
             width: double.infinity,
             child: CButton(text: "Continue", hasShadow: true, onPressed: () => state.nextStage(context))
-        )
+        ),
+        SizedBox(height: height * 0.05),
       ],
 
     ),

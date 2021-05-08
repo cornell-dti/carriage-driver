@@ -27,148 +27,177 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
   bool _requestedContinue = false;
   @override
   Widget build(BuildContext context) {
+    double buttonVerticalPadding = 16;
+    double buttonHeight = 48;
+    double delayButtonHeight = 48;
+
     return Scaffold(
         backgroundColor: Colors.white,
-        body: LoadingOverlay(
-          color: Colors.white,
-          opacity: 0.3,
-          isLoading: _requestedContinue,
-          child: SafeArea(
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              child: Column(
+        body: SafeArea(
+          child: LoadingOverlay(
+            color: Colors.white,
+            opacity: 0.3,
+            isLoading: _requestedContinue,
+            child: Stack(
                 children: [
-                  SizedBox(height: 16),
-                  Padding(
-                    padding: EdgeInsets.only(right: 16),
-                    child: Row(
-                        children: [
-                          Spacer(),
-                          CalendarButton()
-                        ]
-                    ),
-                  ),
-                  Divider(height: 12),
-                  SizedBox(height: 12),
-                  Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                  SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.only(left: 16, right: 16, bottom: buttonHeight + 2*buttonVerticalPadding + delayButtonHeight + 16),
                       child: Column(
                         children: [
-                          Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text("On your way to...",
-                                  style: CarriageTheme.title2)),
-                          SizedBox(height: 32),
+                          SizedBox(height: 16),
                           Row(
                               children: [
-                                widget.ride.rider.profilePicture(100),
-                                SizedBox(width: 16),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                Spacer(),
+                                CalendarButton()
+                              ]
+                          ),
+                          Divider(height: 32),
+                          SizedBox(height: 24),
+                          Column(
+                            children: [
+                              Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text("On your way to...",
+                                      style: CarriageTheme.title1)),
+                              SizedBox(height: 32),
+                              Row(
                                   children: [
-                                    Text(widget.ride.rider.firstName,
-                                        style: CarriageTheme.title3),
-                                    widget.ride.rider.accessibilityNeeds.length > 0
-                                        ? Padding(
-                                      padding: EdgeInsets.only(top: 2),
-                                      child: Text(
-                                          widget.ride.rider.accessibilityNeeds
-                                              .join(', '),
-                                          style: CarriageTheme.body),
-                                    ) : Container(),
-                                    SizedBox(height: 16),
-                                    Row(
-                                        children: [
-                                          CallButton(widget.ride.rider.phoneNumber, 40),
-                                          SizedBox(width: 12),
-                                          GestureDetector(
-                                            onTap: () {
-                                              widget.ride.status = RideStatus.NOT_STARTED;
-                                              Provider.of<RidesProvider>(context, listen: false).pauseRide(widget.ride);
-                                              Navigator.of(context).pushReplacement(
-                                                  MaterialPageRoute(builder: (BuildContext context) => Home())
-                                              );
-                                            },
-                                            child: Container(
-                                                decoration: BoxDecoration(
-                                                    boxShadow: [CarriageTheme.shadow],
-                                                    color: Colors.white
+                                    widget.ride.rider.profilePicture(100),
+                                    SizedBox(width: 16),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(widget.ride.rider.firstName,
+                                            style: CarriageTheme.title3),
+                                        widget.ride.rider.accessibilityNeeds.length > 0
+                                            ? Padding(
+                                          padding: EdgeInsets.only(top: 2),
+                                          child: Text(
+                                              widget.ride.rider.accessibilityNeeds
+                                                  .join(', '),
+                                              style: CarriageTheme.body),
+                                        ) : Container(),
+                                        SizedBox(height: 16),
+                                        Row(
+                                            children: [
+                                              CallButton(widget.ride.rider.phoneNumber, 48),
+                                              SizedBox(width: 12),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  widget.ride.status = RideStatus.NOT_STARTED;
+                                                  Provider.of<RidesProvider>(context, listen: false).pauseRide(widget.ride);
+                                                  Navigator.of(context).pushReplacement(
+                                                      MaterialPageRoute(builder: (BuildContext context) => Home())
+                                                  );
+                                                },
+                                                child: Container(
+                                                    height: 48,
+                                                    decoration: BoxDecoration(
+                                                        boxShadow: [CarriageTheme.shadow],
+                                                        color: Colors.white
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.symmetric(horizontal: 16),
+                                                      child: Center(
+                                                        child: Text('Pause Ride',
+                                                            style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontFamily: 'SFText',
+                                                              fontWeight: FontWeight.w700,
+                                                              fontSize: 16,
+                                                            )
+                                                        ),
+                                                      ),
+                                                    )
                                                 ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 9),
-                                                  child: Text('Pause Ride',
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontFamily: 'SFText',
-                                                        fontWeight: FontWeight.w700,
-                                                        fontSize: 14,
-                                                      )
-                                                  ),
-                                                )
-                                            ),
-                                          )
-                                        ]
-                                    ),
-                                  ],
-                                )
-                              ]),
+                                              )
+                                            ]
+                                        ),
+                                      ],
+                                    )
+                                  ]),
+                            ],
+                          ),
+                          SizedBox(height: 60),
+                          Container(
+                              padding: EdgeInsets.symmetric(horizontal: 28),
+                              width: double.infinity,
+                              child: RideDestPickupCard(false, widget.ride.startTime,
+                                  widget.ride.startLocation, widget.ride.startAddress)
+                          ),
                         ],
-                      )
-                  ),
-
-                  SizedBox(height: 40),
-                  Container(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      width: double.infinity,
-                      child: RideDestPickupCard(false, widget.ride.startTime,
-                          widget.ride.startLocation, widget.ride.startAddress)),
-                  Spacer(),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 34),
-                    width: MediaQuery.of(context).size.width,
-                    child: MeasureRect(
-                      onChange: widget.onContinueRectChange,
-                      child: CButton(
-                          text: "I've Arrived",
-                          hasShadow: true,
-                          onPressed: () async {
-                            if (_requestedContinue) return;
-                            setState(() => _requestedContinue = true);
-                            final response = await updateRideStatus(
-                                context, widget.ride.id, RideStatus.ARRIVED);
-                            if (!mounted) return;
-                            if (response.statusCode == 200) {
-                              setState(() => _requestedContinue = false);
-                              widget.ride.status = RideStatus.ARRIVED;
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          PickUpPage(ride: widget.ride)));
-                            } else {
-                              setState(() => _requestedContinue = false);
-                              throw Exception('Failed to update ride status');
-                            }
-                          }),
+                      ),
                     ),
                   ),
-                  DangerButton(
-                      text: "Notify of Delay",
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (_) => ConfirmDialog(
-                              title: "Notify Delay",
-                              content:
-                              "Would you like to notify the rider of a delay?",
-                              actionName: "Notify",
-                              onConfirm: () {
-                                // TODO: notification functionality
-                              },
-                            ),
-                            barrierDismissible: true);
-                      }),
-                ],
-              ),
+                  Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                          padding: EdgeInsets.only(left: 34, right: 34, top: buttonVerticalPadding),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 10,
+                                    spreadRadius: 1,
+                                    offset: Offset(0, -2),
+                                    color: Colors.black.withOpacity(0.05)
+                                )
+                              ]
+                          ),
+                          child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                MeasureRect(
+                                  onChange: widget.onContinueRectChange,
+                                  child: CButton(
+                                      text: "I've Arrived",
+                                      hasShadow: true,
+                                      onPressed: () async {
+                                        if (_requestedContinue) return;
+                                        setState(() => _requestedContinue = true);
+                                        final response = await updateRideStatus(
+                                            context, widget.ride.id, RideStatus.ARRIVED);
+                                        if (!mounted) return;
+                                        if (response.statusCode == 200) {
+                                          setState(() => _requestedContinue = false);
+                                          widget.ride.status = RideStatus.ARRIVED;
+                                          Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                  builder: (BuildContext context) =>
+                                                      PickUpPage(ride: widget.ride)));
+                                        } else {
+                                          setState(() => _requestedContinue = false);
+                                          throw Exception('Failed to update ride status');
+                                        }
+                                      }),
+                                ),
+                                Container(
+                                  height: delayButtonHeight,
+                                  child: DangerButton(
+                                      text: "Notify of Delay",
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) => ConfirmDialog(
+                                              title: "Notify Delay",
+                                              content:
+                                              "Would you like to notify the rider of a delay?",
+                                              actionName: "Notify",
+                                              onConfirm: () {
+                                                // TODO: notification functionality
+                                              },
+                                            ),
+                                            barrierDismissible: true);
+                                      }
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                              ]
+                          )
+                      )
+                  )
+                ]
             ),
           ),
         ));
