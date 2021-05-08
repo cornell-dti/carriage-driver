@@ -8,6 +8,7 @@ import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import '../../providers/RidesProvider.dart';
 import '../../utils/CarriageTheme.dart';
+import '../Home.dart';
 import 'OnTheWayPage.dart';
 
 class BeginRidePage extends StatefulWidget {
