@@ -23,6 +23,8 @@ class Rider {
 
   ///The URL of the rider's profile picture.
   final String photoLink;
+  ///The local path for onboarding riders' profile pictures.
+  final String photoPath;
 
   Rider({
     this.id,
@@ -31,7 +33,8 @@ class Rider {
     this.firstName,
     this.lastName,
     this.accessibilityNeeds,
-    this.photoLink
+    this.photoLink,
+    this.photoPath
   });
 
   ///Creates a rider from JSON representation.
@@ -54,7 +57,7 @@ class Rider {
       child: ClipRRect(
           borderRadius: BorderRadius.circular(100),
           child: photoLink == null ? Image.asset(
-              'assets/images/person.png',
+              photoPath == null ? 'assets/images/person.png' : photoPath,
               width: diameter,
               height: diameter
           ) : Image.network(

@@ -1,5 +1,7 @@
+import 'package:carriage/pages/Onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
 import 'providers/AuthProvider.dart';
 import 'pages/Home.dart';
@@ -65,6 +67,34 @@ class HomeOrLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    return authProvider.isAuthenticated ? Home() : Login();
+    return authProvider.isAuthenticated ? HomeOrOnboarding() : Login();
   }
 }
+
+class HomeOrOnboarding extends StatelessWidget {
+  HomeOrOnboarding({Key key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    Future<bool> checkAndSetFirstLogin() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      bool firstLogin = prefs.getBool('loggedInPreviously') == null;
+      if (firstLogin) {
+        await prefs.setBool('loggedInPreviously', true);
+      }
+      return firstLogin;
+    }
+
+    return FutureBuilder<bool>(
+        future: checkAndSetFirstLogin(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            bool firstLogin = snapshot.data;
+            return firstLogin ? Onboarding() : Home();
+          }
+          return Center(child: CircularProgressIndicator());
+        }
+    );
+  }
+}
+
+

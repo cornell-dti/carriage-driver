@@ -1,5 +1,6 @@
 import 'package:carriage/providers/AuthProvider.dart';
 import 'package:carriage/utils/app_config.dart';
+import 'package:carriage/widgets/Buttons.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import '../utils/MeasureRect.dart';
 import '../providers/RidesProvider.dart';
@@ -19,8 +20,20 @@ class RidesStateless extends StatelessWidget {
   final void Function() onDropoff;
   final void Function(Ride r) selectCallback;
 
+  final bool highlightFirstCurrentRide;
+  final bool highlightSecondCurrentRide;
   final OnWidgetRectChange firstCurrentRideRectCb;
+  final OnWidgetRectChange secondCurrentRideRectCb;
+
+  final bool highlightRemainingRide;
   final OnWidgetRectChange firstRemainingRideRectCb;
+
+  final bool highlightCarButton;
+  final OnWidgetRectChange carButtonRectCb;
+
+  final bool highlightDropOffButton;
+  final OnWidgetRectChange dropOffButtonRectCb;
+
   static void onChangeDefault(Rect s) {}
 
   final bool interactive;
@@ -33,9 +46,16 @@ class RidesStateless extends StatelessWidget {
     this.onDropoff,
     this.selectCallback,
     this.firstCurrentRideRectCb = onChangeDefault,
+    this.secondCurrentRideRectCb = onChangeDefault,
     this.firstRemainingRideRectCb = onChangeDefault,
-    this.interactive
-
+    this.carButtonRectCb = onChangeDefault,
+    this.dropOffButtonRectCb = onChangeDefault,
+    this.highlightRemainingRide = false,
+    this.highlightFirstCurrentRide = false,
+    this.highlightSecondCurrentRide = false,
+    this.highlightCarButton = false,
+    this.highlightDropOffButton = false,
+    this.interactive = true
   }) : super(key: key);
 
   Widget emptyPage(BuildContext context) {
@@ -68,8 +88,12 @@ class RidesStateless extends StatelessWidget {
                 selectedRideIDs.contains(ride.id), selectCallback
             )
         );
-        if (i == 0)
+        if (highlightFirstCurrentRide && i == 0) {
           card = MeasureRect(child: card, onChange: firstCurrentRideRectCb);
+        }
+        else if (highlightSecondCurrentRide && i == 1) {
+          card = MeasureRect(child: card, onChange: secondCurrentRideRectCb);
+        }
         return MapEntry(i, card);
       }).values.toList();
 
@@ -129,7 +153,7 @@ class RidesStateless extends StatelessWidget {
       itemBuilder: (context, index) {
         int hour = hours[index];
         return RideGroup(
-            rideGroups[hour], hour, index, firstRemainingRideRectCb, interactive);
+            rideGroups[hour], hour, index, highlightRemainingRide, firstRemainingRideRectCb, interactive);
       },
       separatorBuilder: (context, index) {
         return SizedBox(height: 32);
@@ -141,7 +165,20 @@ class RidesStateless extends StatelessWidget {
   Widget build(BuildContext context) {
     bool emptyMainPage = interactive && currentRides.isEmpty && remainingRides.isEmpty; // no current or remaining
     bool emptyPreviewPage = !interactive && remainingRides.isEmpty; // the ride we're switching from will be a current ride, so just check remaining
-    
+    Widget carButton = IconButton(
+      icon: highlightCarButton ? Image.asset('assets/images/highlightedCarButton.png', width: 28, height: 25) : Image.asset('assets/images/carButton.png', width: 24, height: 21),
+      onPressed: () => Navigator.of(context).pop(),
+    );
+
+    Widget dropOffButton = CButton(
+        hasShadow: true,
+        text: 'Drop off ' +
+            (selectedRideIDs.length == 1
+                ? currentRides.where((ride) => ride.id == selectedRideIDs.single).single.rider.firstName
+                : 'Multiple Passengers'),
+        onPressed: onDropoff
+    );
+
     return Stack(
       children: [
         emptyMainPage || emptyPreviewPage ? Container(
@@ -173,10 +210,10 @@ class RidesStateless extends StatelessWidget {
                                 ),
                                 interactive ? Container() : Spacer(),
                                 interactive ?
-                                Container() : GestureDetector(
-                                  child: Image.asset('assets/images/carButton.png', width: 24, height: 21),
-                                  onTap: () => Navigator.of(context).pop(),
-                                )
+                                Container() : (highlightCarButton ? MeasureRect(
+                                  child: carButton,
+                                  onChange: carButtonRectCb,
+                                ) : carButton)
                               ]
                           ),
                         ),
@@ -195,24 +232,14 @@ class RidesStateless extends StatelessWidget {
         selectedRideIDs.isNotEmpty
             ? Positioned(
           bottom: 32,
-          child: SizedBox(
+          child: Container(
             width: MediaQuery.of(context).size.width,
             child: Padding(
-              padding:
-              const EdgeInsets.only(left: 34, right: 34),
-              child: FlatButton(
-                  padding: EdgeInsets.all(16),
-                  color: Colors.black,
-                  child: Text(
-                      'Drop off ' +
-                          (selectedRideIDs.length == 1
-                              ? currentRides.where((ride) => ride.id == selectedRideIDs.single).single.rider.firstName
-                              : 'Multiple Passengers'),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold)),
-                  onPressed: onDropoff),
+                padding: EdgeInsets.only(left: 34, right: 34),
+                child: highlightDropOffButton ? MeasureRect(
+                  child: dropOffButton,
+                  onChange: dropOffButtonRectCb,
+                ) : dropOffButton
             ),
           ),
         ) : Container()
@@ -271,24 +298,24 @@ class _RidesState extends State<Rides> {
         opacity: 0.3,
         isLoading: requestedDropOff,
         child: RidesStateless(
-              currentRides: ridesProvider.currentRides,
-              remainingRides: ridesProvider.remainingRides,
-              selectedRideIDs: selectedRideIDs,
-              onDropoff: () async {
-                setState(() {
-                  requestedDropOff = true;
-                });
-                for (String id in selectedRideIDs) {
-                  await finishRide(context, ridesProvider.currentRides.where((ride) => ride.id == id).single);
-                }
-                setState(() {
-                  selectedRideIDs = [];
-                  requestedDropOff = false;
-                });
-              },
-              selectCallback: _selectRide,
-              interactive: widget.interactive
-          ),
+            currentRides: ridesProvider.currentRides,
+            remainingRides: ridesProvider.remainingRides,
+            selectedRideIDs: selectedRideIDs,
+            onDropoff: () async {
+              setState(() {
+                requestedDropOff = true;
+              });
+              for (String id in selectedRideIDs) {
+                await finishRide(context, ridesProvider.currentRides.where((ride) => ride.id == id).single);
+              }
+              setState(() {
+                selectedRideIDs = [];
+                requestedDropOff = false;
+              });
+            },
+            selectCallback: _selectRide,
+            interactive: widget.interactive
+        ),
       ),
     );
 
@@ -324,10 +351,11 @@ class RideGroupTitle extends StatelessWidget {
 
 class RideGroup extends StatelessWidget {
   RideGroup(
-      this.rides, this.hour, this.groupIndex, this.firstRemainingRideRectCb, this.interactive);
+      this.rides, this.hour, this.groupIndex, this.highlightRemainingRide, this.firstRemainingRideRectCb, this.interactive);
   final int hour;
   final List<Ride> rides;
   final int groupIndex;
+  final bool highlightRemainingRide;
   final Function firstRemainingRideRectCb;
   final bool interactive;
 
@@ -358,7 +386,7 @@ class RideGroup extends StatelessWidget {
           if (!interactive) {
             w = IgnorePointer(child: w);
           }
-          if (index == 0 && groupIndex == 0)
+          if (highlightRemainingRide && index == 0 && groupIndex == 0)
             w = MeasureRect(child: w, onChange: firstRemainingRideRectCb);
           return w;
         },

@@ -1,10 +1,8 @@
 import 'package:carriage/pages/RideHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/AuthProvider.dart';
 import '../utils/LocationTracker.dart';
 import 'Rides.dart';
-import '../main_common.dart';
 import 'Profile.dart';
 import '../providers/DriverProvider.dart';
 import '../utils/CarriageTheme.dart';
@@ -72,7 +70,7 @@ class _HomeState extends State<Home> {
       case (HISTORY):
         return RideHistory();
       case (PROFILE):
-        return SingleChildScrollView(child: Profile());
+        return Profile();
       default:
         return Column();
     }
@@ -99,21 +97,6 @@ class _HomeState extends State<Home> {
           onTap: _onItemTapped,
         ),
       ),
-    );
-  }
-}
-
-class SignOutButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    return RaisedButton(
-      child: Text('Sign out', textAlign: TextAlign.start),
-      onPressed: () {
-        authProvider.signOut();
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => HomeOrLogin()));
-      },
     );
   }
 }
