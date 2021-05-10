@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class CarriageTheme {
   static final TextStyle largeTitle = TextStyle(
       color: Colors.black,
-      fontFamily: 'SFDisplay',
       fontWeight: FontWeight.bold,
       fontSize: 34,
       letterSpacing: 0.37
@@ -11,7 +10,6 @@ class CarriageTheme {
 
   static final TextStyle title1 = TextStyle(
       color: Colors.black,
-      fontFamily: 'SFDisplay',
       fontWeight: FontWeight.bold,
       fontSize: 28,
       letterSpacing: 0.36
@@ -19,7 +17,6 @@ class CarriageTheme {
 
   static final TextStyle title2 = TextStyle(
       color: Colors.black,
-      fontFamily: 'SFDisplay',
       fontWeight: FontWeight.bold,
       fontSize: 22,
       letterSpacing: 0.35
@@ -27,7 +24,6 @@ class CarriageTheme {
 
   static final TextStyle title3 = TextStyle(
       color: Colors.black,
-      fontFamily: 'SFDisplay',
       fontWeight: FontWeight.w600,
       fontSize: 20,
       height: 24 / 20,
@@ -36,7 +32,6 @@ class CarriageTheme {
 
   static final TextStyle body = TextStyle(
       color: Colors.black,
-      fontFamily: 'SFText',
       fontWeight: FontWeight.w400,
       fontSize: 17,
       letterSpacing: -0.41
@@ -44,14 +39,12 @@ class CarriageTheme {
 
   static final TextStyle button = TextStyle(
       color: Colors.white,
-      fontFamily: 'SFText',
       fontWeight: FontWeight.bold,
       fontSize: 17
   );
 
   static final TextStyle subheadline = TextStyle(
       color: Colors.black,
-      fontFamily: 'SFText',
       fontWeight: FontWeight.w400,
       fontSize: 15,
       letterSpacing: -0.24
@@ -59,7 +52,6 @@ class CarriageTheme {
 
   static final TextStyle caption1 = TextStyle(
       color: Colors.black,
-      fontFamily: 'SFText',
       fontWeight: FontWeight.w600,
       fontSize: 11,
       letterSpacing: 0.07
@@ -67,7 +59,6 @@ class CarriageTheme {
 
   static final TextStyle caption2 = TextStyle(
       color: Colors.black,
-      fontFamily: 'SFText',
       fontWeight: FontWeight.w400,
       fontSize: 11,
       letterSpacing: 0.07

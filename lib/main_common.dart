@@ -43,17 +43,8 @@ class MyApp extends StatelessWidget {
               title: 'Carriage',
               theme: ThemeData(
                   scaffoldBackgroundColor: Colors.white,
-                  primarySwatch: Colors.red,
-                  fontFamily: 'SFText',
-                  accentColor: Color.fromRGBO(60, 60, 67, 0.6),
-                  textTheme: TextTheme(
-                    headline4: TextStyle(fontFamily: 'SFDisplay', fontSize: 34, fontWeight: FontWeight.bold, letterSpacing: 0.37, color: Colors.black),
-                    headline5: TextStyle(fontFamily: 'SFDisplay', fontSize: 28, fontWeight: FontWeight.w700, letterSpacing: 0.23, color: Colors.black),
-                    headline6: TextStyle(fontFamily: 'SFDisplay', fontSize: 20.0, fontWeight: FontWeight.w700, letterSpacing: 0.38, color: Colors.black),
-                    subtitle2: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold, letterSpacing: -0.41),
-                    bodyText1: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
-                    bodyText2: TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal),
-                  )
+                  fontFamily: 'Inter',
+                  accentColor: Color.fromRGBO(60, 60, 67, 0.6)
               ),
               home: HomeOrLogin()),
         ),
