@@ -1,43 +1,8 @@
 import 'package:carriage/pages/RideHistory.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../utils/LocationTracker.dart';
 import 'Rides.dart';
 import 'Profile.dart';
-import '../providers/DriverProvider.dart';
-import '../utils/CarriageTheme.dart';
-
-class Greeting extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    DriverProvider userInfoProvider = Provider.of<DriverProvider>(context);
-    return Padding(
-        child: Container(
-            height: 46,
-            child: userInfoProvider.hasInfo()
-                ? Text('Hi ${userInfoProvider.driver.firstName}!',
-                    style: Theme.of(context).textTheme.headline4)
-                : Container()),
-        padding: EdgeInsets.only(
-            left: 24.0,
-            top: 18.0 + MediaQuery.of(context).padding.top,
-            bottom: 16.0));
-  }
-}
-
-class LeftSubheading extends StatelessWidget {
-  final String heading;
-
-  LeftSubheading({@required this.heading});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 24.0, bottom: 16.0),
-      child: Text('$heading', style: CarriageTheme.largeTitle),
-    );
-  }
-}
 
 class Home extends StatefulWidget {
   @override
