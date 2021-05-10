@@ -15,14 +15,14 @@ class RideInProgressCard extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
           color:
-              selected ? CarriageTheme.gray3.withOpacity(0.2) : Colors.white,
+          selected ? CarriageTheme.gray3.withOpacity(0.2) : Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(8)),
           boxShadow: selected
               ? [
-                  BoxShadow(
-                      blurRadius: 2,
-                      color: CarriageTheme.gray3.withOpacity(0.2))
-                ]
+            BoxShadow(
+                blurRadius: 2,
+                color: CarriageTheme.gray3.withOpacity(0.2))
+          ]
               : [CarriageTheme.shadow]),
       child: Material(
         type: MaterialType.transparency,
@@ -39,7 +39,7 @@ class RideInProgressCard extends StatelessWidget {
                 child: selected
                     ? Icon(Icons.check_circle, size: 20, color: Colors.black)
                     : Icon(Icons.circle,
-                        size: 20, color: Color.fromRGBO(196, 196, 196, 0.5))),
+                    size: 20, color: Color.fromRGBO(196, 196, 196, 0.5))),
             Container(
               padding: const EdgeInsets.all(16),
               child: Column(mainAxisSize: MainAxisSize.max, children: [
@@ -75,30 +75,40 @@ class RideInProgressCard extends StatelessWidget {
                 SizedBox(height: 8),
                 Center(
                     child: Text(ride.rider.firstName,
-                        style: Theme.of(context).textTheme.subtitle2)),
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 17,
+                            color: Colors.black,
+                            letterSpacing: -0.41,
+                            fontWeight: FontWeight.w700
+                        )
+                    )
+                ),
                 SizedBox(height: 8),
                 RichText(
                   text: TextSpan(
                       text: 'To ',
                       style: CarriageTheme.subheadline
-                          .copyWith(color: CarriageTheme.gray2),
+                          .copyWith(fontFamily: 'Inter', color: CarriageTheme.gray2),
                       children: [
                         TextSpan(
                             text: ride.endLocation,
                             style: TextStyle(
-                                fontFamily: 'SFText',
+                                fontFamily: 'Inter',
                                 fontSize: 15,
                                 color: Colors.black,
                                 letterSpacing: -0.24,
-                                fontWeight: FontWeight.w600))
-                      ]),
+                                fontWeight: FontWeight.w600)
+                        )
+                      ]
+                  ),
                 ),
                 SizedBox(height: 8),
                 RichText(
                   text: TextSpan(
                       text: 'Drop off by ',
                       style: TextStyle(
-                          fontFamily: 'SFText',
+                          fontFamily: 'Inter',
                           fontSize: 15,
                           color: CarriageTheme.gray1,
                           fontWeight: FontWeight.w400),
@@ -106,10 +116,11 @@ class RideInProgressCard extends StatelessWidget {
                         TextSpan(
                             text: DateFormat('jm').format(ride.endTime),
                             style: TextStyle(
-                                fontFamily: 'SFText',
+                                fontFamily: 'Inter',
                                 fontSize: 15,
                                 color: CarriageTheme.gray1,
-                                fontWeight: FontWeight.w600))
+                                fontWeight: FontWeight.w600)
+                        )
                       ]),
                 ),
               ]),
