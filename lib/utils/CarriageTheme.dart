@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class CarriageTheme {
   static final TextStyle largeTitle = TextStyle(
       color: Colors.black,
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.w600,
       fontSize: 34,
       letterSpacing: 0.37
   );
 
   static final TextStyle title1 = TextStyle(
       color: Colors.black,
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.w600,
       fontSize: 28,
       letterSpacing: 0.36
   );
@@ -26,7 +26,6 @@ class CarriageTheme {
       color: Colors.black,
       fontWeight: FontWeight.w600,
       fontSize: 20,
-      height: 24 / 20,
       letterSpacing: 0.38
   );
 
