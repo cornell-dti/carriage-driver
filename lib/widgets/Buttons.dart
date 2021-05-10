@@ -52,31 +52,29 @@ class DangerButton extends StatelessWidget {
 }
 
 class ShadowedCircleButton extends StatelessWidget {
-  final String imagePath;
+  final Icon icon;
   final Function onPressed;
   final double diameter;
-  ShadowedCircleButton(this.imagePath, this.onPressed, this.diameter);
+  ShadowedCircleButton(this.icon, this.onPressed, this.diameter);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: diameter,
-        height: diameter,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(100),
-            boxShadow: [CarriageTheme.shadow]),
-        child: Material(
+      width: diameter,
+      height: diameter,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(100),
+          boxShadow: [CarriageTheme.shadow]),
+      child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-            onTap: onPressed,
-            child: Padding(
-              padding: EdgeInsets.all(diameter / 3.5),
-              child: Image.asset(imagePath, color: Colors.black),
-            )
-          ),
-        ));
+              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+              onTap: onPressed,
+              child: icon
+          )
+      ),
+    );
   }
 }
 
@@ -88,7 +86,7 @@ class CallButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String phoneURL = 'tel:' + phoneNumber;
-    return ShadowedCircleButton('assets/images/phoneIcon.png', () async {
+    return ShadowedCircleButton(Icon(Icons.phone), () async {
       if (await canLaunch(phoneURL)) {
         await launch(phoneURL);
       } else {
@@ -105,7 +103,7 @@ class NotifyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShadowedCircleButton('assets/images/bellIcon.png', () {
+    return ShadowedCircleButton(Icon(Icons.notifications), () {
       showDialog(
           context: context,
           builder: (_) => ConfirmDialog(

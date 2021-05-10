@@ -87,11 +87,11 @@ class _HomeState extends State<Home> {
           unselectedItemColor: Colors.grey,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Image.asset(_selectedIndex == 0 ? 'assets/images/carIconBlack.png' : 'assets/images/carIconGrey.png', width: 20), label: 'Rides'),
+              icon: Icon(Icons.directions_car, size: 20), label: 'Rides'),
             BottomNavigationBarItem(
-                icon: Image.asset(_selectedIndex == 1 ? 'assets/images/clockIconBlack.png' : 'assets/images/clockIconGrey.png', width: 20), label: 'History'),
+                icon: Icon(Icons.schedule, size: 20), label: 'History'),
             BottomNavigationBarItem(
-                icon: Image.asset(_selectedIndex == 2 ? 'assets/images/profileIconBlack.png' : 'assets/images/profileIconGrey.png', width: 20), label: 'Profile')
+                icon: Icon(Icons.person, size: 20), label: 'Profile')
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
