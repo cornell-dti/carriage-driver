@@ -39,78 +39,78 @@ class _RideCardState extends State<RideCard> {
         child: Material(
             type: MaterialType.transparency,
             child: InkWell(
-                customBorder: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          BeginRidePage(ride: widget.ride)));
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(padding),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                            children: [
-                              widget.ride.rider.profilePicture(profilePictureSize),
-                              SizedBox(width: picNameSpacing),
-                              Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: textWidth,
-                                      child: FittedBox(
-                                        alignment: Alignment.centerLeft,
-                                        fit: BoxFit.scaleDown,
-                                        child: Text(widget.ride.rider.firstName,
-                                            style: CarriageTheme.title3),
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    widget.ride.rider.accessibilityNeeds.length > 0 && textWidth > 0 ?
-                                    Container(
-                                      width: textWidth,
-                                      child: Text(
-                                          widget.ride.rider.accessibilityNeeds
-                                              .join(', '),
-                                          style: TextStyle(
-                                              color: CarriageTheme.gray2,
-                                              fontStyle: FontStyle.italic,
-                                              fontSize: 15)
-                                      ),
-                                    ) : Container()
-                                  ]
-                              ),
-                              SizedBox(width: nameButtonSpacing),
-                              textWidth == 0 || widget.ride.rider.accessibilityNeeds.length == 0 ? Spacer() : Container(),
-                              MeasureSize(
-                                onChange: (size) {
-                                  setState(() {
-                                    buttonsWidth = size.width;
-                                    textWidth = MediaQuery.of(context).size.width - (2*margin) - (2*padding) - buttonsWidth - profilePictureSize - picNameSpacing - nameButtonSpacing;
-                                  });
-                                },
-                                child: Row(
-                                    children: [
-                                      CallButton(widget.ride.rider.phoneNumber, 48),
-                                      SizedBox(width: 8),
-                                      NotifyButton(widget.ride, 48)
-                                    ]
+              customBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        BeginRidePage(ride: widget.ride)));
+              },
+              child: Padding(
+                padding: EdgeInsets.all(padding),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          widget.ride.rider.profilePicture(profilePictureSize),
+                          SizedBox(width: picNameSpacing),
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: textWidth,
+                                  child: FittedBox(
+                                    alignment: Alignment.centerLeft,
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(widget.ride.rider.firstName,
+                                        style: CarriageTheme.title3),
+                                  ),
                                 ),
-                              )
-                            ]
-                        ),
-                        SizedBox(height: 32),
-                        TimeLine(widget.ride)
-                      ]
-                  ),
-                )
+                                SizedBox(height: 4),
+                                widget.ride.rider.accessibilityNeeds.length > 0 && textWidth > 0 ?
+                                Container(
+                                  width: textWidth,
+                                  child: Text(
+                                      widget.ride.rider.accessibilityNeeds
+                                          .join(', '),
+                                      style: TextStyle(
+                                          color: CarriageTheme.gray2,
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 15)
+                                  ),
+                                ) : Container()
+                              ]
+                          ),
+                          SizedBox(width: nameButtonSpacing),
+                          textWidth == 0 || widget.ride.rider.accessibilityNeeds.length == 0 ? Spacer() : Container(),
+                          MeasureSize(
+                            onChange: (size) {
+                              setState(() {
+                                buttonsWidth = size.width;
+                                textWidth = MediaQuery.of(context).size.width - (2*margin) - (2*padding) - buttonsWidth - profilePictureSize - picNameSpacing - nameButtonSpacing;
+                              });
+                            },
+                            child: Row(
+                                children: [
+                                  CallButton(widget.ride.rider.phoneNumber, 48),
+                                  SizedBox(width: 8),
+                                  NotifyButton(widget.ride, 48)
+                                ]
+                            ),
+
+                          ),
+                        ]
+                      ),
+                      SizedBox(height: 32),
+                      TimeLine(widget.ride)
+                    ]
+                ),
+              ),
             )
         )
     );
-
   }
 }
 
@@ -150,11 +150,9 @@ class _TimeLineState extends State<TimeLine> {
           Expanded(
             child: RichText(
               text: TextSpan(
-                  text: DateFormat('jm').format(time),
-                  style: CarriageTheme.body.copyWith(
-                      fontWeight: FontWeight.bold, color: Colors.black),
                   children: [
-                    TextSpan(text: ' @ $location', style: CarriageTheme.body)
+                    TextSpan(text: DateFormat('jm').format(time), style: CarriageTheme.body.copyWith(fontFamily: 'Inter', fontWeight: FontWeight.bold)),
+                    TextSpan(text: ' @ $location', style: CarriageTheme.body.copyWith(fontFamily: 'Inter'))
                   ]),
             ),
           ),
