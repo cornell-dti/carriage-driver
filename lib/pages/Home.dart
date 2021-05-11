@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import '../utils/LocationTracker.dart';
 import 'Rides.dart';
 import 'Profile.dart';
-import '../providers/DriverProvider.dart';
-import '../utils/CarriageTheme.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -12,6 +10,7 @@ import 'dart:convert';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../utils/app_config.dart';
+import 'package:provider/provider.dart';
 import '../providers/AuthProvider.dart';
 import '../utils/NotificationService.dart';
 
@@ -178,8 +177,7 @@ class _HomeState extends State<Home> {
   }
 
   subscribe(String token) async {
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
     String authToken = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
       "${AppConfig.of(context).baseUrl}/notification/subscribe",
