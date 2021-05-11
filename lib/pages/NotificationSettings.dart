@@ -62,11 +62,11 @@ class SettingRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: TextStyle(fontFamily: 'SFDisplay', fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
               Container(
                   width: MediaQuery.of(context).size.width * 0.7,
-                  child: Text(description, style: TextStyle(fontFamily: 'SFDisplay', fontSize: 17, color: CarriageTheme.gray1))
+                  child: Text(description, style: TextStyle(fontSize: 17, color: CarriageTheme.gray1))
               ),
             ],
           ),

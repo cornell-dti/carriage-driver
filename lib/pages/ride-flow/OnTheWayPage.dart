@@ -107,7 +107,6 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                                           child: Text('Pause Ride',
                                                               style: TextStyle(
                                                                 color: Colors.black,
-                                                                fontFamily: 'SFText',
                                                                 fontWeight: FontWeight.w700,
                                                                 fontSize: 16,
                                                               )

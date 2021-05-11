@@ -118,7 +118,6 @@ class Profile extends StatelessWidget {
                           children: [
                             Text(driverProvider.driver.firstName + ' ' + driverProvider.driver.lastName,
                                 style: TextStyle(
-                                    fontFamily: 'SFDisplay',
                                     fontSize: 22,
                                     fontWeight: FontWeight.w700
                                 )
@@ -253,9 +252,9 @@ class SettingRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: TextStyle(fontFamily: 'SFDisplay', fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
-              Text(description, style: TextStyle(fontFamily: 'SFDisplay', fontSize: 17, color: CarriageTheme.gray1)),
+              Text(description, style: TextStyle(fontSize: 17, color: CarriageTheme.gray1)),
             ],
           ),
           Spacer(),
@@ -280,7 +279,7 @@ class InfoGroup extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(title, style: TextStyle(fontFamily: 'SFDisplay', fontSize: 20, fontWeight: FontWeight.bold)),
+                Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,
@@ -562,7 +561,6 @@ class SignOutButton extends StatelessWidget {
                   Text(
                       'Sign out',
                       style: TextStyle(
-                          fontFamily: 'SFDisplay',
                           fontSize: 16,
                           fontWeight: FontWeight.w700
                       )

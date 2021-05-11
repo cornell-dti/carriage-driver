@@ -40,40 +40,24 @@ flutter_icons:
 
 flutter:
   fonts:
-    - family: SFDisplay
+    - family: Inter
       fonts:
-        - asset: fonts/SFUIDisplay-Black.ttf
+        - asset: fonts/Inter-Black.ttf
           weight: 900
-        - asset: fonts/SFUIDisplay-Heavy.ttf
-          weight: 800
-        - asset: fonts/SFUIDisplay-Bold.ttf
+        - asset: fonts/Inter-Bold.ttf
           weight: 700
-        - asset: fonts/SFUIDisplay-Semibold.ttf
+        - asset: fonts/Inter-SemiBold.ttf
           weight: 600
-        - asset: fonts/SFUIDisplay-Medium.ttf
+        - asset: fonts/Inter-Medium.ttf
           weight: 500
-        - asset: fonts/SFUIDisplay-Regular.ttf
+        - asset: fonts/Inter-Regular.ttf
           weight: 400
-        - asset: fonts/SFUIDisplay-Light.ttf
+        - asset: fonts/Inter-Light.ttf
           weight: 300
-        - asset: fonts/SFUIDisplay-Thin.ttf
+        - asset: fonts/Inter-Thin.ttf
           weight: 200
-        - asset: fonts/SFUIDisplay-Ultralight.ttf
+        - asset: fonts/Inter-ExtraLight.ttf
           weight: 100
-    - family: SFText
-      fonts:
-        - asset: fonts/SFUIText-Heavy.ttf
-          weight: 800
-        - asset: fonts/SFUIText-Bold.ttf
-          weight: 700
-        - asset: fonts/SFUIText-Semibold.ttf
-          weight: 600
-        - asset: fonts/SFUIText-Medium.ttf
-          weight: 500
-        - asset: fonts/SFUIText-Regular.ttf
-          weight: 400
-        - asset: fonts/SFUIText-Light.ttf
-          weight: 300
   uses-material-design: true
   assets:
     - assets/images/
