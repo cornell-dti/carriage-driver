@@ -110,8 +110,9 @@ class NotifyButton extends StatelessWidget {
             title: "Notify Delay",
             content: "Would you like to notify the rider of a delay?",
             actionName: "Notify",
-            onConfirm: () {
-              // TODO: notify delay functionality
+            onConfirm: () async {
+              await notifyDelay(context, ride.id);
+              Navigator.of(context, rootNavigator: true).pop();
             },
           ),
           barrierDismissible: true);

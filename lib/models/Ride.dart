@@ -106,6 +106,18 @@ RideStatus getStatusEnum(String status) {
 }
 
 ///Modifies the ride with [id] to have status [status].
+Future<http.Response> notifyDelay(BuildContext context, String id) async {
+  AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+  String token = await authProvider.secureStorage.read(key: 'token');
+  final body = jsonEncode(<String, bool>{'late': true});
+  return http
+      .put(AppConfig.of(context).baseUrl + '/rides/$id', body: body, headers: {
+    'Content-Type': 'application/json',
+    HttpHeaders.authorizationHeader: 'Bearer $token'
+  });
+}
+
+///Modifies the ride with [id] to have status [status].
 Future<http.Response> updateRideStatus(
     BuildContext context, String id, RideStatus status) async {
   AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
