@@ -188,8 +188,9 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                               content:
                                               "Would you like to notify the rider of a delay?",
                                               actionName: "Notify",
-                                              onConfirm: () {
-                                                // TODO: notification functionality
+                                              onConfirm: () async {
+                                                await notifyDelay(context, widget.ride.id);
+                                                Navigator.of(context, rootNavigator: true).pop();
                                               },
                                             ),
                                             barrierDismissible: true);
