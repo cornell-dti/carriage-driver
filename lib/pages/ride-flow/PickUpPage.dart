@@ -1,3 +1,6 @@
+import 'package:carriage/providers/RidesProvider.dart';
+import 'package:provider/provider.dart';
+
 import '../../utils/MeasureRect.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:carriage/widgets/Dialogs.dart';
@@ -180,6 +183,8 @@ class _PickUpPageState extends State<PickUpPage> {
                                                   final pastResponse = await setRideToPast(
                                                       context, widget.ride.id);
                                                   if (pastResponse.statusCode == 200) {
+                                                    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+                                                    ridesProvider.finishCurrentRide(widget.ride);
                                                     Navigator.of(context).pushReplacement(
                                                         MaterialPageRoute(
                                                             builder:
@@ -197,6 +202,7 @@ class _PickUpPageState extends State<PickUpPage> {
                                             ),
                                             barrierDismissible: true
                                         );
+
                                       }
                                   ),
                                 ]

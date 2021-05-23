@@ -157,9 +157,6 @@ class Profile extends StatelessWidget {
               sectionDivider,
               // commenting out right now because this is likely being removed or pushed to v2
               //SettingRow('Notifications', 'Set your notification preferences', NotificationSettings()),
-              //TODO: implement this
-              SettingRow('Legal', 'Terms of Service & Privacy Policy', Container()),
-              sectionDivider,
               SignOutButton()
             ],
           ),
