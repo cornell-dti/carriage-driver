@@ -1,8 +1,7 @@
-import 'package:carriage/pages/RideHistory.dart';
+import 'package:carriage/pages/Notifications.dart';
+import 'package:carriage/providers/PageNavigationProvider.dart';
 import 'package:flutter/material.dart';
 import '../utils/LocationTracker.dart';
-import 'Rides.dart';
-import 'Profile.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -14,17 +13,15 @@ import 'package:provider/provider.dart';
 import '../providers/AuthProvider.dart';
 import '../utils/NotificationService.dart';
 
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  static const int RIDES = 0;
-  static const int HISTORY = 1;
-  static const int PROFILE = 2;
-
-  int _selectedIndex = RIDES;
+  //TODO: figure out if there's been a new notification
+  bool hasNewNotification = false;
 
   //Initialize notification variables
   static final FirebaseMessaging _fcm = FirebaseMessaging();
@@ -32,6 +29,7 @@ class _HomeState extends State<Home> {
       FlutterLocalNotificationsPlugin();
   StreamSubscription iosSubscription; // ignore: cancel_subscriptions
   String deviceToken;
+  String id;
 
   @override
   void initState() {
@@ -53,8 +51,13 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> onSelectNotification(String payload) {
-    Navigator.push(
-        context, new MaterialPageRoute(builder: (context) => Home()));
+    if (id != null) {
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => NotificationsPage()));
+    } else {
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => NotificationsPage()));
+    }
     return Future<void>.value();
   }
 
@@ -95,7 +98,7 @@ class _HomeState extends State<Home> {
     await notificationsPlugin.show(
       0,
       'Carriage Driver',
-      notification,
+      'Ride changed by $notification',
       platformChannelSpecifics,
     );
   }
@@ -119,40 +122,46 @@ class _HomeState extends State<Home> {
     _fcm.configure(
       onBackgroundMessage: Platform.isIOS ? null : backgroundHandle,
       onMessage: (Map<String, dynamic> message) async {
-        // print("onMessage: $message");
+        hasNewNotification = true;
         if (Platform.isAndroid) {
           androidNotification =
               PushNotificationMessageAndroid.fromJson(message);
+          id = androidNotification.rideId;
         } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
+          id = iosNotification.rideId;
         }
         Platform.isIOS
-            ? showNotification(iosNotification.body)
-            : showNotification(androidNotification.body);
+            ? showNotification(iosNotification.changedBy)
+            : showNotification(androidNotification.changedBy);
         setState(() {});
       },
       onLaunch: (Map<String, dynamic> message) async {
-        //print("onLaunch: $message");
+        hasNewNotification = true;
         if (Platform.isAndroid) {
           androidNotification =
               PushNotificationMessageAndroid.fromJson(message);
+          id = androidNotification.rideId;
         } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
+          id = iosNotification.rideId;
         }
-        Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => Home()));
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => NotificationsPage()));
         setState(() {});
       },
       onResume: (Map<String, dynamic> message) async {
-        //print("onResume: $message");
+        hasNewNotification = true;
         if (Platform.isAndroid) {
           androidNotification =
               PushNotificationMessageAndroid.fromJson(message);
+          id = androidNotification.rideId;
         } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
+          id = iosNotification.rideId;
         }
-        Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => Home()));
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => NotificationsPage()));
         setState(() {});
       },
     );
@@ -164,14 +173,8 @@ class _HomeState extends State<Home> {
     if (message.containsKey('data')) {
       // Handle data message
       final dynamic data = message['data']['default'];
-      showNotification('$data');
+      showNotification(jsonDecode(data)['changedBy']['userType']);
       print("_backgroundMessageHandler data: $data");
-    }
-    if (message.containsKey('notification')) {
-      // Handle notification message
-      final dynamic notification = message['notification']['body'];
-      showNotification('$notification');
-      print("_backgroundMessageHandler notification: $notification");
     }
     return Future<void>.value();
   }
@@ -197,44 +200,48 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  Widget getPage(BuildContext context, int index) {
-    switch (index) {
-      case (RIDES):
-        return Rides(interactive: true);
-      case (HISTORY):
-        return RideHistory();
-      case (PROFILE):
-        return Profile();
-      default:
-        return Column();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    Widget notifIcon = Icon(Icons.notifications);
+    Widget notifWidget = hasNewNotification
+        ? Stack(children: [
+            notifIcon,
+            Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                    width: 9,
+                    height: 9,
+                    padding: EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(100),
+                    )))
+          ])
+        : notifIcon;
+
+    PageNavigationProvider pageNavProvider =
+        Provider.of<PageNavigationProvider>(context);
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        body: getPage(context, _selectedIndex),
+        body: pageNavProvider.getPage(),
         bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           selectedItemColor: Colors.black,
           unselectedItemColor: Colors.grey,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.directions_car, size: 20), label: 'Rides'),
+                icon: Icon(Icons.directions_car), label: 'Rides'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.schedule, size: 20), label: 'History'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person, size: 20), label: 'Profile')
+                icon: Icon(Icons.schedule), label: 'History'),
+            BottomNavigationBarItem(icon: notifWidget, label: 'Notifications'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
           ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
+          currentIndex: pageNavProvider.getPageIndex(),
+          onTap: (index) => pageNavProvider.changePage(index),
+          showUnselectedLabels: true,
         ),
       ),
     );

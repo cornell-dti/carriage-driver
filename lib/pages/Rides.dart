@@ -1,4 +1,5 @@
 import 'package:carriage/providers/AuthProvider.dart';
+import 'package:carriage/providers/PageNavigationProvider.dart';
 import 'package:carriage/utils/app_config.dart';
 import 'package:carriage/widgets/Buttons.dart';
 import 'package:loading_overlay/loading_overlay.dart';
@@ -22,17 +23,21 @@ class RidesStateless extends StatelessWidget {
 
   final bool highlightFirstCurrentRide;
   final bool highlightSecondCurrentRide;
+
   final OnWidgetRectChange firstCurrentRideRectCb;
   final OnWidgetRectChange secondCurrentRideRectCb;
 
   final bool highlightRemainingRide;
   final OnWidgetRectChange firstRemainingRideRectCb;
 
+  final int scrollToHour;
+
   final bool highlightCarButton;
   final OnWidgetRectChange carButtonRectCb;
 
   final bool highlightDropOffButton;
   final OnWidgetRectChange dropOffButtonRectCb;
+
 
   static void onChangeDefault(Rect s) {}
 
@@ -55,11 +60,15 @@ class RidesStateless extends StatelessWidget {
     this.highlightSecondCurrentRide = false,
     this.highlightCarButton = false,
     this.highlightDropOffButton = false,
-    this.interactive = true
+    this.interactive = true,
+    this.scrollToHour,
   }) : super(key: key);
 
   Widget emptyPage(BuildContext context) {
-    double imageSize = MediaQuery.of(context).size.width * 0.2;
+    double imageSize = MediaQuery
+        .of(context)
+        .size
+        .width * 0.2;
     return Center(
       child: Column(
         children: <Widget>[
@@ -83,7 +92,10 @@ class RidesStateless extends StatelessWidget {
       double spacing = 16;
       List<Widget> rideCards = currentRides.asMap().map((i, ride) {
         Widget card = Container(
-            width: (MediaQuery.of(context).size.width / 2) - (spacing * 1.5),
+            width: (MediaQuery
+                .of(context)
+                .size
+                .width / 2) - (spacing * 1.5),
             child: RideInProgressCard(Key(ride.id), ride,
                 selectedRideIDs.contains(ride.id), selectCallback
             )
@@ -115,7 +127,6 @@ class RidesStateless extends StatelessWidget {
       }
       return result;
     }
-
     return Container(
         child: Column(
             children: [
@@ -135,54 +146,90 @@ class RidesStateless extends StatelessWidget {
     );
   }
 
-  Widget rideCards(BuildContext context, List<Ride> rides) {
-    Map<int, List<Ride>> rideGroups = Map();
-    for (Ride ride in rides) {
-      int hour = ride.startTime.hour;
-      if (rideGroups.containsKey(hour)) {
-        rideGroups[hour].add(ride);
-      } else {
-        rideGroups[hour] = [ride];
-      }
-    }
-    List<int> hours = rideGroups.keys.toList();
-    return ListView.separated(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: hours.length,
-      itemBuilder: (context, index) {
-        int hour = hours[index];
-        return RideGroup(
-            rideGroups[hour], hour, index, highlightRemainingRide, firstRemainingRideRectCb, interactive);
-      },
-      separatorBuilder: (context, index) {
-        return SizedBox(height: 32);
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final ScrollController scrollCtrl = ScrollController();
+    Map<int, List<Ride>> groupsByHour = Map();
+
+    for (Ride ride in remainingRides) {
+      int hour = ride.startTime.hour;
+      if (groupsByHour.containsKey(hour)) {
+        groupsByHour[hour].add(ride);
+      } else {
+        groupsByHour[hour] = [ride];
+      }
+    }
+
+    List<int> hours = groupsByHour.keys.toList();
+    List<RideGroup> rideGroups = [];
+    Map<int, GlobalKey> keysByHour = Map();
+    hours.forEach((hour) {
+      keysByHour[hour] = GlobalKey();
+    });
+    hours.asMap().forEach((index, hour) {
+      rideGroups.add(
+      RideGroup(keysByHour[hour], groupsByHour[hour], hour, index,
+              highlightRemainingRide, firstRemainingRideRectCb, interactive)
+      );
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      PageNavigationProvider pageNavProvider = Provider.of<
+          PageNavigationProvider>(context, listen: false);
+      int hourToScrollTo = pageNavProvider.getHourToScrollTo();
+      if (hourToScrollTo != null) {
+        RenderBox renderBox = keysByHour[hourToScrollTo].currentContext
+            .findRenderObject();
+        double yPos = renderBox
+            .localToGlobal(Offset(0, -50))
+            .dy;
+        scrollCtrl.animateTo(
+            yPos, duration: Duration(milliseconds: 500), curve: Curves.ease);
+        pageNavProvider.finishScroll();
+      }
+    });
+
+    Widget rideCards() {
+      return ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: hours.length,
+        itemBuilder: (context, index) {
+          int hour = hours[index];
+          return RideGroup(
+              keysByHour[hour], groupsByHour[hour], hour, index, highlightRemainingRide, firstRemainingRideRectCb, interactive
+          );
+        },
+        separatorBuilder: (context, index) {
+          return SizedBox(height: 32);
+        },
+      );
+    }
+
     bool emptyMainPage = interactive && currentRides.isEmpty && remainingRides.isEmpty; // no current or remaining
     bool emptyPreviewPage = !interactive && remainingRides.isEmpty; // the ride we're switching from will be a current ride, so just check remaining
+
     Widget carButton = IconButton(
-      icon: highlightCarButton ? Image.asset('assets/images/highlightedCarButton.png', width: 28, height: 25) : Image.asset('assets/images/carButton.png', width: 24, height: 21),
-      onPressed: () => Navigator.of(context).pop(),
+    icon: highlightCarButton ? Image.asset('assets/images/highlightedCarButton.png', width: 28, height: 25) : Image.asset('assets/images/carButton.png', width: 24, height: 21),
+    onPressed: () => Navigator.of(context).pop(),
     );
 
     Widget dropOffButton = CButton(
-        hasShadow: true,
-        text: 'Drop off ' +
-            (selectedRideIDs.length == 1
-                ? currentRides.where((ride) => ride.id == selectedRideIDs.single).single.rider.firstName
-                : 'Multiple Passengers'),
-        onPressed: onDropoff
+    hasShadow: true,
+    text: 'Drop off ' +
+    (selectedRideIDs.length == 1
+    ? currentRides.where((ride) => ride.id == selectedRideIDs.single).single.rider.firstName
+        : 'Multiple Passengers'),
+    onPressed: onDropoff
     );
 
     return Stack(
       children: [
         emptyMainPage || emptyPreviewPage ? Container(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -191,8 +238,12 @@ class RidesStateless extends StatelessWidget {
           ),
         ) : Container(),
         Container(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery
+                .of(context)
+                .size
+                .height,
             child: ListView(
+                controller: scrollCtrl,
                 physics: AlwaysScrollableScrollPhysics(),
                 shrinkWrap: true,
                 children: [
@@ -205,12 +256,13 @@ class RidesStateless extends StatelessWidget {
                           child: Row(
                               children: [
                                 Text(
-                                    DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
+                                    DateFormat('E').format(DateTime.now()) +
+                                        '. ' + DateFormat('Md').format(
+                                        DateTime.now()),
                                     style: CarriageTheme.largeTitle
                                 ),
                                 interactive ? Container() : Spacer(),
-                                interactive ?
-                                Container() : (highlightCarButton ? MeasureRect(
+                                interactive ? Container() : (highlightCarButton ? MeasureRect(
                                   child: carButton,
                                   onChange: carButtonRectCb,
                                 ) : carButton)
@@ -223,8 +275,9 @@ class RidesStateless extends StatelessWidget {
                         selectedRideIDs.isEmpty
                             ? Padding(
                           padding: EdgeInsets.only(bottom: 32),
-                          child: rideCards(context, remainingRides),
-                        ) : Container()]
+                          child: rideCards(),
+                        ) : Container()
+                      ]
                   )
                 ]
             )
@@ -249,7 +302,8 @@ class RidesStateless extends StatelessWidget {
 }
 
 class Rides extends StatefulWidget {
-  Rides({@required this.interactive});
+  Rides({@required this.interactive, this.scrollToHour});
+  final int scrollToHour;
   final bool interactive;
 
   @override
@@ -350,8 +404,9 @@ class RideGroupTitle extends StatelessWidget {
 }
 
 class RideGroup extends StatelessWidget {
-  RideGroup(
-      this.rides, this.hour, this.groupIndex, this.highlightRemainingRide, this.firstRemainingRideRectCb, this.interactive);
+  RideGroup(this.key, this.rides, this.hour, this.groupIndex, this.highlightRemainingRide, this.firstRemainingRideRectCb, this.interactive): super(key: key);
+  final GlobalKey key;
+
   final int hour;
   final List<Ride> rides;
   final int groupIndex;
@@ -367,7 +422,7 @@ class RideGroup extends StatelessWidget {
     String title = DateFormat('jm').format(startHour) + ' ~ ' + DateFormat('jm').format(endHour);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.only(left: 16, right: 16, bottom: 24),
       child: ListView.separated(
         itemCount: rides.length + 1,
         itemBuilder: (context, index) {
