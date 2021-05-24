@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:carriage/providers/AuthProvider.dart';
+import 'package:carriage/utils/MeasureSize.dart';
 import 'package:carriage/utils/app_config.dart';
 
 import '../utils/CarriageTheme.dart';
@@ -44,34 +47,34 @@ class RideHistory extends StatelessWidget {
           await ridesProvider.requestPastRides(appConfig, authProvider);
         },
         child: ListView(
-          physics: AlwaysScrollableScrollPhysics(),
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
-                  child: Text('History', style: CarriageTheme.largeTitle),
-                ),
-                SizedBox(height: 22),
-                ListView.separated(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: days.length,
-                  itemBuilder: (context, index) {
-                    int daysAgo = days[index];
-                    return PastRideGroup(
-                        rideGroups[daysAgo].first.startTime, rideGroups[daysAgo]
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(height: 48);
-                  },
-                ),
-                SizedBox(height: 32)
-              ],
-            ),
-          ]
+            physics: AlwaysScrollableScrollPhysics(),
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+                    child: Text('History', style: CarriageTheme.largeTitle),
+                  ),
+                  SizedBox(height: 22),
+                  ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: days.length,
+                    itemBuilder: (context, index) {
+                      int daysAgo = days[index];
+                      return PastRideGroup(
+                          rideGroups[daysAgo].first.startTime, rideGroups[daysAgo]
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return SizedBox(height: 48);
+                    },
+                  ),
+                  SizedBox(height: 32)
+                ],
+              ),
+            ]
         ),
       ),
     );
@@ -79,36 +82,32 @@ class RideHistory extends StatelessWidget {
 }
 
 class LocationInfo extends StatelessWidget {
-  LocationInfo(this.isPickup, this.location, this.dateTime);
+  LocationInfo(this.isPickup, this.directionWidth, this.setDirectionWidth, this.location, this.dateTime);
   final bool isPickup;
   final String location;
   final DateTime dateTime;
+  final double directionWidth;
+  final Function setDirectionWidth;
 
-  // source: https://stackoverflow.com/a/62536187/
-  double getTextWidth(BuildContext context) {
-    TextPainter painter = TextPainter(
-      text: TextSpan(
-          text: 'Dropoff', style: CarriageTheme.caption1
-      ),
-      maxLines: 1,
-      textScaleFactor: MediaQuery.of(context).textScaleFactor,
-      textDirection: TextDirection.ltr
-    )..layout();
-
-    return painter.size.width;
-  }
   @override
   Widget build(BuildContext context) {
 
+    Text directionText = Text(isPickup ? 'Pickup' : 'Dropoff', style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3));
+
     return Row(
       children: [
-        Container(
-            width: getTextWidth(context), //dropoffTextSize.width,
-            child: Text(isPickup ? 'Pickup' : 'Dropoff', style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3))
+        directionWidth == null ? Container(
+          child: MeasureSize(
+            onChange: setDirectionWidth,
+            child: directionText,
+          ),
+        ) : Container(
+            width: directionWidth,
+            child: directionText
         ),
         SizedBox(width: 12),
         Container(
-            // TODO: try to make this less hard-coded?
+          // TODO: try to make this less hard-coded?
             width: MediaQuery.of(context).size.width / 2,
             child: Text(location + ' @ ' + intl.DateFormat('jm').format(dateTime), style: CarriageTheme.body)
         )
@@ -116,25 +115,42 @@ class LocationInfo extends StatelessWidget {
     );
   }
 }
-class RideHistoryRow extends StatelessWidget {
+class RideHistoryRow extends StatefulWidget {
   RideHistoryRow(this.ride);
   final Ride ride;
 
+  @override
+  _RideHistoryRowState createState() => _RideHistoryRowState();
+}
+
+class _RideHistoryRowState extends State<RideHistoryRow> {
+  double locationWidth;
+
+  void setLocationWidth(double width) {
+    setState(() {
+      if (locationWidth == null) {
+        locationWidth = width;
+      }
+      else {
+        locationWidth = max(locationWidth, width);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        ride.rider.profilePicture(54),
+        widget.ride.rider.profilePicture(54),
         SizedBox(width: 28),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(ride.rider.firstName, style: CarriageTheme.body.copyWith(fontWeight: FontWeight.w600)),
+            Text(widget.ride.rider.firstName, style: CarriageTheme.body.copyWith(fontWeight: FontWeight.w600)),
             SizedBox(height: 8),
-            LocationInfo(true, ride.startLocation, ride.startTime),
+            LocationInfo(true, locationWidth, (size) => setLocationWidth(size.width), widget.ride.startLocation, widget.ride.startTime),
             SizedBox(height: 4),
-            LocationInfo(false, ride.endLocation, ride.endTime),
+            LocationInfo(false, locationWidth, (size) => setLocationWidth(size.width), widget.ride.endLocation, widget.ride.endTime),
           ],
         )
       ],

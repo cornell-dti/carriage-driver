@@ -8,8 +8,7 @@ import 'RideDestPickupCard.dart';
 class RideStops extends StatefulWidget {
   final Ride ride;
   final bool carIcon;
-  final bool largeSpacing;
-  RideStops({Key key, @required this.ride, @required this.carIcon, @required this.largeSpacing}) : super(key: key);
+  RideStops({Key key, @required this.ride, @required this.carIcon}) : super(key: key);
 
   @override
   RideStopsState createState() => RideStopsState();
@@ -85,7 +84,7 @@ class RideStopsState extends State<RideStops> {
                     ],
                   ),
                 ),
-                SizedBox(height: widget.largeSpacing ? 24 : 12),
+                SizedBox(height: 40),
                 Padding(
                   padding: const EdgeInsets.only(right: 16),
                   child: Row(

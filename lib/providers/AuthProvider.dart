@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/app_config.dart';
 
@@ -38,6 +39,7 @@ class AuthProvider with ChangeNotifier {
   StreamSubscription _userAuthSub;
   GoogleSignIn googleSignIn;
   FlutterSecureStorage secureStorage;
+  Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 
   AuthProvider(BuildContext context) {
     secureStorage = FlutterSecureStorage();
@@ -54,6 +56,7 @@ class AuthProvider with ChangeNotifier {
         Map<String, dynamic> jwt = JwtDecoder.decode(token);
         id = jwt['id'];
         await secureStorage.write(key: 'token', value: token);
+
         notifyListeners();
       } else {
         id = null;

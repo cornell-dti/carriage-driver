@@ -45,9 +45,9 @@ class DriverProvider with ChangeNotifier {
     }
   }
 
-  /// Updates the logged in driver's name and phone number.
-  Future<void> updateDriver(AppConfig config, AuthProvider authProvider,
-      String firstName, String lastName, String phoneNumber) async {
+  /// Updates the logged in driver's name.
+  Future<void> updateName(AppConfig config, AuthProvider authProvider,
+      String firstName, String lastName) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.put(
       "${config.baseUrl}/drivers/${authProvider.id}",
@@ -58,7 +58,28 @@ class DriverProvider with ChangeNotifier {
       body: jsonEncode(<String, String>{
         'firstName': firstName,
         'lastName': lastName,
-        'phoneNumber': phoneNumber,
+      }),
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> json = jsonDecode(response.body);
+      _setDriver(Driver.fromJson(json));
+    } else {
+      throw Exception('Failed to update driver.');
+    }
+  }
+
+  /// Updates the logged in driver's phone number.
+  Future<void> updatePhoneNumber(AppConfig config, AuthProvider authProvider,
+      String phoneNumber) async {
+    String token = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.put(
+      "${config.baseUrl}/drivers/${authProvider.id}",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      },
+      body: jsonEncode(<String, String>{
+        'phoneNumber': phoneNumber
       }),
     );
     if (response.statusCode == 200) {

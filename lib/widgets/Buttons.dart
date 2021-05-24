@@ -1,3 +1,4 @@
+import 'package:carriage/models/Ride.dart';
 import 'package:carriage/pages/Rides.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,35 +11,28 @@ class CButton extends StatelessWidget {
   final hasShadow;
   final void Function() onPressed;
 
-  CButton({@required this.text, @required this.hasShadow, @required this.onPressed});
+  CButton(
+      {@required this.text,
+        @required this.hasShadow,
+        @required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    Widget button = FlatButton(
-      padding: EdgeInsets.all(16),
-      color: Colors.black,
-      child: Text(text,
-          style: CarriageTheme.button),
-      onPressed: onPressed,
+    return Container(
+      width: double.infinity,
+      child: ButtonTheme(
+          height: 50,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+          child: RaisedButton(
+            padding: EdgeInsets.all(16),
+            color: Colors.black,
+            textColor: Colors.white,
+            child: Text(text,
+                style: CarriageTheme.button),
+            onPressed: onPressed,
+          )
+      ),
     );
-
-    if (hasShadow) {
-      return Container(
-        child: button,
-        decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                  offset: Offset(0, 6),
-                  blurRadius: 6,
-                  color: Colors.black.withOpacity(0.15)
-              )
-            ]
-        ),
-      );
-    }
-    else {
-      return button;
-    }
   }
 }
 
@@ -52,35 +46,32 @@ class DangerButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: FlatButton(
-            textColor: Color.fromRGBO(240, 134, 134, 1),
-            child: Text(text, style: TextStyle(fontWeight: FontWeight.bold)),
-            onPressed: onPressed
-        )
-    );
+            child: Text(text, style: CarriageTheme.button.copyWith(color: Color.fromRGBO(240, 134, 134, 1))),
+            onPressed: onPressed));
   }
 }
 
 class ShadowedCircleButton extends StatelessWidget {
-  final String imagePath;
+  final Icon icon;
   final Function onPressed;
   final double diameter;
-  ShadowedCircleButton(this.imagePath, this.onPressed, this.diameter);
+  ShadowedCircleButton(this.icon, this.onPressed, this.diameter);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-          width: diameter,
-          height: diameter,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(100),
-              boxShadow: [CarriageTheme.shadow]
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(diameter / 3.5),
-            child: Image.asset(imagePath, color: Colors.black),
+    return Container(
+      width: diameter,
+      height: diameter,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(100),
+          boxShadow: [CarriageTheme.shadow]),
+      child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+              onTap: onPressed,
+              child: icon
           )
       ),
     );
@@ -95,7 +86,7 @@ class CallButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String phoneURL = 'tel:' + phoneNumber;
-    return ShadowedCircleButton('assets/images/phoneIcon.png', () async {
+    return ShadowedCircleButton(Icon(Icons.phone), () async {
       if (await canLaunch(phoneURL)) {
         await launch(phoneURL);
       } else {
@@ -104,50 +95,51 @@ class CallButton extends StatelessWidget {
     }, diameter);
   }
 }
+
 class NotifyButton extends StatelessWidget {
+  NotifyButton(this.ride, this.diameter);
+  final Ride ride;
+  final double diameter;
+
   @override
   Widget build(BuildContext context) {
-    return ShadowedCircleButton('assets/images/bellIcon.png', () {
+    return ShadowedCircleButton(Icon(Icons.notifications), () {
       showDialog(
           context: context,
           builder: (_) => ConfirmDialog(
             title: "Notify Delay",
             content: "Would you like to notify the rider of a delay?",
             actionName: "Notify",
-            onConfirm: () {
-              // TODO: notify delay functionality
+            onConfirm: () async {
+              await notifyDelay(context, ride.id);
+              Navigator.of(context, rootNavigator: true).pop();
             },
           ),
-          barrierDismissible: true
-      );
-    }, 40);
+          barrierDismissible: true);
+    }, diameter);
   }
 }
 
 class CalendarButton extends StatelessWidget {
+  CalendarButton({this.highlight = false});
+  final bool highlight;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16),
-      child: Row(
-          children: [
-            Spacer(),
-            GestureDetector(
-                child: Image.asset('assets/images/calendarButton.png', width: 20, height: 20,),
-                onTap: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => Scaffold(
-                              body: SafeArea(
-                                  child: Rides(interactive: false)
-                              )
-                          )
-                      )
-                  );
-                }
-            )
-          ]
-      ),
+    return Container(
+      width: 40,
+      height: 40,
+      child: IconButton(
+          icon: Image.asset(
+            highlight ? 'assets/images/highlightedCalendarButton.png' : 'assets/images/calendarButton.png',
+            width: highlight ? 24 : 20,
+            height: highlight ? 24 : 20,
+          ),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    Scaffold(body: SafeArea(child: Rides(interactive: false)))));
+          }),
     );
   }
 }
