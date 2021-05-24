@@ -53,10 +53,6 @@ class RidesStateless extends StatelessWidget {
     this.firstCurrentRideRectCb = onChangeDefault,
     this.secondCurrentRideRectCb = onChangeDefault,
     this.firstRemainingRideRectCb = onChangeDefault,
-
-    this.scrollToHour,
-    this.interactive,
-
     this.carButtonRectCb = onChangeDefault,
     this.dropOffButtonRectCb = onChangeDefault,
     this.highlightRemainingRide = false,
@@ -64,7 +60,8 @@ class RidesStateless extends StatelessWidget {
     this.highlightSecondCurrentRide = false,
     this.highlightCarButton = false,
     this.highlightDropOffButton = false,
-
+    this.interactive = true,
+    this.scrollToHour,
   }) : super(key: key);
 
   Widget emptyPage(BuildContext context) {
@@ -209,7 +206,7 @@ class RidesStateless extends StatelessWidget {
       );
     }
 
-    bool emptyMainPage = interactive && currentRides.isEmpty &&remainingRides.isEmpty; // no current or remaining
+    bool emptyMainPage = interactive && currentRides.isEmpty && remainingRides.isEmpty; // no current or remaining
     bool emptyPreviewPage = !interactive && remainingRides.isEmpty; // the ride we're switching from will be a current ride, so just check remaining
 
     Widget carButton = IconButton(
