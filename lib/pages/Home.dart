@@ -1,8 +1,7 @@
+import 'package:carriage/pages/Notifications.dart';
 import 'package:carriage/providers/PageNavigationProvider.dart';
 import 'package:flutter/material.dart';
 import '../utils/LocationTracker.dart';
-import 'Rides.dart';
-import 'Profile.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -22,7 +21,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   //TODO: figure out if there's been a new notification
-  bool hasNewNotification = true;
+  bool hasNewNotification = false;
 
   //Initialize notification variables
   static final FirebaseMessaging _fcm = FirebaseMessaging();
@@ -30,6 +29,7 @@ class _HomeState extends State<Home> {
       FlutterLocalNotificationsPlugin();
   StreamSubscription iosSubscription; // ignore: cancel_subscriptions
   String deviceToken;
+  String id;
 
   @override
   void initState() {
@@ -51,8 +51,13 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> onSelectNotification(String payload) {
-    Navigator.push(
-        context, new MaterialPageRoute(builder: (context) => Home()));
+    if (id != null) {
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => NotificationsPage()));
+    } else {
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => NotificationsPage()));
+    }
     return Future<void>.value();
   }
 
@@ -93,7 +98,7 @@ class _HomeState extends State<Home> {
     await notificationsPlugin.show(
       0,
       'Carriage Driver',
-      notification,
+      'Ride changed by $notification',
       platformChannelSpecifics,
     );
   }
@@ -117,40 +122,46 @@ class _HomeState extends State<Home> {
     _fcm.configure(
       onBackgroundMessage: Platform.isIOS ? null : backgroundHandle,
       onMessage: (Map<String, dynamic> message) async {
-        // print("onMessage: $message");
+        hasNewNotification = true;
         if (Platform.isAndroid) {
           androidNotification =
               PushNotificationMessageAndroid.fromJson(message);
+          id = androidNotification.rideId;
         } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
+          id = iosNotification.rideId;
         }
         Platform.isIOS
-            ? showNotification(iosNotification.body)
-            : showNotification(androidNotification.body);
+            ? showNotification(iosNotification.changedBy)
+            : showNotification(androidNotification.changedBy);
         setState(() {});
       },
       onLaunch: (Map<String, dynamic> message) async {
-        //print("onLaunch: $message");
+        hasNewNotification = true;
         if (Platform.isAndroid) {
           androidNotification =
               PushNotificationMessageAndroid.fromJson(message);
+          id = androidNotification.rideId;
         } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
+          id = iosNotification.rideId;
         }
-        Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => Home()));
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => NotificationsPage()));
         setState(() {});
       },
       onResume: (Map<String, dynamic> message) async {
-        //print("onResume: $message");
+        hasNewNotification = true;
         if (Platform.isAndroid) {
           androidNotification =
               PushNotificationMessageAndroid.fromJson(message);
+          id = androidNotification.rideId;
         } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
+          id = iosNotification.rideId;
         }
-        Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => Home()));
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => NotificationsPage()));
         setState(() {});
       },
     );
@@ -162,14 +173,8 @@ class _HomeState extends State<Home> {
     if (message.containsKey('data')) {
       // Handle data message
       final dynamic data = message['data']['default'];
-      showNotification('$data');
+      showNotification(jsonDecode(data)['changedBy']['userType']);
       print("_backgroundMessageHandler data: $data");
-    }
-    if (message.containsKey('notification')) {
-      // Handle notification message
-      final dynamic notification = message['notification']['body'];
-      showNotification('$notification');
-      print("_backgroundMessageHandler notification: $notification");
     }
     return Future<void>.value();
   }
