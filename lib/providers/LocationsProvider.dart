@@ -5,7 +5,6 @@ import './AuthProvider.dart';
 import '../utils/app_config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import '../models/Location.dart';
 
 //Manage the state of locations with ChangeNotifier
