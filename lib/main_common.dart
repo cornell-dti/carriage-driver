@@ -1,4 +1,5 @@
 import 'package:carriage/pages/Onboarding.dart';
+import 'package:carriage/providers/LocationsProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,14 +40,19 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) {
             return RidesProvider(config, Provider.of<AuthProvider>(context, listen: false));
           },
-          child: MaterialApp(
-              title: 'Carriage',
-              theme: ThemeData(
-                  scaffoldBackgroundColor: Colors.white,
-                  fontFamily: 'Inter',
-                  accentColor: Color.fromRGBO(60, 60, 67, 0.6)
-              ),
-              home: HomeOrLogin()),
+          child: ChangeNotifierProvider<LocationsProvider>(
+            create: (BuildContext context) {
+              return LocationsProvider(config, Provider.of<AuthProvider>(context, listen: false));
+            },
+            child: MaterialApp(
+                title: 'Carriage',
+                theme: ThemeData(
+                    scaffoldBackgroundColor: Colors.white,
+                    fontFamily: 'Inter',
+                    accentColor: Color.fromRGBO(60, 60, 67, 0.6)
+                ),
+                home: HomeOrLogin()),
+          ),
         ),
       ),
     );
