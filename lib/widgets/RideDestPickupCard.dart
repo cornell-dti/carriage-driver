@@ -1,3 +1,6 @@
+import 'package:carriage/providers/LocationsProvider.dart';
+import 'package:provider/provider.dart';
+
 import '../utils/CarriageTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +16,9 @@ class RideDestPickupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
+    bool showAddress = !locationsProvider.isPreset(_stop);
+
     return SizedBox(
       child: DecoratedBox(
         decoration: BoxDecoration(
@@ -32,8 +38,8 @@ class RideDestPickupCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(_stop, style: CarriageTheme.subheadline),
-                Text(_address, style: CarriageTheme.subheadline.copyWith(color: CarriageTheme.gray3)),
-                SizedBox(height: 24),
+                showAddress ? Text(_address, style: CarriageTheme.subheadline.copyWith(color: CarriageTheme.gray3)) : Container(),
+                SizedBox(height: showAddress ? 24 : 8),
                 Text(
                     "${_dropoff ? "Drop off time" : "Pick up time"}: ${DateFormat.jm().format(_time)}",
                     style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray1))
