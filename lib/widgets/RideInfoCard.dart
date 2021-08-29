@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../CarriageTheme.dart';
-import '../Ride.dart';
+import '../utils/CarriageTheme.dart';
+import '../models/Ride.dart';
 import 'RideDestPickupCard.dart';
 
 class RideInfoCard extends StatelessWidget {
@@ -14,21 +14,19 @@ class RideInfoCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Center(
-        child: Column(children: <Widget>[
-          CircleAvatar(
-            radius: 50,
-            //TODO: replace with rider image
-            backgroundImage: AssetImage('assets/images/terry.jpg'),
-          ),
-          SizedBox(height: 16),
-          Text(ride.rider.firstName, style: CarriageTheme.largeTitle),
-          ride.rider.accessibilityNeeds.length > 0 ?
-          Padding(
-            padding: EdgeInsets.only(top: 8),
-            child: Text(ride.rider.accessibilityNeeds.join(', '),
-                style: CarriageTheme.body),
-          ) : Container()
-        ]),
+        child: Column(
+            children: <Widget>[
+              ride.rider.profilePicture(100),
+              SizedBox(height: 16),
+              Text(ride.rider.firstName, style: CarriageTheme.largeTitle),
+              ride.rider.accessibilityNeeds.length > 0 ?
+              Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text(ride.rider.accessibilityNeeds.join(', '),
+                    style: CarriageTheme.body),
+              ) : Container()
+            ]
+        ),
       ),
     );
   }

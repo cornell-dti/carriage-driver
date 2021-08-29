@@ -1,12 +1,15 @@
+import 'package:carriage/pages/Onboarding.dart';
+import 'package:carriage/providers/LocationsProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
-import 'AuthProvider.dart';
-import 'Home.dart';
-import 'UserInfoProvider.dart';
-import 'app_config.dart';
-import 'Login.dart';
-import 'RidesProvider.dart';
+import 'providers/AuthProvider.dart';
+import 'pages/Home.dart';
+import 'providers/DriverProvider.dart';
+import 'utils/app_config.dart';
+import 'pages/Login.dart';
+import 'providers/RidesProvider.dart';
 
 void mainCommon() async {
   // Prevent screen from sleeping
@@ -26,33 +29,31 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AuthProvider>(create: (BuildContext context) {
           return AuthProvider(context);
-        }),
-        ChangeNotifierProvider<RidesProvider>(create: (BuildContext context) {
-          return RidesProvider();
         })
       ],
       // UserInfoProvider is in a child widget because it uses AuthProvider
-      child: ChangeNotifierProvider<UserInfoProvider>(
+      child: ChangeNotifierProvider<DriverProvider>(
         create: (BuildContext context) {
-          return UserInfoProvider(config, Provider.of<AuthProvider>(context, listen: false));
+          return DriverProvider(config, Provider.of<AuthProvider>(context, listen: false));
         },
-        child: MaterialApp(
-            title: 'Carriage',
-            theme: ThemeData(
-                scaffoldBackgroundColor: Colors.white,
-                primarySwatch: Colors.red,
-                fontFamily: 'SFText',
-                accentColor: Color.fromRGBO(60, 60, 67, 0.6),
-                textTheme: TextTheme(
-                  headline4: TextStyle(fontFamily: 'SFDisplay', fontSize: 34, fontWeight: FontWeight.bold, letterSpacing: 0.37, color: Colors.black),
-                  headline5: TextStyle(fontFamily: 'SFDisplay', fontSize: 28, fontWeight: FontWeight.w700, letterSpacing: 0.23, color: Colors.black),
-                  headline6: TextStyle(fontFamily: 'SFDisplay', fontSize: 20.0, fontWeight: FontWeight.w700, letterSpacing: 0.38, color: Colors.black),
-                  subtitle2: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold, letterSpacing: -0.41),
-                  bodyText1: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
-                  bodyText2: TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal),
-                )
-            ),
-            home: HomeOrLogin()),
+        child: ChangeNotifierProvider<RidesProvider>(
+          create: (BuildContext context) {
+            return RidesProvider(config, Provider.of<AuthProvider>(context, listen: false));
+          },
+          child: ChangeNotifierProvider<LocationsProvider>(
+            create: (BuildContext context) {
+              return LocationsProvider(config, Provider.of<AuthProvider>(context, listen: false));
+            },
+            child: MaterialApp(
+                title: 'Carriage',
+                theme: ThemeData(
+                    scaffoldBackgroundColor: Colors.white,
+                    fontFamily: 'Inter',
+                    accentColor: Color.fromRGBO(60, 60, 67, 0.6)
+                ),
+                home: HomeOrLogin()),
+          ),
+        ),
       ),
     );
   }
@@ -63,6 +64,34 @@ class HomeOrLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    return authProvider.isAuthenticated ? Home() : Login();
+    return authProvider.isAuthenticated ? HomeOrOnboarding() : Login();
   }
 }
+
+class HomeOrOnboarding extends StatelessWidget {
+  HomeOrOnboarding({Key key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    Future<bool> checkAndSetFirstLogin() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      bool firstLogin = prefs.getBool('loggedInPreviously') == null;
+      if (firstLogin) {
+        await prefs.setBool('loggedInPreviously', true);
+      }
+      return firstLogin;
+    }
+
+    return FutureBuilder<bool>(
+        future: checkAndSetFirstLogin(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            bool firstLogin = snapshot.data;
+            return firstLogin ? Onboarding() : Home();
+          }
+          return Center(child: CircularProgressIndicator());
+        }
+    );
+  }
+}
+
+

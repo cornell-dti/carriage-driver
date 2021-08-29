@@ -20,7 +20,6 @@ class OnboardingState extends State<Onboarding> {
       setState(() => ++stage);
     }
     else {
-      // TODO: continue to home
       Navigator.pop(context);
     }
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../CarriageTheme.dart';
+import '../utils/CarriageTheme.dart';
 import 'Buttons.dart';
 
 // TODO: update when design is confirmed
@@ -34,6 +34,7 @@ class ConfirmDialog extends StatelessWidget {
             width: double.infinity,
             child: CButton(
                 text: actionName,
+                hasShadow: false,
                 onPressed: onConfirm
             ),
           ),
