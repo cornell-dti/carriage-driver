@@ -68,7 +68,7 @@ class _RideCardState extends State<RideCard> {
                                 ),
                               ),
                               SizedBox(height: 4),
-                              widget.ride.rider.accessibilityNeeds.length > 0 &&
+                              widget.ride.rider.accessibilityNeeds.isNotEmpty &&
                                       textWidth > 0
                                   ? Container(
                                       width: textWidth,
@@ -84,7 +84,7 @@ class _RideCardState extends State<RideCard> {
                             ]),
                         SizedBox(width: nameButtonSpacing),
                         textWidth == 0 ||
-                                widget.ride.rider.accessibilityNeeds.length == 0
+                                widget.ride.rider.accessibilityNeeds.isEmpty
                             ? Spacer()
                             : Container(),
                         MeasureSize(
@@ -197,7 +197,7 @@ class _TimeLineState extends State<TimeLine> {
 
     return Stack(
       children: <Widget>[
-        line == null ? CircularProgressIndicator() : line,
+        line ?? CircularProgressIndicator(),
         MeasureSize(
           onChange: (size) {
             setState(() {

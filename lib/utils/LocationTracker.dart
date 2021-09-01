@@ -6,7 +6,7 @@ import 'package:geolocation/geolocation.dart';
 abstract class LocationTracker {
   // minimum displacement from last position update
   // required to send another update, in meters
-  static final double displacementFilter = 10.0;
+  static const double displacementFilter = 10.0;
 
   // TODO: placeholder
   static final TimeOfDay startTime = TimeOfDay(hour: 7, minute: 30);

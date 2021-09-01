@@ -36,7 +36,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
               widget.ride.rider.firstName,
               style: CarriageTheme.title1,
             ),
-            widget.ride.rider.accessibilityNeeds.length > 0
+            widget.ride.rider.accessibilityNeeds.isNotEmpty
                 ? Padding(
                     padding: EdgeInsets.only(top: 4),
                     child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
@@ -66,6 +66,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     double buttonVerticalPadding = 16;
     double buttonHeight = 48;

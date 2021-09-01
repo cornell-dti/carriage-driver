@@ -58,11 +58,11 @@ class Rider {
           borderRadius: BorderRadius.circular(100),
           child: photoLink == null
               ? Image.asset(
-                  photoPath == null ? 'assets/images/person.png' : photoPath,
+                  photoPath ?? 'assets/images/person.png',
                   width: diameter,
                   height: diameter)
               : Image.network(
-                  this.photoLink,
+                  photoLink,
                   fit: BoxFit.cover,
                   loadingBuilder: (BuildContext context, Widget child,
                       ImageChunkEvent loadingProgress) {

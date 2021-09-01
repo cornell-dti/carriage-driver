@@ -99,7 +99,7 @@ class RidesStateless extends StatelessWidget {
           .toList();
 
       List<Widget> result = [];
-      while (rideCards.length > 0) {
+      while (rideCards.isNotEmpty) {
         List<Widget> rowCards = rideCards.take(2).toList();
         rideCards.removeRange(0, rowCards.length);
         if (rowCards.length == 2) {
@@ -133,7 +133,7 @@ class RidesStateless extends StatelessWidget {
   }
 
   Widget rideCards(BuildContext context, List<Ride> rides) {
-    Map<int, List<Ride>> rideGroups = Map();
+    Map<int, List<Ride>> rideGroups = {};
     for (Ride ride in rides) {
       int hour = ride.startTime.hour;
       if (rideGroups.containsKey(hour)) {
@@ -228,7 +228,7 @@ class RidesStateless extends StatelessWidget {
                                     : carButton)
                           ]),
                         ),
-                        interactive && currentRides.length > 0
+                        interactive && currentRides.isNotEmpty
                             ? ridesInProgress(context)
                             : Container(),
                         selectedRideIDs.isEmpty
@@ -274,10 +274,11 @@ class _RidesState extends State<Rides> {
 
   void _selectRide(Ride ride) {
     setState(() {
-      if (!selectedRideIDs.contains(ride.id))
+      if (!selectedRideIDs.contains(ride.id)) {
         selectedRideIDs.add(ride.id);
-      else
+      } else {
         selectedRideIDs.remove(ride.id);
+      }
     });
   }
 
@@ -404,8 +405,9 @@ class RideGroup extends StatelessWidget {
           if (!interactive) {
             w = IgnorePointer(child: w);
           }
-          if (highlightRemainingRide && index == 0 && groupIndex == 0)
+          if (highlightRemainingRide && index == 0 && groupIndex == 0) {
             w = MeasureRect(child: w, onChange: firstRemainingRideRectCb);
+          }
           return w;
         },
         separatorBuilder: (context, index) {

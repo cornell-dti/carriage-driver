@@ -48,10 +48,10 @@ class Driver {
 
   Driver copyWithPhoto(String newPhoto) {
     return Driver(
-        firstName: this.firstName,
-        lastName: this.lastName,
-        phoneNumber: this.phoneNumber,
-        email: this.email,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        email: email,
         photoLink: 'http://' + newPhoto);
   }
 }

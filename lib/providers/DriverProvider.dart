@@ -23,7 +23,7 @@ class DriverProvider with ChangeNotifier {
   }
 
   void _setDriver(Driver newDriver) {
-    this.driver = newDriver;
+    driver = newDriver;
     notifyListeners();
   }
 

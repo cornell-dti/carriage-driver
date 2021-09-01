@@ -152,7 +152,7 @@ Future<http.Response> setRideToPast(BuildContext context, String id) async {
   });
 }
 
-T getOrNull<T>(Map<String, dynamic> map, String key, {T parse(dynamic s)}) {
+T getOrNull<T>(Map<String, dynamic> map, String key, {T Function(dynamic s) parse}) {
   var x = map.containsKey(key) ? map[key] : null;
   if (x == null) return null;
   if (parse == null) return x;

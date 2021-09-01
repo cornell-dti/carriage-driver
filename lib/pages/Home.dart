@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
 
   Future<void> onSelectNotification(String payload) {
     Navigator.push(
-        context, new MaterialPageRoute(builder: (context) => Home()));
+        context, MaterialPageRoute(builder: (context) => Home()));
     return Future<void>.value();
   }
 
@@ -140,7 +140,7 @@ class _HomeState extends State<Home> {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
         Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => Home()));
         setState(() {});
       },
       onResume: (Map<String, dynamic> message) async {
@@ -152,7 +152,7 @@ class _HomeState extends State<Home> {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
         Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => Home()));
         setState(() {});
       },
     );

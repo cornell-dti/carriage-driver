@@ -113,8 +113,7 @@ class _PickUpPageState extends State<PickUpPage> {
                                 children: [
                                   Text(widget.ride.rider.firstName,
                                       style: CarriageTheme.title3),
-                                  widget.ride.rider.accessibilityNeeds.length >
-                                          0
+                                  widget.ride.rider.accessibilityNeeds.isNotEmpty
                                       ? Padding(
                                           padding: EdgeInsets.only(top: 2),
                                           child: Text(

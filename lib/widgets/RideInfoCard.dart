@@ -19,7 +19,7 @@ class RideInfoCard extends StatelessWidget {
           ride.rider.profilePicture(100),
           SizedBox(height: 16),
           Text(ride.rider.firstName, style: CarriageTheme.largeTitle),
-          ride.rider.accessibilityNeeds.length > 0
+          ride.rider.accessibilityNeeds.isNotEmpty
               ? Padding(
                   padding: EdgeInsets.only(top: 8),
                   child: Text(ride.rider.accessibilityNeeds.join(', '),

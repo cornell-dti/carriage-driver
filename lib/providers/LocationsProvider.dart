@@ -11,7 +11,7 @@ import '../models/Location.dart';
 class LocationsProvider with ChangeNotifier {
   List<Location> locations;
   List<Location> favLocations;
-  Map<String, Location> locationsByName = Map();
+  Map<String, Location> locationsByName = {};
 
   LocationsProvider(AppConfig config, AuthProvider authProvider) {
     void Function() callback;

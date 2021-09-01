@@ -15,6 +15,7 @@ class Break {
     return Break(day, json['breakStart'], json['breakEnd']);
   }
 
+  @override
   String toString() {
     return "$day: $startTime to $endTime";
   }
@@ -53,10 +54,11 @@ class Breaks {
     }
   }
 
+  @override
   String toString() {
-    if (breaks.isEmpty)
+    if (breaks.isEmpty) {
       return "None";
-    else {
+    } else {
       String str = "";
       for (Break b in breaks) {
         str += b.toString();

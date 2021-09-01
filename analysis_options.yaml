@@ -1,10 +1,14 @@
 include: package:flutter_lints/flutter.yaml
 
-# Overrides in place to not make huge diff, would be good to remove
-# in the future
+
 linter:
   rules:
+    # The following rules were overridden to prevent a big diff when adding 
+    # the linter. These should be addressed and removed in the future.
     file_names: false
     prefer_const_constructors: false
     prefer_const_literals_to_create_immutables: false
     prefer_const_constructors_in_immutables: false
+    use_key_in_widget_constructors: false
+    # The following rules are overridden due to preference.
+    avoid_print: false

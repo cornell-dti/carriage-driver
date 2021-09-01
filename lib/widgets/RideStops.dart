@@ -28,14 +28,14 @@ class RideStopsState extends State<RideStops> {
       Container(
           width: circleRadius * 2,
           height: circleRadius * 2,
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.black,
             shape: BoxShape.circle,
           )),
       Container(
           width: 7.5,
           height: 7.5,
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
           ))
@@ -48,7 +48,7 @@ class RideStopsState extends State<RideStops> {
         alignment: Alignment.topCenter,
         child: Container(
           width: 4,
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
               color: const Color.fromRGBO(236, 235, 237, 1),
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(8.0))),

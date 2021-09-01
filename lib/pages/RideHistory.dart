@@ -20,7 +20,7 @@ class RideHistory extends StatelessWidget {
     AppConfig appConfig = AppConfig.of(context);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
 
-    Map<int, List<Ride>> rideGroups = Map();
+    Map<int, List<Ride>> rideGroups = {};
     List<int> days = [];
 
     List<Ride> pastRides = ridesProvider.pastRides;

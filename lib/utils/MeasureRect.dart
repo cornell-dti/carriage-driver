@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-typedef void OnWidgetRectChange(Rect rect);
+typedef OnWidgetRectChange = void Function(Rect rect);
 
 class MeasureRect extends StatefulWidget {
   final Widget child;
