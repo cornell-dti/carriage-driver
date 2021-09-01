@@ -175,7 +175,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                 }
                               }),
                         ),
-                        Container(
+                        SizedBox(
                           height: delayButtonHeight,
                           child: DangerButton(
                               text: "Notify of Delay",

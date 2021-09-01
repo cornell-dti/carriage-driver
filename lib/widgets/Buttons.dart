@@ -18,7 +18,7 @@ class CButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: ButtonTheme(
           height: 50,
@@ -125,7 +125,7 @@ class CalendarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 40,
       height: 40,
       child: IconButton(

@@ -94,15 +94,15 @@ class LocationInfo extends StatelessWidget {
     return Row(
       children: [
         directionWidth == null
-            ? Container(
+            ? SizedBox(
                 child: MeasureSize(
                   onChange: setDirectionWidth,
                   child: directionText,
                 ),
               )
-            : Container(width: directionWidth, child: directionText),
+            : SizedBox(width: directionWidth, child: directionText),
         SizedBox(width: 12),
-        Container(
+        SizedBox(
             // TODO: try to make this less hard-coded?
             width: MediaQuery.of(context).size.width / 2,
             child: Text(

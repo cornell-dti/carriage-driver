@@ -30,7 +30,7 @@ class ConfirmDialog extends StatelessWidget {
           SizedBox(height: 8),
           Text(content, style: CarriageTheme.body, textAlign: TextAlign.center),
           SizedBox(height: 24),
-          Container(
+          SizedBox(
             width: double.infinity,
             child: CButton(
                 text: actionName, hasShadow: false, onPressed: onConfirm),

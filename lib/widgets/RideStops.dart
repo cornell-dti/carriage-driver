@@ -68,7 +68,7 @@ class RideStopsState extends State<RideStops> {
                   padding: const EdgeInsets.only(right: 16),
                   child: Row(
                     children: [
-                      Container(
+                      SizedBox(
                         width: max(carWidth, circleRadius * 2),
                         child: widget.carIcon
                             ? Image.asset('assets/images/carIcon.png',
@@ -93,7 +93,7 @@ class RideStopsState extends State<RideStops> {
                   padding: const EdgeInsets.only(right: 16),
                   child: Row(
                     children: [
-                      Container(
+                      SizedBox(
                           width: max(carWidth, circleRadius * 2),
                           child: stopCircle),
                       Expanded(

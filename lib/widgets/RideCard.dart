@@ -58,7 +58,7 @@ class _RideCardState extends State<RideCard> {
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
+                              SizedBox(
                                 width: textWidth,
                                 child: FittedBox(
                                   alignment: Alignment.centerLeft,
@@ -70,7 +70,7 @@ class _RideCardState extends State<RideCard> {
                               SizedBox(height: 4),
                               widget.ride.rider.accessibilityNeeds.isNotEmpty &&
                                       textWidth > 0
-                                  ? Container(
+                                  ? SizedBox(
                                       width: textWidth,
                                       child: Text(
                                           widget.ride.rider.accessibilityNeeds

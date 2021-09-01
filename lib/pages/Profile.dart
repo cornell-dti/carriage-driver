@@ -55,7 +55,7 @@ class Profile extends StatelessWidget {
                             Padding(
                               padding:
                                   EdgeInsets.only(bottom: _picDiameter * 0.05),
-                              child: Container(
+                              child: SizedBox(
                                 height: _picDiameter,
                                 width: _picDiameter,
                                 child: ClipRRect(
@@ -88,7 +88,7 @@ class Profile extends StatelessWidget {
                               ),
                             ),
                             Positioned(
-                                child: Container(
+                                child: SizedBox(
                                   height: _picBtnDiameter,
                                   width: _picBtnDiameter,
                                   child: FittedBox(
@@ -171,7 +171,7 @@ class Profile extends StatelessWidget {
       );
     } else {
       return SafeArea(
-          child: Container(
+          child: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: Center(child: CircularProgressIndicator()),
       ));
@@ -417,7 +417,7 @@ class _EditNameState extends State<EditName> {
                                   )
                                 ])),
                         Spacer(),
-                        Container(
+                        SizedBox(
                           width: double.infinity,
                           child: CButton(
                             text: 'Update Name',
@@ -527,7 +527,7 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
                               },
                             )),
                         Spacer(),
-                        Container(
+                        SizedBox(
                           width: double.infinity,
                           child: CButton(
                             text: 'Update Phone Number',

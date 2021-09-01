@@ -82,7 +82,7 @@ class RidesStateless extends StatelessWidget {
       List<Widget> rideCards = currentRides
           .asMap()
           .map((i, ride) {
-            Widget card = Container(
+            Widget card = SizedBox(
                 width:
                     (MediaQuery.of(context).size.width / 2) - (spacing * 1.5),
                 child: RideInProgressCard(Key(ride.id), ride,
@@ -117,7 +117,7 @@ class RidesStateless extends StatelessWidget {
       return result;
     }
 
-    return Container(
+    return SizedBox(
         child: Column(children: [
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -189,7 +189,7 @@ class RidesStateless extends StatelessWidget {
     return Stack(
       children: [
         emptyMainPage || emptyPreviewPage
-            ? Container(
+            ? SizedBox(
                 height: MediaQuery.of(context).size.height,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -199,7 +199,7 @@ class RidesStateless extends StatelessWidget {
                 ),
               )
             : Container(),
-        Container(
+        SizedBox(
             height: MediaQuery.of(context).size.height,
             child: ListView(
                 physics: AlwaysScrollableScrollPhysics(),
@@ -242,7 +242,7 @@ class RidesStateless extends StatelessWidget {
         selectedRideIDs.isNotEmpty
             ? Positioned(
                 bottom: 32,
-                child: Container(
+                child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Padding(
                       padding: EdgeInsets.only(left: 34, right: 34),

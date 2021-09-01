@@ -51,7 +51,7 @@ class Rider {
   }
 
   Widget profilePicture(double diameter) {
-    return Container(
+    return SizedBox(
       height: diameter,
       width: diameter,
       child: ClipRRect(

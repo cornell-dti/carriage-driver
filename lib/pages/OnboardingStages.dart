@@ -132,7 +132,7 @@ Widget _start(OnboardingState state, BuildContext context) {
           style: CarriageTheme.body,
         ),
         Spacer(),
-        Container(
+        SizedBox(
             width: double.infinity,
             child: CButton(
                 text: "Continue",
@@ -200,7 +200,7 @@ Widget beginRidePage(OnboardingState state, BuildContext context) {
             left: 8,
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                     title: 'Begin your ride.',
@@ -243,7 +243,7 @@ Widget onTheWayPage(OnboardingState state, BuildContext context) {
             left: 8,
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                     title: "Let your rider know you've arrived.",
@@ -287,7 +287,7 @@ Widget pickUpPage(OnboardingState state, BuildContext context) {
             left: 8,
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                   title: 'Update your dispatcher in real time.',
@@ -345,7 +345,7 @@ Widget startRideCard2(OnboardingState state, BuildContext context) {
             left: 8,
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                   title: 'Complete multiple rides at once.',
@@ -377,7 +377,7 @@ Widget beginRidePage2(OnboardingState state, BuildContext context) {
             left: 8,
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                     title: 'Begin another ride.',
@@ -411,7 +411,7 @@ Widget onTheWayPage2(OnboardingState state, BuildContext context) {
             left: 8,
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                     title: "Let your rider know you've arrived.",
@@ -440,7 +440,7 @@ Widget checkYourSchedule(OnboardingState state, BuildContext context) {
           Positioned(
             top: highlightRect.bottom + 8,
             right: 8,
-            child: Container(
+            child: SizedBox(
                 width: 32,
                 child: SpeechBubble(
                     color: highlightColor,
@@ -451,7 +451,7 @@ Widget checkYourSchedule(OnboardingState state, BuildContext context) {
           Positioned(
             top: highlightRect.bottom + 8,
             right: 8,
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.75,
               child: OnboardingBubble(
                 title: 'Check your schedule',
@@ -497,7 +497,7 @@ Widget viewSchedulePage(OnboardingState state, BuildContext context) {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                     width: MediaQuery.of(context).size.width * 0.75,
                     child: Column(children: [
                       OnboardingBubble(
@@ -537,7 +537,7 @@ Widget scheduleButtonPage(OnboardingState state, BuildContext context) {
           Positioned(
             top: highlightRect.bottom + 8,
             right: 12,
-            child: Container(
+            child: SizedBox(
                 width: 32,
                 child: SpeechBubble(
                     color: highlightColor,
@@ -551,7 +551,7 @@ Widget scheduleButtonPage(OnboardingState state, BuildContext context) {
                 return Positioned(
                   top: highlightRect.bottom + 8,
                   right: 12,
-                  child: Container(
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.75,
                     child: OnboardingBubble(
                       title: 'Return to your current ride.',
@@ -582,7 +582,7 @@ Widget pickUpPage2(OnboardingState state, BuildContext context) {
             left: 8,
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                   title: 'Update your dispatcher in real time.',
@@ -615,7 +615,7 @@ Widget selectFirstCurrent(OnboardingState state, BuildContext context) {
             left: 64,
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: Container(
+              child: SizedBox(
                   width: 32,
                   child: SpeechBubble(
                       color: highlightColor,
@@ -629,7 +629,7 @@ Widget selectFirstCurrent(OnboardingState state, BuildContext context) {
             left: 8,
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                   title: 'Select a rider to drop off.',
@@ -660,7 +660,7 @@ Widget selectSecondCurrent(OnboardingState state, BuildContext context) {
             right: 64,
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: Container(
+              child: SizedBox(
                   width: 32,
                   child: SpeechBubble(
                       color: highlightColor,
@@ -674,7 +674,7 @@ Widget selectSecondCurrent(OnboardingState state, BuildContext context) {
             right: 8,
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                   title: 'Choose multiple riders.',
@@ -707,7 +707,7 @@ Widget dropOffRiders(OnboardingState state, BuildContext context) {
             bottom: MediaQuery.of(context).size.height - highlightRect.top,
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                   title: 'Drop off riders.',
@@ -750,7 +750,7 @@ Widget pullToRefresh(OnboardingState state, BuildContext context) {
                         height: MediaQuery.of(context).size.height * 0.25),
                   )),
               Center(
-                child: Container(
+                child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.75,
                   child: OnboardingBubble(
                     title: 'Pull to refresh.',
@@ -789,7 +789,7 @@ Widget refreshed(OnboardingState state, BuildContext context) {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
+                        SizedBox(
                             width: MediaQuery.of(context).size.width * 0.75,
                             child: Column(children: [
                               OnboardingBubble(

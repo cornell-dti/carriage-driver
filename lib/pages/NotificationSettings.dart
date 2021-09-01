@@ -77,7 +77,7 @@ class SettingRow extends StatelessWidget {
               Text(title,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
-              Container(
+              SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: Text(description,
                       style:
