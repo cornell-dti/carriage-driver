@@ -15,7 +15,6 @@ import '../utils/CarriageTheme.dart';
 import '../providers/DriverProvider.dart';
 
 class Profile extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     DriverProvider driverProvider = Provider.of<DriverProvider>(context);
@@ -25,10 +24,8 @@ class Profile extends StatelessWidget {
     double _picMarginTB = _picDiameter / 4;
     double _picBtnDiameter = _picDiameter * 0.39;
 
-    Widget sectionDivider = Container(
-        height: 6,
-        color: CarriageTheme.backgroundColor
-    );
+    Widget sectionDivider =
+        Container(height: 6, color: CarriageTheme.backgroundColor);
 
     if (driverProvider.hasInfo()) {
       return SafeArea(
@@ -40,100 +37,109 @@ class Profile extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 color: CarriageTheme.backgroundColor,
                 child: Padding(
-                  padding: EdgeInsets.only(
-                      left: 24,
-                      top: 18,
-                      bottom: 16
-                  ),
-                  child: Text('Your Profile',
-                      style: CarriageTheme.largeTitle),
+                  padding: EdgeInsets.only(left: 24, top: 18, bottom: 16),
+                  child: Text('Your Profile', style: CarriageTheme.largeTitle),
                 ),
               ),
               Container(
                   color: Colors.white,
-                  child: Row(
-                      children: [
-                        Padding(
-                            padding: EdgeInsets.only(
-                                left: _picMarginLR,
-                                right: _picMarginLR,
-                                top: _picMarginTB,
-                                bottom: _picMarginTB),
-                            child: Stack(
-                              children: [
-                                Padding(
-                                  padding:
+                  child: Row(children: [
+                    Padding(
+                        padding: EdgeInsets.only(
+                            left: _picMarginLR,
+                            right: _picMarginLR,
+                            top: _picMarginTB,
+                            bottom: _picMarginTB),
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding:
                                   EdgeInsets.only(bottom: _picDiameter * 0.05),
-                                  child: Container(
-                                    height: _picDiameter,
-                                    width: _picDiameter,
-                                    child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(100),
-                                        child: driverProvider.driver.photoLink == null ? Image.asset(
-                                          'assets/images/person.png',
-                                          width: _picDiameter,
-                                          height: _picDiameter,
-                                        ) : Image.network(
-                                          driverProvider.driver.photoLink,
-                                          fit: BoxFit.cover,
-                                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
-                                            if (loadingProgress == null) {
-                                              return child;
-                                            }else {
-                                              return Center(
-                                                child: CircularProgressIndicator(),
-                                              );
-                                            }
-                                          },
-                                        )
-                                    ),
+                              child: Container(
+                                height: _picDiameter,
+                                width: _picDiameter,
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child:
+                                        driverProvider.driver.photoLink == null
+                                            ? Image.asset(
+                                                'assets/images/person.png',
+                                                width: _picDiameter,
+                                                height: _picDiameter,
+                                              )
+                                            : Image.network(
+                                                driverProvider.driver.photoLink,
+                                                fit: BoxFit.cover,
+                                                loadingBuilder:
+                                                    (BuildContext context,
+                                                        Widget child,
+                                                        ImageChunkEvent
+                                                            loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  } else {
+                                                    return Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    );
+                                                  }
+                                                },
+                                              )),
+                              ),
+                            ),
+                            Positioned(
+                                child: Container(
+                                  height: _picBtnDiameter,
+                                  width: _picBtnDiameter,
+                                  child: FittedBox(
+                                    child: FloatingActionButton(
+                                        backgroundColor: Colors.black,
+                                        child: Icon(Icons.edit,
+                                            size: _picBtnDiameter * 0.75),
+                                        onPressed: () async {
+                                          ImagePicker picker = ImagePicker();
+                                          PickedFile pickedFile =
+                                              await picker.getImage(
+                                                  source: ImageSource.gallery,
+                                                  maxHeight: 200,
+                                                  maxWidth: 200);
+                                          Uint8List bytes =
+                                              await File(pickedFile.path)
+                                                  .readAsBytes();
+                                          String base64Image =
+                                              base64Encode(bytes);
+                                          await driverProvider
+                                              .updateDriverPhoto(
+                                                  AppConfig.of(context),
+                                                  Provider.of<AuthProvider>(
+                                                      context,
+                                                      listen: false),
+                                                  base64Image);
+                                        }),
                                   ),
                                 ),
-                                Positioned(
-                                    child: Container(
-                                      height: _picBtnDiameter,
-                                      width: _picBtnDiameter,
-                                      child: FittedBox(
-                                        child: FloatingActionButton(
-                                            backgroundColor: Colors.black,
-                                            child:
-                                            Icon(Icons.edit, size: _picBtnDiameter * 0.75),
-                                            onPressed: () async {
-                                              ImagePicker picker = ImagePicker();
-                                              PickedFile pickedFile = await picker.getImage(source: ImageSource.gallery, maxHeight: 200, maxWidth: 200);
-                                              Uint8List bytes = await File(pickedFile.path).readAsBytes();
-                                              String base64Image = base64Encode(bytes);
-                                              await driverProvider.updateDriverPhoto(AppConfig.of(context), Provider.of<AuthProvider>(context, listen: false), base64Image);
-                                            }),
-                                      ),
-                                    ),
-                                    left: _picDiameter * 0.61,
-                                    top: _picDiameter * 0.66
-                                )
-                              ],
-                            )
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(driverProvider.driver.firstName + ' ' + driverProvider.driver.lastName,
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w700
-                                )
-                            ),
-                            SizedBox(height: 4),
-                            Text('Joined ' + driverProvider.driver.startDate,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Theme.of(context).accentColor,
-                                )
-                            )
+                                left: _picDiameter * 0.61,
+                                top: _picDiameter * 0.66)
                           ],
-                        )
-                      ]
-                  )
-              ),
+                        )),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            driverProvider.driver.firstName +
+                                ' ' +
+                                driverProvider.driver.lastName,
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w700)),
+                        SizedBox(height: 4),
+                        Text('Joined ' + driverProvider.driver.startDate,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).accentColor,
+                            ))
+                      ],
+                    )
+                  ])),
               sectionDivider,
               InfoGroup(
                 'Account Info',
@@ -142,15 +148,16 @@ class Profile extends StatelessWidget {
                     Icons.mail_outline,
                     driverProvider.driver.email,
                   ),
-                  InfoRow(
-                      Icons.phone,
-                      driverProvider.driver.phoneNumber,
-                      editPage: EditPhoneNumber(driverProvider.driver.phoneNumber)
-                  ),
+                  InfoRow(Icons.phone, driverProvider.driver.phoneNumber,
+                      editPage:
+                          EditPhoneNumber(driverProvider.driver.phoneNumber)),
                   InfoRow(
                     Icons.person,
-                    driverProvider.driver.firstName + ' ' + driverProvider.driver.lastName,
-                    editPage: EditName(driverProvider.driver.firstName, driverProvider.driver.lastName),
+                    driverProvider.driver.firstName +
+                        ' ' +
+                        driverProvider.driver.lastName,
+                    editPage: EditName(driverProvider.driver.firstName,
+                        driverProvider.driver.lastName),
                   ),
                 ],
               ),
@@ -162,16 +169,12 @@ class Profile extends StatelessWidget {
           ),
         ),
       );
-    }
-    else {
+    } else {
       return SafeArea(
           child: Container(
-            height: MediaQuery.of(context).size.height,
-            child: Center(
-                child: CircularProgressIndicator()
-            ),
-          )
-      );
+        height: MediaQuery.of(context).size.height,
+        child: Center(child: CircularProgressIndicator()),
+      ));
     }
   }
 }
@@ -184,23 +187,24 @@ class ArrowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(100),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(100),
         ),
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+            customBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100)),
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Icon(Icons.arrow_forward_ios, size: 20),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => page));
             },
           ),
-        )
-    );
+        ));
   }
 }
 
@@ -229,8 +233,7 @@ class InfoRow extends StatelessWidget {
             ),
             editPage != null ? ArrowButton(editPage) : Container()
           ],
-        )
-    );
+        ));
   }
 }
 
@@ -249,9 +252,11 @@ class SettingRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(title,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
-              Text(description, style: TextStyle(fontSize: 17, color: CarriageTheme.gray1)),
+              Text(description,
+                  style: TextStyle(fontSize: 17, color: CarriageTheme.gray1)),
             ],
           ),
           Spacer(),
@@ -276,7 +281,9 @@ class InfoGroup extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                Text(title,
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,
@@ -291,8 +298,7 @@ class InfoGroup extends StatelessWidget {
                           child: Container(
                             height: 1,
                             color: Color.fromRGBO(151, 151, 151, 1),
-                          )
-                      );
+                          ));
                     })
               ],
             )));
@@ -327,105 +333,118 @@ class _EditNameState extends State<EditName> {
 
     return Scaffold(
         body: LoadingOverlay(
-          isLoading: requestedUpdate,
-          color: Colors.white,
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: ProfileBackButton(),
-                ),
-                Flexible(
-                  child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 32,
-                          vertical: 24
-                      ),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: MediaQuery.of(context).size.height / 8),
-                            Form(
-                                key: _formKey,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      TextFormField(
-                                        autofocus: true,
-                                        controller: firstNameCtrl,
-                                        textInputAction: TextInputAction.next,
-                                        onFieldSubmitted: (value) { focus.nextFocus(); },
-                                        decoration: InputDecoration(
-                                          labelText: 'First Name',
-                                          labelStyle: TextStyle(color: CarriageTheme.gray2),
-                                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                                          suffixIcon: IconButton(
-                                            onPressed: firstNameCtrl.clear,
-                                            icon: Icon(Icons.cancel_outlined, size: 16, color: Colors.black),
-                                          ),
-                                        ),
-                                        validator: (input) {
-                                          if (input.isEmpty) {
-                                            return 'Please enter your first name.';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                      SizedBox(height: 10),
-                                      TextFormField(
-                                        controller: lastNameCtrl,
-                                        textInputAction: TextInputAction.go,
-                                        decoration: InputDecoration(
-                                          labelText: 'Last Name',
-                                          labelStyle: TextStyle(color: CarriageTheme.gray2),
-                                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                                          suffixIcon: IconButton(
-                                            onPressed: lastNameCtrl.clear,
-                                            icon: Icon(Icons.cancel_outlined, size: 16, color: Colors.black),
-                                          ),
-                                        ),
-                                        validator: (input) {
-                                          if (input.isEmpty) {
-                                            return 'Please enter your last name.';
-                                          }
-                                          return null;
-                                        },
-                                      )
-                                    ]
-                                )
-                            ),
-                            Spacer(),
-                            Container(
-                              width: double.infinity,
-                              child: CButton(
-                                text: 'Update Name',
-                                hasShadow: true,
-                                onPressed: () async {
-                                  if (_formKey.currentState.validate()) {
-                                    _formKey.currentState.save();
-                                    setState(() {
-                                      requestedUpdate = true;
-                                    });
-                                    await userInfoProvider.updateName(AppConfig.of(context), Provider.of<AuthProvider>(context, listen: false), firstNameCtrl.text, lastNameCtrl.text);
-                                    Navigator.pop(context);
-                                  }
-                                },
-                              ),
-                            )
-                          ]
-                      )
-                  ),
-                ),
-              ],
+      isLoading: requestedUpdate,
+      color: Colors.white,
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: ProfileBackButton(),
             ),
-          ),
-        )
-    );
+            Flexible(
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height / 8),
+                        Form(
+                            key: _formKey,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextFormField(
+                                    autofocus: true,
+                                    controller: firstNameCtrl,
+                                    textInputAction: TextInputAction.next,
+                                    onFieldSubmitted: (value) {
+                                      focus.nextFocus();
+                                    },
+                                    decoration: InputDecoration(
+                                      labelText: 'First Name',
+                                      labelStyle:
+                                          TextStyle(color: CarriageTheme.gray2),
+                                      focusedBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.black)),
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.black)),
+                                      suffixIcon: IconButton(
+                                        onPressed: firstNameCtrl.clear,
+                                        icon: Icon(Icons.cancel_outlined,
+                                            size: 16, color: Colors.black),
+                                      ),
+                                    ),
+                                    validator: (input) {
+                                      if (input.isEmpty) {
+                                        return 'Please enter your first name.';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  SizedBox(height: 10),
+                                  TextFormField(
+                                    controller: lastNameCtrl,
+                                    textInputAction: TextInputAction.go,
+                                    decoration: InputDecoration(
+                                      labelText: 'Last Name',
+                                      labelStyle:
+                                          TextStyle(color: CarriageTheme.gray2),
+                                      focusedBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.black)),
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.black)),
+                                      suffixIcon: IconButton(
+                                        onPressed: lastNameCtrl.clear,
+                                        icon: Icon(Icons.cancel_outlined,
+                                            size: 16, color: Colors.black),
+                                      ),
+                                    ),
+                                    validator: (input) {
+                                      if (input.isEmpty) {
+                                        return 'Please enter your last name.';
+                                      }
+                                      return null;
+                                    },
+                                  )
+                                ])),
+                        Spacer(),
+                        Container(
+                          width: double.infinity,
+                          child: CButton(
+                            text: 'Update Name',
+                            hasShadow: true,
+                            onPressed: () async {
+                              if (_formKey.currentState.validate()) {
+                                _formKey.currentState.save();
+                                setState(() {
+                                  requestedUpdate = true;
+                                });
+                                await userInfoProvider.updateName(
+                                    AppConfig.of(context),
+                                    Provider.of<AuthProvider>(context,
+                                        listen: false),
+                                    firstNameCtrl.text,
+                                    lastNameCtrl.text);
+                                Navigator.pop(context);
+                              }
+                            },
+                          ),
+                        )
+                      ])),
+            ),
+          ],
+        ),
+      ),
+    ));
   }
 }
 
@@ -446,91 +465,95 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
     super.initState();
     phoneNumberCtrl.text = widget.initialPhoneNumber;
   }
+
   @override
   Widget build(BuildContext context) {
     DriverProvider driverProvider = Provider.of<DriverProvider>(context);
 
     return Scaffold(
         body: LoadingOverlay(
-          isLoading: requestedUpdate,
-          color: Colors.white,
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: ProfileBackButton(),
-                ),
-                Flexible(
-                  child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 32,
-                          vertical: 24
-                      ),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: MediaQuery.of(context).size.height / 8),
-                            Form(
-                                key: _formKey,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                child: TextFormField(
-                                  autofocus: true,
-                                  controller: phoneNumberCtrl,
-                                  textInputAction: TextInputAction.go,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    labelText: 'Phone Number',
-                                    labelStyle: TextStyle(color: CarriageTheme.gray2),
-                                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                                    suffixIcon: IconButton(
-                                      onPressed: phoneNumberCtrl.clear,
-                                      icon: Icon(Icons.cancel_outlined, size: 16, color: Colors.black),
-                                    ),
-                                  ),
-                                  validator: (input) {
-                                    if (input.isEmpty) {
-                                      return 'Please enter your phone number.';
-                                    }
-                                    else if (input.length != 10) {
-                                      return 'Phone number should be 10 digits.';
-                                    }
-                                    else if (int.tryParse(input) == null) {
-                                      return 'Phone number should be all numbers.';
-                                    }
-                                    return null;
-                                  },
-                                )
-                            ),
-                            Spacer(),
-                            Container(
-                              width: double.infinity,
-                              child: CButton(
-                                text: 'Update Phone Number',
-                                hasShadow: true,
-                                onPressed: () async {
-                                  if (_formKey.currentState.validate()) {
-                                    _formKey.currentState.save();
-                                    setState(() {
-                                      requestedUpdate = true;
-                                    });
-                                    await driverProvider.updatePhoneNumber(AppConfig.of(context), Provider.of<AuthProvider>(context, listen: false), phoneNumberCtrl.text);
-                                    Navigator.pop(context);
-                                  }
-                                },
-                              ),
-                            )
-                          ]
-                      )
-                  ),
-                ),
-              ],
+      isLoading: requestedUpdate,
+      color: Colors.white,
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: ProfileBackButton(),
             ),
-          ),
-        )
-    );
+            Flexible(
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height / 8),
+                        Form(
+                            key: _formKey,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            child: TextFormField(
+                              autofocus: true,
+                              controller: phoneNumberCtrl,
+                              textInputAction: TextInputAction.go,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                labelText: 'Phone Number',
+                                labelStyle:
+                                    TextStyle(color: CarriageTheme.gray2),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                suffixIcon: IconButton(
+                                  onPressed: phoneNumberCtrl.clear,
+                                  icon: Icon(Icons.cancel_outlined,
+                                      size: 16, color: Colors.black),
+                                ),
+                              ),
+                              validator: (input) {
+                                if (input.isEmpty) {
+                                  return 'Please enter your phone number.';
+                                } else if (input.length != 10) {
+                                  return 'Phone number should be 10 digits.';
+                                } else if (int.tryParse(input) == null) {
+                                  return 'Phone number should be all numbers.';
+                                }
+                                return null;
+                              },
+                            )),
+                        Spacer(),
+                        Container(
+                          width: double.infinity,
+                          child: CButton(
+                            text: 'Update Phone Number',
+                            hasShadow: true,
+                            onPressed: () async {
+                              if (_formKey.currentState.validate()) {
+                                _formKey.currentState.save();
+                                setState(() {
+                                  requestedUpdate = true;
+                                });
+                                await driverProvider.updatePhoneNumber(
+                                    AppConfig.of(context),
+                                    Provider.of<AuthProvider>(context,
+                                        listen: false),
+                                    phoneNumberCtrl.text);
+                                Navigator.pop(context);
+                              }
+                            },
+                          ),
+                        )
+                      ])),
+            ),
+          ],
+        ),
+      ),
+    ));
   }
 }
 
@@ -555,13 +578,9 @@ class SignOutButton extends StatelessWidget {
                 children: [
                   Icon(Icons.exit_to_app),
                   SizedBox(width: 12),
-                  Text(
-                      'Sign out',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700
-                      )
-                  ),
+                  Text('Sign out',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                 ],
               ),
             ),
@@ -576,8 +595,7 @@ class ProfileBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back_ios, size: 16),
-      onPressed: () => Navigator.of(context).pop()
-    );
+        icon: Icon(Icons.arrow_back_ios, size: 16),
+        onPressed: () => Navigator.of(context).pop());
   }
 }

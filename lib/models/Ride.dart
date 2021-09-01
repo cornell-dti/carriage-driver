@@ -10,7 +10,14 @@ import 'Rider.dart';
 import '../utils/app_config.dart';
 
 ///A ride's status.
-enum RideStatus { NOT_STARTED, ON_THE_WAY, ARRIVED, PICKED_UP, COMPLETED, NO_SHOW}
+enum RideStatus {
+  NOT_STARTED,
+  ON_THE_WAY,
+  ARRIVED,
+  PICKED_UP,
+  COMPLETED,
+  NO_SHOW
+}
 
 ///Converts [status] to a string.
 String toString(RideStatus status) {
@@ -59,15 +66,15 @@ class Ride {
 
   Ride(
       {this.id,
-        this.type,
-        this.status,
-        this.startLocation,
-        this.endLocation,
-        this.startAddress,
-        this.endAddress,
-        this.rider,
-        this.endTime,
-        this.startTime});
+      this.type,
+      this.status,
+      this.startLocation,
+      this.endLocation,
+      this.startAddress,
+      this.endAddress,
+      this.rider,
+      this.endTime,
+      this.startTime});
 
   ///Creates a ride from JSON representation.
   factory Ride.fromJson(Map<String, dynamic> json) {
@@ -79,8 +86,12 @@ class Ride {
       endLocation: json['endLocation']['name'],
       startAddress: json['startLocation']['address'],
       endAddress: json['endLocation']['address'],
-      startTime: DateFormat('yyyy-MM-ddTHH:mm:ss').parse(json['startTime'], true).toLocal(),
-      endTime: DateFormat('yyyy-MM-ddTHH:mm:ss').parse(json['endTime'], true).toLocal(),
+      startTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
+          .parse(json['startTime'], true)
+          .toLocal(),
+      endTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
+          .parse(json['endTime'], true)
+          .toLocal(),
       rider: Rider.fromJson(json['rider']),
     );
   }

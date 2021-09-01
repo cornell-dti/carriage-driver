@@ -38,25 +38,25 @@ class RidesStateless extends StatelessWidget {
 
   final bool interactive;
 
-  const RidesStateless({
-    Key key,
-    this.currentRides,
-    this.remainingRides,
-    this.selectedRideIDs,
-    this.onDropoff,
-    this.selectCallback,
-    this.firstCurrentRideRectCb = onChangeDefault,
-    this.secondCurrentRideRectCb = onChangeDefault,
-    this.firstRemainingRideRectCb = onChangeDefault,
-    this.carButtonRectCb = onChangeDefault,
-    this.dropOffButtonRectCb = onChangeDefault,
-    this.highlightRemainingRide = false,
-    this.highlightFirstCurrentRide = false,
-    this.highlightSecondCurrentRide = false,
-    this.highlightCarButton = false,
-    this.highlightDropOffButton = false,
-    this.interactive = true
-  }) : super(key: key);
+  const RidesStateless(
+      {Key key,
+      this.currentRides,
+      this.remainingRides,
+      this.selectedRideIDs,
+      this.onDropoff,
+      this.selectCallback,
+      this.firstCurrentRideRectCb = onChangeDefault,
+      this.secondCurrentRideRectCb = onChangeDefault,
+      this.firstRemainingRideRectCb = onChangeDefault,
+      this.carButtonRectCb = onChangeDefault,
+      this.dropOffButtonRectCb = onChangeDefault,
+      this.highlightRemainingRide = false,
+      this.highlightFirstCurrentRide = false,
+      this.highlightSecondCurrentRide = false,
+      this.highlightCarButton = false,
+      this.highlightDropOffButton = false,
+      this.interactive = true})
+      : super(key: key);
 
   Widget emptyPage(BuildContext context) {
     double imageSize = MediaQuery.of(context).size.width * 0.2;
@@ -64,13 +64,11 @@ class RidesStateless extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Image.asset('assets/images/steeringWheel@3x.png',
-              width: imageSize,
-              height: imageSize
-          ),
+              width: imageSize, height: imageSize),
           SizedBox(height: 22),
           Text(
             'Congratulations! You are done for the day. \n'
-                'Come back tomorrow!',
+            'Come back tomorrow!',
             textAlign: TextAlign.center,
           )
         ],
@@ -81,21 +79,24 @@ class RidesStateless extends StatelessWidget {
   Widget ridesInProgress(BuildContext context) {
     List<Widget> buildRideGrid(BuildContext context) {
       double spacing = 16;
-      List<Widget> rideCards = currentRides.asMap().map((i, ride) {
-        Widget card = Container(
-            width: (MediaQuery.of(context).size.width / 2) - (spacing * 1.5),
-            child: RideInProgressCard(Key(ride.id), ride,
-                selectedRideIDs.contains(ride.id), selectCallback
-            )
-        );
-        if (highlightFirstCurrentRide && i == 0) {
-          card = MeasureRect(child: card, onChange: firstCurrentRideRectCb);
-        }
-        else if (highlightSecondCurrentRide && i == 1) {
-          card = MeasureRect(child: card, onChange: secondCurrentRideRectCb);
-        }
-        return MapEntry(i, card);
-      }).values.toList();
+      List<Widget> rideCards = currentRides
+          .asMap()
+          .map((i, ride) {
+            Widget card = Container(
+                width:
+                    (MediaQuery.of(context).size.width / 2) - (spacing * 1.5),
+                child: RideInProgressCard(Key(ride.id), ride,
+                    selectedRideIDs.contains(ride.id), selectCallback));
+            if (highlightFirstCurrentRide && i == 0) {
+              card = MeasureRect(child: card, onChange: firstCurrentRideRectCb);
+            } else if (highlightSecondCurrentRide && i == 1) {
+              card =
+                  MeasureRect(child: card, onChange: secondCurrentRideRectCb);
+            }
+            return MapEntry(i, card);
+          })
+          .values
+          .toList();
 
       List<Widget> result = [];
       while (rideCards.length > 0) {
@@ -117,22 +118,18 @@ class RidesStateless extends StatelessWidget {
     }
 
     return Container(
-        child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: RideGroupTitle('In Progress', currentRides.length),
-              ),
-              Padding(
-                  padding: EdgeInsets.only(top: 24, bottom: 32),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: buildRideGrid(context),
-                  )
-              )
-            ]
-        )
-    );
+        child: Column(children: [
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: RideGroupTitle('In Progress', currentRides.length),
+      ),
+      Padding(
+          padding: EdgeInsets.only(top: 24, bottom: 32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: buildRideGrid(context),
+          ))
+    ]));
   }
 
   Widget rideCards(BuildContext context, List<Ride> rides) {
@@ -152,8 +149,8 @@ class RidesStateless extends StatelessWidget {
       itemCount: hours.length,
       itemBuilder: (context, index) {
         int hour = hours[index];
-        return RideGroup(
-            rideGroups[hour], hour, index, highlightRemainingRide, firstRemainingRideRectCb, interactive);
+        return RideGroup(rideGroups[hour], hour, index, highlightRemainingRide,
+            firstRemainingRideRectCb, interactive);
       },
       separatorBuilder: (context, index) {
         return SizedBox(height: 32);
@@ -163,10 +160,17 @@ class RidesStateless extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool emptyMainPage = interactive && currentRides.isEmpty && remainingRides.isEmpty; // no current or remaining
-    bool emptyPreviewPage = !interactive && remainingRides.isEmpty; // the ride we're switching from will be a current ride, so just check remaining
+    bool emptyMainPage = interactive &&
+        currentRides.isEmpty &&
+        remainingRides.isEmpty; // no current or remaining
+    bool emptyPreviewPage = !interactive &&
+        remainingRides
+            .isEmpty; // the ride we're switching from will be a current ride, so just check remaining
     Widget carButton = IconButton(
-      icon: highlightCarButton ? Image.asset('assets/images/highlightedCarButton.png', width: 28, height: 25) : Image.asset('assets/images/carButton.png', width: 24, height: 21),
+      icon: highlightCarButton
+          ? Image.asset('assets/images/highlightedCarButton.png',
+              width: 28, height: 25)
+          : Image.asset('assets/images/carButton.png', width: 24, height: 21),
       onPressed: () => Navigator.of(context).pop(),
     );
 
@@ -174,22 +178,27 @@ class RidesStateless extends StatelessWidget {
         hasShadow: true,
         text: 'Drop off ' +
             (selectedRideIDs.length == 1
-                ? currentRides.where((ride) => ride.id == selectedRideIDs.single).single.rider.firstName
+                ? currentRides
+                    .where((ride) => ride.id == selectedRideIDs.single)
+                    .single
+                    .rider
+                    .firstName
                 : 'Multiple Passengers'),
-        onPressed: onDropoff
-    );
+        onPressed: onDropoff);
 
     return Stack(
       children: [
-        emptyMainPage || emptyPreviewPage ? Container(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              emptyPage(context),
-            ],
-          ),
-        ) : Container(),
+        emptyMainPage || emptyPreviewPage
+            ? Container(
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    emptyPage(context),
+                  ],
+                ),
+              )
+            : Container(),
         Container(
             height: MediaQuery.of(context).size.height,
             child: ListView(
@@ -202,47 +211,50 @@ class RidesStateless extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 32, left: 16, right: 16, bottom: 32),
-                          child: Row(
-                              children: [
-                                Text(
-                                    DateFormat('E').format(DateTime.now()) + '. ' + DateFormat('Md').format(DateTime.now()),
-                                    style: CarriageTheme.largeTitle
-                                ),
-                                interactive ? Container() : Spacer(),
-                                interactive ?
-                                Container() : (highlightCarButton ? MeasureRect(
-                                  child: carButton,
-                                  onChange: carButtonRectCb,
-                                ) : carButton)
-                              ]
-                          ),
+                          child: Row(children: [
+                            Text(
+                                DateFormat('E').format(DateTime.now()) +
+                                    '. ' +
+                                    DateFormat('Md').format(DateTime.now()),
+                                style: CarriageTheme.largeTitle),
+                            interactive ? Container() : Spacer(),
+                            interactive
+                                ? Container()
+                                : (highlightCarButton
+                                    ? MeasureRect(
+                                        child: carButton,
+                                        onChange: carButtonRectCb,
+                                      )
+                                    : carButton)
+                          ]),
                         ),
                         interactive && currentRides.length > 0
                             ? ridesInProgress(context)
                             : Container(),
                         selectedRideIDs.isEmpty
                             ? Padding(
-                          padding: EdgeInsets.only(bottom: 32),
-                          child: rideCards(context, remainingRides),
-                        ) : Container()]
-                  )
-                ]
-            )
-        ),
+                                padding: EdgeInsets.only(bottom: 32),
+                                child: rideCards(context, remainingRides),
+                              )
+                            : Container()
+                      ])
+                ])),
         selectedRideIDs.isNotEmpty
             ? Positioned(
-          bottom: 32,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            child: Padding(
-                padding: EdgeInsets.only(left: 34, right: 34),
-                child: highlightDropOffButton ? MeasureRect(
-                  child: dropOffButton,
-                  onChange: dropOffButtonRectCb,
-                ) : dropOffButton
-            ),
-          ),
-        ) : Container()
+                bottom: 32,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 34, right: 34),
+                      child: highlightDropOffButton
+                          ? MeasureRect(
+                              child: dropOffButton,
+                              onChange: dropOffButtonRectCb,
+                            )
+                          : dropOffButton),
+                ),
+              )
+            : Container()
       ],
     );
   }
@@ -271,7 +283,7 @@ class _RidesState extends State<Rides> {
 
   Future<void> finishRide(BuildContext context, Ride ride) async {
     http.Response statusResponse =
-    await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
+        await updateRideStatus(context, ride.id, RideStatus.COMPLETED);
     if (statusResponse.statusCode == 200) {
       http.Response typeResponse = await setRideToPast(context, ride.id);
       if (typeResponse.statusCode == 200) {
@@ -306,7 +318,11 @@ class _RidesState extends State<Rides> {
                 requestedDropOff = true;
               });
               for (String id in selectedRideIDs) {
-                await finishRide(context, ridesProvider.currentRides.where((ride) => ride.id == id).single);
+                await finishRide(
+                    context,
+                    ridesProvider.currentRides
+                        .where((ride) => ride.id == id)
+                        .single);
               }
               setState(() {
                 selectedRideIDs = [];
@@ -314,18 +330,20 @@ class _RidesState extends State<Rides> {
               });
             },
             selectCallback: _selectRide,
-            interactive: widget.interactive
-        ),
+            interactive: widget.interactive),
       ),
     );
 
-    return !ridesProvider.hasActiveRides() ? Center(child: CircularProgressIndicator()) :
-    widget.interactive ? RefreshIndicator(
-        onRefresh: () async {
-          await ridesProvider.requestActiveRides(appConfig, authProvider);
-        },
-        child: page
-    ) : page;
+    return !ridesProvider.hasActiveRides()
+        ? Center(child: CircularProgressIndicator())
+        : widget.interactive
+            ? RefreshIndicator(
+                onRefresh: () async {
+                  await ridesProvider.requestActiveRides(
+                      appConfig, authProvider);
+                },
+                child: page)
+            : page;
   }
 }
 
@@ -350,8 +368,8 @@ class RideGroupTitle extends StatelessWidget {
 }
 
 class RideGroup extends StatelessWidget {
-  RideGroup(
-      this.rides, this.hour, this.groupIndex, this.highlightRemainingRide, this.firstRemainingRideRectCb, this.interactive);
+  RideGroup(this.rides, this.hour, this.groupIndex, this.highlightRemainingRide,
+      this.firstRemainingRideRectCb, this.interactive);
   final int hour;
   final List<Ride> rides;
   final int groupIndex;
@@ -364,7 +382,9 @@ class RideGroup extends StatelessWidget {
     DateTime startHour = DateTime(0, 0, 0, hour, 0);
     DateTime endHour = startHour.add(Duration(hours: 1));
 
-    String title = DateFormat('jm').format(startHour) + ' ~ ' + DateFormat('jm').format(endHour);
+    String title = DateFormat('jm').format(startHour) +
+        ' ~ ' +
+        DateFormat('jm').format(endHour);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
@@ -380,9 +400,7 @@ class RideGroup extends StatelessWidget {
             );
           }
           Widget w = Opacity(
-              opacity: interactive ? 1 : 0.5,
-              child: RideCard(rides[index])
-          );
+              opacity: interactive ? 1 : 0.5, child: RideCard(rides[index]));
           if (!interactive) {
             w = IgnorePointer(child: w);
           }

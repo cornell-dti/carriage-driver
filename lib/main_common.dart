@@ -34,23 +34,25 @@ class MyApp extends StatelessWidget {
       // UserInfoProvider is in a child widget because it uses AuthProvider
       child: ChangeNotifierProvider<DriverProvider>(
         create: (BuildContext context) {
-          return DriverProvider(config, Provider.of<AuthProvider>(context, listen: false));
+          return DriverProvider(
+              config, Provider.of<AuthProvider>(context, listen: false));
         },
         child: ChangeNotifierProvider<RidesProvider>(
           create: (BuildContext context) {
-            return RidesProvider(config, Provider.of<AuthProvider>(context, listen: false));
+            return RidesProvider(
+                config, Provider.of<AuthProvider>(context, listen: false));
           },
           child: ChangeNotifierProvider<LocationsProvider>(
             create: (BuildContext context) {
-              return LocationsProvider(config, Provider.of<AuthProvider>(context, listen: false));
+              return LocationsProvider(
+                  config, Provider.of<AuthProvider>(context, listen: false));
             },
             child: MaterialApp(
                 title: 'Carriage',
                 theme: ThemeData(
                     scaffoldBackgroundColor: Colors.white,
                     fontFamily: 'Inter',
-                    accentColor: Color.fromRGBO(60, 60, 67, 0.6)
-                ),
+                    accentColor: Color.fromRGBO(60, 60, 67, 0.6)),
                 home: HomeOrLogin()),
           ),
         ),
@@ -89,9 +91,6 @@ class HomeOrOnboarding extends StatelessWidget {
             return firstLogin ? Onboarding() : Home();
           }
           return Center(child: CircularProgressIndicator());
-        }
-    );
+        });
   }
 }
-
-

@@ -31,18 +31,30 @@ class _NotificationSettingsState extends State<NotificationSettings> {
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
-                  SettingRow('New Rides', 'Get notifications when a new ride is added to your schedule.', newRides, (selection) => setState(() => newRides = selection)),
+                  SettingRow(
+                      'New Rides',
+                      'Get notifications when a new ride is added to your schedule.',
+                      newRides,
+                      (selection) => setState(() => newRides = selection)),
                   Divider(),
-                  SettingRow('Ride Edits', "Get notifications when a ride's info is edited in to your schedule.", rideEdits, (selection) => setState(() => rideEdits = selection)),
+                  SettingRow(
+                      'Ride Edits',
+                      "Get notifications when a ride's info is edited in to your schedule.",
+                      rideEdits,
+                      (selection) => setState(() => rideEdits = selection)),
                   Divider(),
-                  SettingRow('Ride Cancellations', 'Get notifications when a new ride is removed from your schedule.', rideCancellations, (selection) => setState(() => rideCancellations = selection)),
+                  SettingRow(
+                      'Ride Cancellations',
+                      'Get notifications when a new ride is removed from your schedule.',
+                      rideCancellations,
+                      (selection) =>
+                          setState(() => rideCancellations = selection)),
                   Divider()
                 ],
               ),
             ),
           ],
-        )
-    );
+        ));
   }
 }
 
@@ -62,12 +74,14 @@ class SettingRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(title,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
               Container(
                   width: MediaQuery.of(context).size.width * 0.7,
-                  child: Text(description, style: TextStyle(fontSize: 17, color: CarriageTheme.gray1))
-              ),
+                  child: Text(description,
+                      style:
+                          TextStyle(fontSize: 17, color: CarriageTheme.gray1))),
             ],
           ),
           Spacer(),

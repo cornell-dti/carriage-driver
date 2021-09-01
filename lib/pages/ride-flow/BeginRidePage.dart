@@ -26,36 +26,32 @@ class _BeginRidePageState extends State<BeginRidePage> {
   Widget _picAndName(BuildContext context) {
     return Center(
       child:
-      Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            widget.ride.rider.profilePicture(64),
-            SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.ride.rider.firstName,
-                  style: CarriageTheme.title1,
-                ),
-                widget.ride.rider.accessibilityNeeds.length > 0
-                    ? Padding(
+          Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
+        widget.ride.rider.profilePicture(64),
+        SizedBox(width: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.ride.rider.firstName,
+              style: CarriageTheme.title1,
+            ),
+            widget.ride.rider.accessibilityNeeds.length > 0
+                ? Padding(
                     padding: EdgeInsets.only(top: 4),
                     child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
-                        style: CarriageTheme.body)
-                ) : Container()
-              ],
-            )
-          ]
-      ),
+                        style: CarriageTheme.body))
+                : Container()
+          ],
+        )
+      ]),
     );
   }
 
   Widget _homeButton() {
     return InkWell(
       onTap: () => Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => Home())
-      ),
+          MaterialPageRoute(builder: (BuildContext context) => Home())),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
@@ -65,8 +61,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
             children: [
               Icon(Icons.arrow_back_ios, size: 21),
               Text("Home", style: TextStyle(fontSize: 17))
-            ]
-        ),
+            ]),
       ),
     );
   }
@@ -85,7 +80,11 @@ class _BeginRidePageState extends State<BeginRidePage> {
               children: [
                 SingleChildScrollView(
                   child: Container(
-                    padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: buttonHeight + 2*buttonVerticalPadding + 42),
+                    padding: EdgeInsets.only(
+                        left: 16,
+                        right: 16,
+                        top: 8,
+                        bottom: buttonHeight + 2 * buttonVerticalPadding + 42),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -101,18 +100,15 @@ class _BeginRidePageState extends State<BeginRidePage> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 34, vertical: buttonVerticalPadding),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 10,
-                            spreadRadius: 1,
-                            offset: Offset(0, -2),
-                            color: Colors.black.withOpacity(0.05)
-                        )
-                      ]
-                    ),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 34, vertical: buttonVerticalPadding),
+                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                      BoxShadow(
+                          blurRadius: 10,
+                          spreadRadius: 1,
+                          offset: Offset(0, -2),
+                          color: Colors.black.withOpacity(0.05))
+                    ]),
                     child: MeasureRect(
                       onChange: widget.onContinueRectChange,
                       child: CButton(
@@ -127,8 +123,8 @@ class _BeginRidePageState extends State<BeginRidePage> {
                             if (response.statusCode == 200) {
                               widget.ride.status = RideStatus.ON_THE_WAY;
                               RidesProvider ridesProvider =
-                              Provider.of<RidesProvider>(context,
-                                  listen: false);
+                                  Provider.of<RidesProvider>(context,
+                                      listen: false);
                               ridesProvider.changeRideToCurrent(widget.ride);
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(

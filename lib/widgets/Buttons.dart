@@ -13,8 +13,8 @@ class CButton extends StatelessWidget {
 
   CButton(
       {@required this.text,
-        @required this.hasShadow,
-        @required this.onPressed});
+      @required this.hasShadow,
+      @required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +27,9 @@ class CButton extends StatelessWidget {
             padding: EdgeInsets.all(16),
             color: Colors.black,
             textColor: Colors.white,
-            child: Text(text,
-                style: CarriageTheme.button),
+            child: Text(text, style: CarriageTheme.button),
             onPressed: onPressed,
-          )
-      ),
+          )),
     );
   }
 }
@@ -46,7 +44,9 @@ class DangerButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: FlatButton(
-            child: Text(text, style: CarriageTheme.button.copyWith(color: Color.fromRGBO(240, 134, 134, 1))),
+            child: Text(text,
+                style: CarriageTheme.button
+                    .copyWith(color: Color.fromRGBO(240, 134, 134, 1))),
             onPressed: onPressed));
   }
 }
@@ -69,11 +69,10 @@ class ShadowedCircleButton extends StatelessWidget {
       child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+              customBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100)),
               onTap: onPressed,
-              child: icon
-          )
-      ),
+              child: icon)),
     );
   }
 }
@@ -107,14 +106,14 @@ class NotifyButton extends StatelessWidget {
       showDialog(
           context: context,
           builder: (_) => ConfirmDialog(
-            title: "Notify Delay",
-            content: "Would you like to notify the rider of a delay?",
-            actionName: "Notify",
-            onConfirm: () async {
-              await notifyDelay(context, ride.id);
-              Navigator.of(context, rootNavigator: true).pop();
-            },
-          ),
+                title: "Notify Delay",
+                content: "Would you like to notify the rider of a delay?",
+                actionName: "Notify",
+                onConfirm: () async {
+                  await notifyDelay(context, ride.id);
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+              ),
           barrierDismissible: true);
     }, diameter);
   }
@@ -131,14 +130,16 @@ class CalendarButton extends StatelessWidget {
       height: 40,
       child: IconButton(
           icon: Image.asset(
-            highlight ? 'assets/images/highlightedCalendarButton.png' : 'assets/images/calendarButton.png',
+            highlight
+                ? 'assets/images/highlightedCalendarButton.png'
+                : 'assets/images/calendarButton.png',
             width: highlight ? 24 : 20,
             height: highlight ? 24 : 20,
           ),
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    Scaffold(body: SafeArea(child: Rides(interactive: false)))));
+                builder: (BuildContext context) => Scaffold(
+                    body: SafeArea(child: Rides(interactive: false)))));
           }),
     );
   }

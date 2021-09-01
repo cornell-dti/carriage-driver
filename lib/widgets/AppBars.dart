@@ -22,12 +22,14 @@ class BackBar extends StatelessWidget implements PreferredSizeWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 16, right: 8),
-                      child: Image.asset('assets/images/backArrow.png', width: 12, height: 21),
-                    ),
-                    onTap: () => action != null ? action : Navigator.of(context).pop()
-                  ),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 16, right: 8),
+                        child: Image.asset('assets/images/backArrow.png',
+                            width: 12, height: 21),
+                      ),
+                      onTap: () => action != null
+                          ? action
+                          : Navigator.of(context).pop()),
                   Text(text, style: TextStyle(fontSize: 17))
                 ]),
           ),

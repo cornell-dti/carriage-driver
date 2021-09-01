@@ -23,19 +23,19 @@ class Rider {
 
   ///The URL of the rider's profile picture.
   final String photoLink;
+
   ///The local path for onboarding riders' profile pictures.
   final String photoPath;
 
-  Rider({
-    this.id,
-    this.email,
-    this.phoneNumber,
-    this.firstName,
-    this.lastName,
-    this.accessibilityNeeds,
-    this.photoLink,
-    this.photoPath
-  });
+  Rider(
+      {this.id,
+      this.email,
+      this.phoneNumber,
+      this.firstName,
+      this.lastName,
+      this.accessibilityNeeds,
+      this.photoLink,
+      this.photoPath});
 
   ///Creates a rider from JSON representation.
   factory Rider.fromJson(Map<String, dynamic> json) {
@@ -46,8 +46,8 @@ class Rider {
         firstName: json['firstName'],
         lastName: json['lastName'],
         accessibilityNeeds: List.from(json['accessibility']),
-        photoLink: json['photoLink'] == null ? null : 'https://' + json['photoLink']
-    );
+        photoLink:
+            json['photoLink'] == null ? null : 'https://' + json['photoLink']);
   }
 
   Widget profilePicture(double diameter) {
@@ -56,24 +56,25 @@ class Rider {
       width: diameter,
       child: ClipRRect(
           borderRadius: BorderRadius.circular(100),
-          child: photoLink == null ? Image.asset(
-              photoPath == null ? 'assets/images/person.png' : photoPath,
-              width: diameter,
-              height: diameter
-          ) : Image.network(
-            this.photoLink,
-            fit: BoxFit.cover,
-            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
-              if (loadingProgress == null) {
-                return child;
-              }else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          )
-      ),
+          child: photoLink == null
+              ? Image.asset(
+                  photoPath == null ? 'assets/images/person.png' : photoPath,
+                  width: diameter,
+                  height: diameter)
+              : Image.network(
+                  this.photoLink,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                )),
     );
   }
 }

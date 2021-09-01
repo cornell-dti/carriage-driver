@@ -177,7 +177,8 @@ class _HomeState extends State<Home> {
   }
 
   subscribe(String token) async {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     String authToken = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
       "${AppConfig.of(context).baseUrl}/notification/subscribe",

@@ -20,14 +20,13 @@ class Driver {
   ///The date that the driver joined, formatted as mm/dd/yyyy from backend
   final String startDate;
 
-  Driver({
-    this.firstName,
-    this.lastName,
-    this.startDate,
-    this.phoneNumber,
-    this.email,
-    this.photoLink
-  });
+  Driver(
+      {this.firstName,
+      this.lastName,
+      this.startDate,
+      this.phoneNumber,
+      this.email,
+      this.photoLink});
 
   ///Creates driver info from JSON representation. The query at the end of photoLink is to
   // force the network images that display it to re-fetch the photo, because it won't
@@ -36,11 +35,15 @@ class Driver {
     return Driver(
         firstName: json['firstName'],
         lastName: json['lastName'],
-        startDate: DateFormat('MM/yyyy').format((DateFormat('yyyy-MM-dd').parse(json['startDate']))),
+        startDate: DateFormat('MM/yyyy')
+            .format((DateFormat('yyyy-MM-dd').parse(json['startDate']))),
         phoneNumber: json['phoneNumber'],
         email: json['email'],
-        photoLink: json['photoLink'] == null ? null : 'https://' + json['photoLink'] + '?dummy=${DateTime.now().millisecondsSinceEpoch}'
-    );
+        photoLink: json['photoLink'] == null
+            ? null
+            : 'https://' +
+                json['photoLink'] +
+                '?dummy=${DateTime.now().millisecondsSinceEpoch}');
   }
 
   Driver copyWithPhoto(String newPhoto) {
@@ -49,7 +52,6 @@ class Driver {
         lastName: this.lastName,
         phoneNumber: this.phoneNumber,
         email: this.email,
-        photoLink: 'http://' + newPhoto
-    );
+        photoLink: 'http://' + newPhoto);
   }
 }
