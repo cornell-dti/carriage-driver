@@ -14,6 +14,8 @@ jobs:
         uses: subosito/flutter-action@v1
       - name: Get
         run: flutter pub get
+      - name: Format
+        run: dart format -o show .
       - name: Analyze
         run: flutter analyze
       - name: Test
