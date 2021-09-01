@@ -8,7 +8,7 @@ import 'Dialogs.dart';
 /// Black button with white text
 class CButton extends StatelessWidget {
   final String text;
-  final hasShadow;
+  final bool hasShadow;
   final void Function() onPressed;
 
   CButton(

@@ -30,7 +30,7 @@ class _MeasureSizeState extends State<MeasureSize> {
   }
 
   var widgetKey = GlobalKey();
-  var oldSize;
+  Size oldSize;
 
   void postFrameCallback(_) {
     var context = widgetKey.currentContext;

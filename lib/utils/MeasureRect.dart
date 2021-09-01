@@ -30,7 +30,7 @@ class _MeasureRectState extends State<MeasureRect> {
   }
 
   var widgetKey = GlobalKey();
-  var oldRect;
+  Rect oldRect;
 
   void postFrameCallback(_) {
     var context = widgetKey.currentContext;

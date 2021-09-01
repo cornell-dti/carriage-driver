@@ -18,7 +18,9 @@ class LocationsProvider with ChangeNotifier {
     callback = () async {
       if (authProvider.isAuthenticated) {
         await fetchLocations(config, authProvider);
-        locations.forEach((loc) => locationsByName[loc.name] = loc);
+        for (var loc in locations) {
+          locationsByName[loc.name] = loc;
+        }
       }
     };
     callback();
