@@ -53,8 +53,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> onSelectNotification(String payload) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Home()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     return Future<void>.value();
   }
 

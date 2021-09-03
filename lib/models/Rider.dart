@@ -57,10 +57,8 @@ class Rider {
       child: ClipRRect(
           borderRadius: BorderRadius.circular(100),
           child: photoLink == null
-              ? Image.asset(
-                  photoPath ?? 'assets/images/person.png',
-                  width: diameter,
-                  height: diameter)
+              ? Image.asset(photoPath ?? 'assets/images/person.png',
+                  width: diameter, height: diameter)
               : Image.network(
                   photoLink,
                   fit: BoxFit.cover,
