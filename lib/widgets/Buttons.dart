@@ -23,10 +23,12 @@ class CButton extends StatelessWidget {
       child: ButtonTheme(
           height: 50,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
-          child: RaisedButton(
-            padding: EdgeInsets.all(16),
-            color: Colors.black,
-            textColor: Colors.white,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.all(16),
+              primary: Colors.black,
+              onPrimary: Colors.white,
+            ),
             child: Text(text, style: CarriageTheme.button),
             onPressed: onPressed,
           )),
@@ -43,7 +45,7 @@ class DangerButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: FlatButton(
+        child: TextButton(
             child: Text(text,
                 style: CarriageTheme.button
                     .copyWith(color: Color.fromRGBO(240, 134, 134, 1))),

@@ -35,7 +35,7 @@ class ConfirmDialog extends StatelessWidget {
             child: CButton(
                 text: actionName, hasShadow: false, onPressed: onConfirm),
           ),
-          FlatButton(
+          TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text("Cancel",
                   style: TextStyle(

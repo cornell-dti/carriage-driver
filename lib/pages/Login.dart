@@ -72,13 +72,20 @@ class SignInButton extends StatelessWidget {
     AuthProvider authProvider = Provider.of(context);
     return ButtonTheme(
       minWidth: MediaQuery.of(context).size.width * 0.8,
-      child: FlatButton(
-        color: Colors.white,
-        splashColor: Colors.grey,
+      child: TextButton(
+        style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            overlayColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+              if (states.contains(MaterialState.pressed)) return Colors.grey;
+              return null; // Defer to the widget's default.
+            }),
+            shape: MaterialStateProperty.all<OutlinedBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(3)))),
         onPressed: () {
           authProvider.signIn();
         },
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
         child: Padding(
           padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
           child: Row(
