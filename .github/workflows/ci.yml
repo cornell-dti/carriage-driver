@@ -12,6 +12,8 @@ jobs:
           java-version: "8.x"
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
+        with:
+          flutter-version: "2.2.3"
       - name: Get
         run: flutter pub get
       - name: Format
