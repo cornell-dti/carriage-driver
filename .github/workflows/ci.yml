@@ -3,7 +3,7 @@ on: push
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@master
       - name: Setup Java
@@ -22,5 +22,7 @@ jobs:
         run: flutter analyze
       - name: Test
         run: flutter test
-      - name: Build
-        run: flutter build aot
+      - name: Build Android
+        run: flutter build apk
+      - name: Build iOS
+        run: flutter build ios
