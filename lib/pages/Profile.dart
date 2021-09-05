@@ -345,12 +345,10 @@ class _EditNameState extends State<EditName> {
             ),
             Flexible(
               child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height / 8),
                         Form(
                             key: _formKey,
                             autovalidateMode:
@@ -388,7 +386,6 @@ class _EditNameState extends State<EditName> {
                                       return null;
                                     },
                                   ),
-                                  SizedBox(height: 10),
                                   TextFormField(
                                     controller: lastNameCtrl,
                                     textInputAction: TextInputAction.go,
