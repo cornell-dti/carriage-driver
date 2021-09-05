@@ -74,7 +74,7 @@ class SignInButton extends StatelessWidget {
       minWidth: MediaQuery.of(context).size.width * 0.8,
       child: TextButton(
         style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
             overlayColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
               if (states.contains(MaterialState.pressed)) return Colors.grey;
