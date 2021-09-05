@@ -16,14 +16,11 @@ class Login extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
-        margin: EdgeInsets.only(bottom: 20),
+        margin: EdgeInsets.symmetric(vertical: 20),
         height: MediaQuery.of(context).size.height,
         child: Column(
 //        mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 6,
-            ),
             Container(
               margin: EdgeInsets.only(left: 20),
               child: Row(
@@ -47,7 +44,6 @@ class Login extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 60.0),
             Image.asset(
               'assets/images/app_logo.png',
               height: 270,
