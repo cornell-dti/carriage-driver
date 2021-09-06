@@ -100,7 +100,7 @@ class _PickUpPageState extends State<PickUpPage> {
                             SizedBox(height: 24),
                             Row(children: [
                               Stack(clipBehavior: Clip.none, children: [
-                                widget.ride.rider.profilePicture(86),
+                                widget.ride.rider.profilePicture(90),
                                 Positioned(
                                     bottom: -12,
                                     right: -12,

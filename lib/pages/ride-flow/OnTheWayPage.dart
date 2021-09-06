@@ -62,7 +62,7 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                   style: CarriageTheme.title1)),
                           SizedBox(height: 48),
                           Row(children: [
-                            widget.ride.rider.profilePicture(100),
+                            widget.ride.rider.profilePicture(90),
                             SizedBox(width: 16),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

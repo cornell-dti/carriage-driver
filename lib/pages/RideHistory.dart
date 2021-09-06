@@ -139,7 +139,7 @@ class _RideHistoryRowState extends State<RideHistoryRow> {
     return Row(
       children: [
         widget.ride.rider.profilePicture(54),
-        SizedBox(width: 28),
+        SizedBox(width: 20),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
