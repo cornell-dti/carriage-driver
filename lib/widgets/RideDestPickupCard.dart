@@ -16,7 +16,8 @@ class RideDestPickupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context, listen: false);
     bool showAddress = !locationsProvider.isPreset(_stop);
 
     return SizedBox(
@@ -38,11 +39,16 @@ class RideDestPickupCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(_stop, style: CarriageTheme.subheadline),
-                showAddress ? Text(_address, style: CarriageTheme.subheadline.copyWith(color: CarriageTheme.gray3)) : Container(),
+                showAddress
+                    ? Text(_address,
+                        style: CarriageTheme.subheadline
+                            .copyWith(color: CarriageTheme.gray3))
+                    : Container(),
                 SizedBox(height: showAddress ? 24 : 8),
                 Text(
                     "${_dropoff ? "Drop off time" : "Pick up time"}: ${DateFormat.jm().format(_time)}",
-                    style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray1))
+                    style: CarriageTheme.caption1
+                        .copyWith(color: CarriageTheme.gray1))
               ]),
         ),
       ),

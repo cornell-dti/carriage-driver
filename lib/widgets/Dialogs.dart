@@ -12,10 +12,10 @@ class ConfirmDialog extends StatelessWidget {
 
   const ConfirmDialog(
       {Key key,
-        @required this.title,
-        @required this.content,
-        @required this.onConfirm,
-        @required this.actionName})
+      @required this.title,
+      @required this.content,
+      @required this.onConfirm,
+      @required this.actionName})
       : super(key: key);
 
   @override
@@ -30,18 +30,18 @@ class ConfirmDialog extends StatelessWidget {
           SizedBox(height: 8),
           Text(content, style: CarriageTheme.body, textAlign: TextAlign.center),
           SizedBox(height: 24),
-          Container(
+          SizedBox(
             width: double.infinity,
             child: CButton(
-                text: actionName,
-                hasShadow: false,
-                onPressed: onConfirm
-            ),
+                text: actionName, hasShadow: false, onPressed: onConfirm),
           ),
-          FlatButton(
+          TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: CarriageTheme.gray3))
-          )
+              child: Text("Cancel",
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: CarriageTheme.gray3)))
         ],
       ),
     );

@@ -36,18 +36,18 @@ class OnboardingBubble extends StatelessWidget {
 
   Widget _inner() {
     return Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 20),
+        padding:
+            const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 20),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(title, style: CarriageTheme.title3.copyWith(color: Colors.white)),
+              Text(title,
+                  style: CarriageTheme.title3.copyWith(color: Colors.white)),
               SizedBox(height: 16),
               Text(body, style: TextStyle(fontSize: 15, color: Colors.white))
-            ]
-        )
-    );
+            ]));
   }
 
   @override
@@ -60,19 +60,17 @@ class OnboardingBubble extends StatelessWidget {
               blurRadius: 10,
               offset: Offset(0, 9)),
         ]),
-        child: nipLocation == null ?
-        Container(
-            decoration: BoxDecoration(
+        child: nipLocation == null
+            ? Container(
+                decoration: BoxDecoration(
+                    color: highlightColor,
+                    borderRadius: BorderRadius.circular(borderRadius)),
+                child: _inner())
+            : SpeechBubble(
                 color: highlightColor,
-                borderRadius: BorderRadius.circular(borderRadius)),
-            child: _inner()
-        ) : SpeechBubble(
-            color: highlightColor,
-            borderRadius: borderRadius,
-            nipLocation: nipLocation,
-            child: _inner()
-        )
-    );
+                borderRadius: borderRadius,
+                nipLocation: nipLocation,
+                child: _inner()));
   }
 }
 
@@ -89,17 +87,17 @@ class CallbackPiper<T> {
 class OnboardingOverlay extends StatefulWidget {
   final Widget child;
   final Widget Function(BuildContext context, Rect highlightRect)
-  overlayBuilder;
+      overlayBuilder;
   final double radius;
   final CallbackPiper<Rect> highlightPiper;
   final bool noButton;
 
   const OnboardingOverlay(
       {Key key,
-        this.overlayBuilder,
-        this.child,
-        this.highlightPiper,
-        this.radius = 5,
+      this.overlayBuilder,
+      this.child,
+      this.highlightPiper,
+      this.radius = 5,
       this.noButton = false})
       : super(key: key);
 
@@ -147,8 +145,7 @@ class OnboardingOverlayState extends State<OnboardingOverlay> {
             right: 0,
             child: widget.noButton || highlightRect != Rect.largest
                 ? widget.overlayBuilder(context, highlightRect)
-                : SizedBox()
-        )
+                : SizedBox())
       ],
     );
   }
@@ -161,7 +158,8 @@ Widget highlightRegion(OnboardingState state, BuildContext context,
     child: Container(
       decoration: BoxDecoration(
         color: Colors.transparent,
-        border: Border.all(color: hide ? Colors.transparent : highlightColor, width: 4),
+        border: Border.all(
+            color: hide ? Colors.transparent : highlightColor, width: 4),
         borderRadius: BorderRadius.circular(radius),
       ),
     ),

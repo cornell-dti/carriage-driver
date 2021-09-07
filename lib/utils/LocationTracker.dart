@@ -6,7 +6,7 @@ import 'package:geolocation/geolocation.dart';
 abstract class LocationTracker {
   // minimum displacement from last position update
   // required to send another update, in meters
-  static final double displacementFilter = 10.0;
+  static const double displacementFilter = 10.0;
 
   // TODO: placeholder
   static final TimeOfDay startTime = TimeOfDay(hour: 7, minute: 30);
@@ -17,13 +17,16 @@ abstract class LocationTracker {
   static double _todToDouble(TimeOfDay tod) {
     return tod.hour.toDouble() + (tod.minute.toDouble() / 60);
   }
+
   static bool _timeInRange(TimeOfDay start, TimeOfDay end, TimeOfDay time) {
     double dblTime = _todToDouble(time);
     double dblStart = _todToDouble(start);
     double dblEnd = _todToDouble(end);
     return dblTime >= dblStart && dblTime <= dblEnd;
   }
-  static bool _isWorkingHours() => _timeInRange(startTime,endTime,TimeOfDay.now()); 
+
+  static bool _isWorkingHours() =>
+      _timeInRange(startTime, endTime, TimeOfDay.now());
 
   static Future<bool> _requestPermission() async {
     final GeolocationResult result =
@@ -66,7 +69,7 @@ abstract class LocationTracker {
         case GeolocationResultErrorType.playServicesUnavailable:
           // android only
           // result.error.additionalInfo contains more details on the play services error
-          throw new Exception("Not possible.");
+          throw Exception("Not possible.");
       }
     }
   }
@@ -75,9 +78,9 @@ abstract class LocationTracker {
     bool success = await _requestPermission();
     if (!success) return false;
     if (subscription != null) {
-      subscription.cancel();
+      await subscription.cancel();
     }
-    if(_isWorkingHours()) {
+    if (_isWorkingHours()) {
       subscription = Geolocation.locationUpdates(
         accuracy: LocationAccuracy.best,
         displacementFilter: displacementFilter,
@@ -86,7 +89,7 @@ abstract class LocationTracker {
         if (result.isSuccessful) {
           _handlePosition(result);
         }
-        if(!_isWorkingHours()) {
+        if (!_isWorkingHours()) {
           subscription.cancel();
         }
       });

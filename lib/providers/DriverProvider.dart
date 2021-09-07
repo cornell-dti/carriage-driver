@@ -23,7 +23,7 @@ class DriverProvider with ChangeNotifier {
   }
 
   void _setDriver(Driver newDriver) {
-    this.driver = newDriver;
+    driver = newDriver;
     notifyListeners();
   }
 
@@ -33,8 +33,7 @@ class DriverProvider with ChangeNotifier {
     String token = await authProvider.secureStorage.read(key: 'token');
     http.Response response = await http.get(
         "${config.baseUrl}/drivers/${authProvider.id}",
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"}
-    );
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
       _setDriver(Driver.fromJson(json));
@@ -69,8 +68,8 @@ class DriverProvider with ChangeNotifier {
   }
 
   /// Updates the logged in driver's phone number.
-  Future<void> updatePhoneNumber(AppConfig config, AuthProvider authProvider,
-      String phoneNumber) async {
+  Future<void> updatePhoneNumber(
+      AppConfig config, AuthProvider authProvider, String phoneNumber) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.put(
       "${config.baseUrl}/drivers/${authProvider.id}",
@@ -78,9 +77,7 @@ class DriverProvider with ChangeNotifier {
         'Content-Type': 'application/json; charset=UTF-8',
         HttpHeaders.authorizationHeader: "Bearer $token"
       },
-      body: jsonEncode(<String, String>{
-        'phoneNumber': phoneNumber
-      }),
+      body: jsonEncode(<String, String>{'phoneNumber': phoneNumber}),
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
@@ -91,8 +88,8 @@ class DriverProvider with ChangeNotifier {
   }
 
   /// Updates the logged in driver's profile picture.
-  Future<void> updateDriverPhoto(AppConfig config, AuthProvider authProvider,
-      String base64Photo) async {
+  Future<void> updateDriverPhoto(
+      AppConfig config, AuthProvider authProvider, String base64Photo) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
       "${config.baseUrl}/upload",

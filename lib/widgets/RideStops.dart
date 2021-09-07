@@ -8,7 +8,8 @@ import 'RideDestPickupCard.dart';
 class RideStops extends StatefulWidget {
   final Ride ride;
   final bool carIcon;
-  RideStops({Key key, @required this.ride, @required this.carIcon}) : super(key: key);
+  RideStops({Key key, @required this.ride, @required this.carIcon})
+      : super(key: key);
 
   @override
   RideStopsState createState() => RideStopsState();
@@ -22,38 +23,35 @@ class RideStopsState extends State<RideStops> {
     double carWidth = 34;
     double circleRadius = 12;
 
-    Widget stopCircle = Stack(
-        alignment: Alignment.center,
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-              width: circleRadius * 2,
-              height: circleRadius * 2,
-              decoration: new BoxDecoration(
-                color: Colors.black,
-                shape: BoxShape.circle,
-              )),
-          Container(
-              width: 7.5,
-              height: 7.5,
-              decoration: new BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ))
-        ]);
+    Widget stopCircle =
+        Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
+      Container(
+          width: circleRadius * 2,
+          height: circleRadius * 2,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            shape: BoxShape.circle,
+          )),
+      Container(
+          width: 7.5,
+          height: 7.5,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+          ))
+    ]);
 
     return Stack(children: [
       Container(
-        width:  max(carWidth, circleRadius * 2),
+        width: max(carWidth, circleRadius * 2),
         height: _height,
         alignment: Alignment.topCenter,
         child: Container(
           width: 4,
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
               color: const Color.fromRGBO(236, 235, 237, 1),
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(8.0))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(8.0))),
         ),
       ),
       MeasureSize(
@@ -70,15 +68,21 @@ class RideStopsState extends State<RideStops> {
                   padding: const EdgeInsets.only(right: 16),
                   child: Row(
                     children: [
-                      Container(
+                      SizedBox(
                         width: max(carWidth, circleRadius * 2),
-                        child: widget.carIcon ? Image.asset('assets/images/carIcon.png', width: carWidth) : stopCircle,
+                        child: widget.carIcon
+                            ? Image.asset('assets/images/carIcon.png',
+                                width: carWidth)
+                            : stopCircle,
                       ),
                       Expanded(
                         child: Padding(
                           padding: EdgeInsets.only(left: 16),
-                          child: RideDestPickupCard(false, widget.ride.startTime,
-                              widget.ride.startLocation, widget.ride.startAddress),
+                          child: RideDestPickupCard(
+                              false,
+                              widget.ride.startTime,
+                              widget.ride.startLocation,
+                              widget.ride.startAddress),
                         ),
                       ),
                     ],
@@ -89,7 +93,9 @@ class RideStopsState extends State<RideStops> {
                   padding: const EdgeInsets.only(right: 16),
                   child: Row(
                     children: [
-                      Container(width: max(carWidth, circleRadius * 2), child: stopCircle),
+                      SizedBox(
+                          width: max(carWidth, circleRadius * 2),
+                          child: stopCircle),
                       Expanded(
                         child: Padding(
                           padding: EdgeInsets.only(left: 16),
@@ -100,10 +106,7 @@ class RideStopsState extends State<RideStops> {
                     ],
                   ),
                 )
-              ]
-          )
-      ),
+              ])),
     ]);
   }
 }
-

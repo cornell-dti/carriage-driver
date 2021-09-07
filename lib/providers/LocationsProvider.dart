@@ -11,14 +11,16 @@ import '../models/Location.dart';
 class LocationsProvider with ChangeNotifier {
   List<Location> locations;
   List<Location> favLocations;
-  Map<String, Location> locationsByName = Map();
-  
+  Map<String, Location> locationsByName = {};
+
   LocationsProvider(AppConfig config, AuthProvider authProvider) {
     void Function() callback;
     callback = () async {
       if (authProvider.isAuthenticated) {
         await fetchLocations(config, authProvider);
-        locations.forEach((loc) => locationsByName[loc.name] = loc);
+        for (var loc in locations) {
+          locationsByName[loc.name] = loc;
+        }
       }
     };
     callback();
@@ -35,7 +37,8 @@ class LocationsProvider with ChangeNotifier {
   }
 
   //Fetches all the locations from the backend as a list by using the baseUrl of [config] and id from [authProvider].
-  Future<void> fetchLocations(AppConfig config, AuthProvider authProvider) async {
+  Future<void> fetchLocations(
+      AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get('${config.baseUrl}/locations',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
@@ -53,7 +56,7 @@ class LocationsProvider with ChangeNotifier {
   List<Location> _locationsFromJson(String json) {
     var data = jsonDecode(json)['data'];
     List<Location> res =
-    data.map<Location>((e) => Location.fromJson(e)).toList();
+        data.map<Location>((e) => Location.fromJson(e)).toList();
     return res;
   }
 

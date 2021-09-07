@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-typedef void OnWidgetSizeChange(Size size);
+typedef OnWidgetSizeChange = void Function(Size size);
 
 class MeasureSize extends StatefulWidget {
   final Widget child;
@@ -30,7 +30,7 @@ class _MeasureSizeState extends State<MeasureSize> {
   }
 
   var widgetKey = GlobalKey();
-  var oldSize;
+  Size oldSize;
 
   void postFrameCallback(_) {
     var context = widgetKey.currentContext;

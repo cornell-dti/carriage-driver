@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatelessWidget {
-
   @override
   Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
@@ -14,17 +13,15 @@ class Login extends StatelessWidget {
       print(
           'User has not logged in previously, therefore, we should not proceed');
     }
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       backgroundColor: Colors.black,
       body: Container(
-        margin: EdgeInsets.only(bottom: 20),
+        margin: EdgeInsets.symmetric(vertical: 20),
         height: MediaQuery.of(context).size.height,
         child: Column(
 //        mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 6,
-            ),
             Container(
               margin: EdgeInsets.only(left: 20),
               child: Row(
@@ -48,7 +45,6 @@ class Login extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 60.0),
             Image.asset(
               'assets/images/app_logo.png',
               height: 270,
@@ -63,7 +59,7 @@ class Login extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 }
 
@@ -73,13 +69,20 @@ class SignInButton extends StatelessWidget {
     AuthProvider authProvider = Provider.of(context);
     return ButtonTheme(
       minWidth: MediaQuery.of(context).size.width * 0.8,
-      child: FlatButton(
-        color: Colors.white,
-        splashColor: Colors.grey,
+      child: TextButton(
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            overlayColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+              if (states.contains(MaterialState.pressed)) return Colors.grey;
+              return null; // Defer to the widget's default.
+            }),
+            shape: MaterialStateProperty.all<OutlinedBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(3)))),
         onPressed: () {
           authProvider.signIn();
         },
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
         child: Padding(
           padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
           child: Row(

@@ -53,8 +53,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> onSelectNotification(String payload) {
-    Navigator.push(
-        context, new MaterialPageRoute(builder: (context) => Home()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     return Future<void>.value();
   }
 
@@ -140,7 +139,7 @@ class _HomeState extends State<Home> {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
         Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => Home()));
         setState(() {});
       },
       onResume: (Map<String, dynamic> message) async {
@@ -152,7 +151,7 @@ class _HomeState extends State<Home> {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
         Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => Home()));
         setState(() {});
       },
     );
@@ -177,7 +176,8 @@ class _HomeState extends State<Home> {
   }
 
   subscribe(String token) async {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     String authToken = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
       "${AppConfig.of(context).baseUrl}/notification/subscribe",

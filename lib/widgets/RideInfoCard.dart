@@ -5,6 +5,7 @@ import 'RideDestPickupCard.dart';
 
 class RideInfoCard extends StatelessWidget {
   final Ride ride;
+
   ///Whether this card shows a ride dropoff
   final bool dropoff;
 
@@ -14,19 +15,18 @@ class RideInfoCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Center(
-        child: Column(
-            children: <Widget>[
-              ride.rider.profilePicture(100),
-              SizedBox(height: 16),
-              Text(ride.rider.firstName, style: CarriageTheme.largeTitle),
-              ride.rider.accessibilityNeeds.length > 0 ?
-              Padding(
-                padding: EdgeInsets.only(top: 8),
-                child: Text(ride.rider.accessibilityNeeds.join(', '),
-                    style: CarriageTheme.body),
-              ) : Container()
-            ]
-        ),
+        child: Column(children: <Widget>[
+          ride.rider.profilePicture(100),
+          SizedBox(height: 16),
+          Text(ride.rider.firstName, style: CarriageTheme.largeTitle),
+          ride.rider.accessibilityNeeds.isNotEmpty
+              ? Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Text(ride.rider.accessibilityNeeds.join(', '),
+                      style: CarriageTheme.body),
+                )
+              : Container()
+        ]),
       ),
     );
   }
@@ -40,10 +40,10 @@ class RideInfoCard extends StatelessWidget {
           children: <Widget>[
             _picAndName(context),
             RideDestPickupCard(
-                dropoff, dropoff ? ride.endTime : ride.startTime,
+                dropoff,
+                dropoff ? ride.endTime : ride.startTime,
                 dropoff ? ride.endLocation : ride.startLocation,
-                dropoff ? ride.endAddress : ride.startAddress
-            )
+                dropoff ? ride.endAddress : ride.startAddress)
           ]),
     );
   }

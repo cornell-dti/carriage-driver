@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-typedef void OnWidgetRectChange(Rect rect);
+typedef OnWidgetRectChange = void Function(Rect rect);
 
 class MeasureRect extends StatefulWidget {
   final Widget child;
@@ -30,7 +30,7 @@ class _MeasureRectState extends State<MeasureRect> {
   }
 
   var widgetKey = GlobalKey();
-  var oldRect;
+  Rect oldRect;
 
   void postFrameCallback(_) {
     var context = widgetKey.currentContext;

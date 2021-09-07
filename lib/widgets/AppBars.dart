@@ -6,7 +6,7 @@ class BackBar extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor;
   final Function action;
 
-  static final double prefHeight = 80;
+  static const double prefHeight = 80;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,18 +16,18 @@ class BackBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Expanded(child: SizedBox()),
           GestureDetector(
-            onTap: () => action != null ? action : Navigator.of(context).pop(),
+            onTap: () => action ?? Navigator.of(context).pop(),
             child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 16, right: 8),
-                      child: Image.asset('assets/images/backArrow.png', width: 12, height: 21),
-                    ),
-                    onTap: () => action != null ? action : Navigator.of(context).pop()
-                  ),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 16, right: 8),
+                        child: Image.asset('assets/images/backArrow.png',
+                            width: 12, height: 21),
+                      ),
+                      onTap: () => action ?? Navigator.of(context).pop()),
                   Text(text, style: TextStyle(fontSize: 17))
                 ]),
           ),
