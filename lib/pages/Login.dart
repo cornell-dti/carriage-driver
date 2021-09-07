@@ -13,7 +13,8 @@ class Login extends StatelessWidget {
       print(
           'User has not logged in previously, therefore, we should not proceed');
     }
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       backgroundColor: Colors.black,
       body: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
@@ -58,7 +59,7 @@ class Login extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 }
 
