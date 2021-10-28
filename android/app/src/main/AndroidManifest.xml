@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cornelldti.carriage_driver">
+    package="com.carriage.carriage_driver">
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -8,11 +8,11 @@
          FlutterApplication and put your custom class here. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
-        android:name="com.cornelldti.carriage_driver.Application"
+        android:name="com.carriage.carriage_driver.Application"
         android:label="carriage"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name="com.cornelldti.carriage_driver.MainActivity"
+            android:name="com.carriage.carriage_driver.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

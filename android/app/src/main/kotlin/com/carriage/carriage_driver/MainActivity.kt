@@ -1,4 +1,4 @@
-package com.cornelldti.carriage_driver
+package com.carriage.carriage_driver
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
