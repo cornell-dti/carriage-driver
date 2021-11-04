@@ -40,7 +40,7 @@ class LocationsProvider with ChangeNotifier {
   Future<void> fetchLocations(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
-    final response = await http.get('${config.baseUrl}/locations',
+    final response = await http.get(Uri.parse('${config.baseUrl}/locations'),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       String responseBody = response.body;

@@ -65,8 +65,8 @@ class RidesProvider with ChangeNotifier {
     DateTime now = DateTime.now();
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
-        config.baseUrl +
-            '/rides?type=active&date=${dateFormat.format(now)}&driver=${authProvider.id}',
+        Uri.parse(config.baseUrl +
+            '/rides?type=active&date=${dateFormat.format(now)}&driver=${authProvider.id}'),
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (response.statusCode == 200) {
       List<Ride> rides = ridesFromJson(response.body);
@@ -92,7 +92,8 @@ class RidesProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
-        config.baseUrl + '/rides?type=past&driver=${authProvider.id}',
+        Uri.parse(
+            config.baseUrl + '/rides?type=past&driver=${authProvider.id}'),
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (response.statusCode == 200) {
       pastRides = ridesFromJson(response.body);

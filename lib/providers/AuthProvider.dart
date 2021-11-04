@@ -20,7 +20,7 @@ Future<String> auth(String baseUrl, String token, String email) async {
         : "241748771473-e85o2d6heucd28loiq5aacese38ln4l4.apps.googleusercontent.com",
     "table": "Drivers"
   };
-  return post(endpoint, body: requestBody).then((res) {
+  return post(Uri.parse(endpoint), body: requestBody).then((res) {
     return res.body;
   });
 }
