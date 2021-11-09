@@ -12,7 +12,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import '../utils/app_config.dart';
 import 'package:provider/provider.dart';
 import '../providers/AuthProvider.dart';
-import '../utils/NotificationService.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print('Handling a background message ${message.messageId}');
+}
+
+void main() {
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+}
 
 class Home extends StatefulWidget {
   @override
@@ -25,10 +32,18 @@ class _HomeState extends State<Home> {
   static const int PROFILE = 2;
 
   int _selectedIndex = RIDES;
+  AndroidNotificationChannel channel;
+  FlutterLocalNotificationsPlugin notificationsPlugin;
+  NotificationSettings notifSettings;
+  String deviceToken;
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
   @override
   void initState() {
     super.initState();
+    _initNotifications();
+    FirebaseMessaging.onMessage.listen(_onMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
     LocationTracker.initialize();
   }
 
@@ -76,6 +91,81 @@ class _HomeState extends State<Home> {
       default:
         return Column();
     }
+  }
+
+  _initNotifications() async {
+    await _fcm.getToken().then((token) => deviceToken = token);
+
+    if (deviceToken != null) {
+      print(deviceToken);
+      subscribe(deviceToken);
+    }
+
+    _fcm.onTokenRefresh.listen((newToken) {
+      subscribe(newToken);
+    });
+
+    notifSettings = await _fcm.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    channel = const AndroidNotificationChannel(
+      'high_importance_channel', // id
+      'High Importance Notifications', // title
+      'This channel is used for important notifications.', // description
+      importance: Importance.high,
+    );
+
+    notificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    /// Create an Android Notification Channel.
+    /// We use this channel in the `AndroidManifest.xml` file to override the
+    /// default FCM channel to enable heads up notifications.
+    await notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    /// Update the iOS foreground notification presentation options to allow
+    /// heads up notifications.
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
+
+  _onMessage(RemoteMessage message) {
+    print('received message');
+    RemoteNotification notification = message.notification;
+    AndroidNotification android = message.notification?.android;
+    if (notification != null && android != null) {
+      notificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channel.description,
+              // TODO add a proper drawable resource to android, for now using
+              //      one that already exists in example app.
+              icon: 'launch_background',
+            ),
+          ));
+    }
+  }
+
+  _onMessageOpenedApp(RemoteMessage message) {
+    print('A new onMessageOpenedApp event was published!');
   }
 
   @override
