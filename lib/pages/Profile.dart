@@ -98,8 +98,8 @@ class Profile extends StatelessWidget {
                                             size: _picBtnDiameter * 0.75),
                                         onPressed: () async {
                                           ImagePicker picker = ImagePicker();
-                                          PickedFile pickedFile =
-                                              await picker.getImage(
+                                          XFile pickedFile =
+                                              await picker.pickImage(
                                                   source: ImageSource.gallery,
                                                   maxHeight: 200,
                                                   maxWidth: 200);

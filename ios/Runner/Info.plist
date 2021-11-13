@@ -27,7 +27,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.241748771473-e85o2d6heucd28loiq5aacese38ln4l4</string>
+				<string>com.googleusercontent.apps.241748771473-a4q5skhr0is8r994o7ie9scrnm5ua760</string>
 			</array>
 		</dict>
 	</array>
@@ -41,6 +41,11 @@
 	<string>This app needs access to your location.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to your photo library to set a profile picture.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

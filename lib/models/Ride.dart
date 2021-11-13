@@ -121,11 +121,12 @@ Future<http.Response> notifyDelay(BuildContext context, String id) async {
   AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
   String token = await authProvider.secureStorage.read(key: 'token');
   final body = jsonEncode(<String, bool>{'late': true});
-  return http
-      .put(AppConfig.of(context).baseUrl + '/rides/$id', body: body, headers: {
-    'Content-Type': 'application/json',
-    HttpHeaders.authorizationHeader: 'Bearer $token'
-  });
+  return http.put(Uri.parse(AppConfig.of(context).baseUrl + '/rides/$id'),
+      body: body,
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token'
+      });
 }
 
 ///Modifies the ride with [id] to have status [status].
@@ -134,22 +135,24 @@ Future<http.Response> updateRideStatus(
   AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
   String token = await authProvider.secureStorage.read(key: 'token');
   final body = jsonEncode(<String, String>{"status": toString(status)});
-  return http
-      .put(AppConfig.of(context).baseUrl + '/rides/$id', body: body, headers: {
-    "Content-Type": "application/json",
-    HttpHeaders.authorizationHeader: "Bearer $token"
-  });
+  return http.put(Uri.parse(AppConfig.of(context).baseUrl + '/rides/$id'),
+      body: body,
+      headers: {
+        "Content-Type": "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      });
 }
 
 Future<http.Response> setRideToPast(BuildContext context, String id) async {
   final body = jsonEncode(<String, String>{"type": "past"});
   AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
   String token = await authProvider.secureStorage.read(key: 'token');
-  return http
-      .put(AppConfig.of(context).baseUrl + '/rides/$id', body: body, headers: {
-    "Content-Type": "application/json",
-    HttpHeaders.authorizationHeader: "Bearer $token"
-  });
+  return http.put(Uri.parse(AppConfig.of(context).baseUrl + '/rides/$id'),
+      body: body,
+      headers: {
+        "Content-Type": "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      });
 }
 
 T getOrNull<T>(Map<String, dynamic> map, String key,

@@ -32,7 +32,7 @@ class DriverProvider with ChangeNotifier {
   Future<void> requestInfo(AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     http.Response response = await http.get(
-        "${config.baseUrl}/drivers/${authProvider.id}",
+        Uri.parse("${config.baseUrl}/drivers/${authProvider.id}"),
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
@@ -49,7 +49,7 @@ class DriverProvider with ChangeNotifier {
       String firstName, String lastName) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.put(
-      "${config.baseUrl}/drivers/${authProvider.id}",
+      Uri.parse("${config.baseUrl}/drivers/${authProvider.id}"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         HttpHeaders.authorizationHeader: "Bearer $token"
@@ -72,7 +72,7 @@ class DriverProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider, String phoneNumber) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.put(
-      "${config.baseUrl}/drivers/${authProvider.id}",
+      Uri.parse("${config.baseUrl}/drivers/${authProvider.id}"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         HttpHeaders.authorizationHeader: "Bearer $token"
@@ -92,7 +92,7 @@ class DriverProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider, String base64Photo) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
-      "${config.baseUrl}/upload",
+      Uri.parse("${config.baseUrl}/upload"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         HttpHeaders.authorizationHeader: "Bearer $token"

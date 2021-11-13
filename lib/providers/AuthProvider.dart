@@ -17,10 +17,10 @@ Future<String> auth(String baseUrl, String token, String email) async {
     "email": email,
     "clientId": Platform.isAndroid
         ? "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com"
-        : "241748771473-e85o2d6heucd28loiq5aacese38ln4l4.apps.googleusercontent.com",
+        : "241748771473-a4q5skhr0is8r994o7ie9scrnm5ua760.apps.googleusercontent.com",
     "table": "Drivers"
   };
-  return post(endpoint, body: requestBody).then((res) {
+  return post(Uri.parse(endpoint), body: requestBody).then((res) {
     return res.body;
   });
 }
