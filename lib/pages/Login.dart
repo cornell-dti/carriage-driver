@@ -67,48 +67,47 @@ class SignInButton extends StatelessWidget {
   @override
   Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
-    return ButtonTheme(
-      minWidth: MediaQuery.of(context).size.width * 0.8,
-      child: TextButton(
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            overlayColor: MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-              if (states.contains(MaterialState.pressed)) return Colors.grey;
-              return null; // Defer to the widget's default.
-            }),
-            shape: MaterialStateProperty.all<OutlinedBorder>(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(3)))),
-        onPressed: () {
-          authProvider.signIn();
-        },
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image(
-                  image: AssetImage('assets/images/google_logo.png'),
-                  height: 20.0),
-              SizedBox(
-                width: 8,
+    return TextButton(
+      style: ButtonStyle(
+          minimumSize: MaterialStateProperty.all(
+              Size(MediaQuery.of(context).size.width * 0.6, 50)),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          overlayColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+            if (states.contains(MaterialState.pressed)) return Colors.grey;
+            return null; // Defer to the widget's default.
+          }),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)))),
+      onPressed: () {
+        authProvider.signIn();
+      },
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image(
+                image: AssetImage('assets/images/google_logo.png'),
+                height: 20.0),
+            SizedBox(
+              width: 8,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text(
+                'Sign in with Google',
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text(
-                  'Sign in with Google',
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
+      //    ),
     );
   }
 }
