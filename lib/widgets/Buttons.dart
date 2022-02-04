@@ -19,20 +19,21 @@ class CButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
-      child: ButtonTheme(
-          height: 50,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
+        width: double.infinity,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
               padding: EdgeInsets.all(16),
               primary: Colors.black,
               onPrimary: Colors.white,
-            ),
-            child: Text(text, style: CarriageTheme.button),
-            onPressed: onPressed,
-          )),
-    );
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(3))),
+              minimumSize: Size(
+                MediaQuery.of(context).size.width * 0.8,
+                50,
+              )),
+          child: Text(text, style: CarriageTheme.button),
+          onPressed: onPressed,
+        ));
   }
 }
 
