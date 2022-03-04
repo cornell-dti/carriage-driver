@@ -47,7 +47,7 @@ class Rider {
         lastName: json['lastName'],
         accessibilityNeeds: List.from(json['accessibility']),
         photoLink:
-            json['photoLink'] == null ? null : 'https://' + json['photoLink']);
+            json['photoLink'] == null ? null : json['photoLink']);
   }
 
   Widget profilePicture(double diameter) {
