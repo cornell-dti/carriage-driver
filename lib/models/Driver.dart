@@ -41,8 +41,7 @@ class Driver {
         email: json['email'],
         photoLink: json['photoLink'] == null
             ? null
-            : 
-                json['photoLink'] +
+            : json['photoLink'] +
                 '?dummy=${DateTime.now().millisecondsSinceEpoch}');
   }
 
