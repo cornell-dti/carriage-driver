@@ -1,4 +1,8 @@
+import 'package:carriage/models/Ride.dart';
+import 'package:carriage/pages/Notifications.dart';
 import 'package:carriage/pages/RideHistory.dart';
+import 'package:carriage/providers/NotificationsProvider.dart';
+import 'package:carriage/providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
 import '../utils/LocationTracker.dart';
 import 'Rides.dart';
@@ -29,7 +33,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   static const int RIDES = 0;
   static const int HISTORY = 1;
-  static const int PROFILE = 2;
+  static const int NOTIFICATIONS = 2;
+  static const int PROFILE = 3;
 
   int _selectedIndex = RIDES;
   AndroidNotificationChannel channel;
@@ -86,6 +91,8 @@ class _HomeState extends State<Home> {
         return Rides(interactive: true);
       case (HISTORY):
         return RideHistory();
+      case (NOTIFICATIONS):
+        return Notifications();
       case (PROFILE):
         return Profile();
       default:
@@ -118,8 +125,9 @@ class _HomeState extends State<Home> {
     channel = const AndroidNotificationChannel(
       'high_importance_channel', // id
       'High Importance Notifications', // title
-      'This channel is used for important notifications.', // description
-      importance: Importance.high,
+      description:
+          'This channel is used for important notifications.', // description
+      importance: Importance.max,
     );
 
     notificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -142,30 +150,86 @@ class _HomeState extends State<Home> {
     );
   }
 
-  _onMessage(RemoteMessage message) {
-    print('received message');
+  _handleNotification(RemoteNotification notification, String notifId,
+      Map<String, dynamic> data) async {
+    RidesProvider ridesProvider =
+        Provider.of<RidesProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    AppConfig appConfig = AppConfig.of(context);
+    NotifEvent notifEvent = getNotifEventEnum(data['notifEvent']);
+    Ride ride;
+    if (notifEvent != NotifEvent.RIDE_CANCELLED) {
+      ride = Ride.fromJson(json.decode(data['ride']));
+      try {
+        // Check if ride exists
+        ridesProvider.getRideByID(ride.id);
+      } catch (Exception) {
+        // Get most up to date rides from server
+        await ridesProvider.requestActiveRides(appConfig, authProvider);
+        await ridesProvider.requestPastRides(appConfig, authProvider);
+      } finally {
+        // Update ride with new information
+        ridesProvider.updateRideByID(ride);
+      }
+    } else {
+      // Updating from server will remove cancelled ride
+      await ridesProvider.requestActiveRides(appConfig, authProvider);
+      await ridesProvider.requestPastRides(appConfig, authProvider);
+    }
+
+    NotificationsProvider notifsProvider =
+        Provider.of<NotificationsProvider>(context, listen: false);
+    BackendNotification backendNotif = BackendNotification(
+        notifId,
+        getNotifEventEnum(data['notifEvent']),
+        notification.body,
+        ride?.id,
+        DateTime.parse(data['sentTime']));
+    notifsProvider.addNewNotif(backendNotif);
+  }
+
+  _onMessage(RemoteMessage message) async {
+    Map<String, dynamic> data = message.data;
+    String notifId = data['id'];
+    print('received message $notifId');
+
     RemoteNotification notification = message.notification;
     AndroidNotification android = message.notification?.android;
-    if (notification != null && android != null) {
-      notificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channel.description,
-              // TODO add a proper drawable resource to android, for now using
-              //      one that already exists in example app.
-              icon: 'launch_background',
-            ),
-          ));
+
+    if (notification != null) {
+      _handleNotification(notification, notifId, data);
+      if (android != null) {
+        notificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                // TODO add a proper drawable resource to android, for now using
+                //      one that already exists in example app.
+                icon: 'launch_background',
+              ),
+            ));
+      }
     }
   }
 
-  _onMessageOpenedApp(RemoteMessage message) {
-    print('A new onMessageOpenedApp event was published!');
+  _onMessageOpenedApp(RemoteMessage message) async {
+    Map<String, dynamic> data = message.data;
+    String notifId = data['id'];
+    print('app launched from message $notifId');
+
+    RemoteNotification notification = message.notification;
+
+    if (notification != null) {
+      _handleNotification(notification, notifId, data);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Notifications()));
+    }
   }
 
   @override
@@ -183,7 +247,13 @@ class _HomeState extends State<Home> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.schedule, size: 20), label: 'History'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.person, size: 20), label: 'Profile')
+                icon: Icon(Icons.notifications_outlined, size: 20),
+                activeIcon: Icon(Icons.notifications, size: 20),
+                label: 'Notifications'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person_outline, size: 20),
+                activeIcon: Icon(Icons.person, size: 20),
+                label: 'Profile')
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,

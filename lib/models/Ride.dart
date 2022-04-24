@@ -13,10 +13,12 @@ import '../utils/app_config.dart';
 enum RideStatus {
   NOT_STARTED,
   ON_THE_WAY,
+  LATE,
   ARRIVED,
   PICKED_UP,
   COMPLETED,
-  NO_SHOW
+  NO_SHOW,
+  CANCELLED
 }
 
 ///Converts [status] to a string.

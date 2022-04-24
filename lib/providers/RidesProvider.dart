@@ -104,4 +104,39 @@ class RidesProvider with ChangeNotifier {
       requestPastRides(config, authProvider);
     }
   }
+
+  Ride getRideByID(String id) {
+    for (Ride ride in remainingRides) {
+      if (ride.id == id) {
+        return ride;
+      }
+    }
+    for (Ride ride in currentRides) {
+      if (ride.id == id) {
+        return ride;
+      }
+    }
+    for (Ride ride in pastRides) {
+      if (ride.id == id) {
+        return ride;
+      }
+    }
+    throw Exception('Cannot get ride with id $id');
+  }
+
+  void updateRideByID(Ride updatedRide) {
+    if (updatedRide.type == 'active' &&
+        updatedRide.status == RideStatus.NOT_STARTED) {
+      int index =
+          remainingRides.indexWhere((ride) => ride.id == updatedRide.id);
+      remainingRides[index] = updatedRide;
+    } else if (updatedRide.type == 'active') {
+      int index = currentRides.indexWhere((ride) => ride.id == updatedRide.id);
+      currentRides[index] = updatedRide;
+    } else if (updatedRide.type == 'past') {
+      int index = pastRides.indexWhere((ride) => ride.id == updatedRide.id);
+      pastRides[index] = updatedRide;
+    }
+    notifyListeners();
+  }
 }
