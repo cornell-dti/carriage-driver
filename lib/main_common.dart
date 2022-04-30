@@ -1,5 +1,6 @@
 import 'package:carriage/pages/Onboarding.dart';
 import 'package:carriage/providers/LocationsProvider.dart';
+import 'package:carriage/providers/NotificationsProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,13 +48,18 @@ class MyApp extends StatelessWidget {
               return LocationsProvider(
                   config, Provider.of<AuthProvider>(context, listen: false));
             },
-            child: MaterialApp(
-                title: 'Carriage',
-                theme: ThemeData(
-                    scaffoldBackgroundColor: Colors.white,
-                    fontFamily: 'Inter',
-                    accentColor: Color.fromRGBO(60, 60, 67, 0.6)),
-                home: HomeOrLogin()),
+            child: ChangeNotifierProvider<NotificationsProvider>(
+              create: (BuildContext context) {
+                return NotificationsProvider();
+              },
+              child: MaterialApp(
+                  title: 'Carriage Driver',
+                  theme: ThemeData(
+                      scaffoldBackgroundColor: Colors.white,
+                      fontFamily: 'Inter',
+                      accentColor: Color.fromRGBO(60, 60, 67, 0.6)),
+                  home: HomeOrLogin()),
+            ),
           ),
         ),
       ),

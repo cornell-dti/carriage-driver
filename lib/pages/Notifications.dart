@@ -234,7 +234,7 @@ class _NotificationsState extends State<Notifications> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
+            padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
             child: Text('Notifications', style: CarriageTheme.largeTitle),
           ),
           Column(children: notifWidgets.reversed.toList())

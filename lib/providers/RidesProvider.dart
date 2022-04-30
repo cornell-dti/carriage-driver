@@ -54,13 +54,9 @@ class RidesProvider with ChangeNotifier {
 
   List<Ride> ridesFromJson(String json) {
     var data = jsonDecode(json)["data"];
-    print("rides");
-    print(data);
     List<Ride> res = data.map<Ride>((e) => Ride.fromJson(e)).toList();
-    print(res);
     res.sort((a, b) => a.startTime.compareTo(b.startTime));
     return res;
-    // return [];
   }
 
   Future<void> requestActiveRides(
