@@ -73,8 +73,8 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                     ? Padding(
                                         padding: EdgeInsets.only(top: 2),
                                         child: Text(
-                                            widget.ride.rider.accessibilityNeeds
-                                                .join(', '),
+                                            widget
+                                                .ride.rider.accessibilityNeeds,
                                             style: CarriageTheme.body),
                                       )
                                     : Container(),

@@ -18,32 +18,32 @@ import 'Onboarding.dart';
 final List<Rider> _sampleRiders = [
   Rider(
       firstName: 'Marisa',
-      accessibilityNeeds: ['Crutches'],
+      accessibilityNeeds: 'Crutches',
       phoneNumber: '',
       photoPath: 'assets/images/marisa.png'),
   Rider(
       firstName: 'Douglas',
-      accessibilityNeeds: ['Wheelchair'],
+      accessibilityNeeds: 'Wheelchair',
       phoneNumber: '',
       photoPath: 'assets/images/douglas.png'),
   Rider(
       firstName: 'Victoria',
-      accessibilityNeeds: ['Wheelchair'],
+      accessibilityNeeds: 'Wheelchair',
       phoneNumber: '',
       photoPath: 'assets/images/victoria.png'),
   Rider(
       firstName: 'Nick',
-      accessibilityNeeds: ['Crutches'],
+      accessibilityNeeds: 'Crutches',
       phoneNumber: '',
       photoPath: 'assets/images/nick.png'),
   Rider(
       firstName: 'Alex',
-      accessibilityNeeds: ['Wheelchair'],
+      accessibilityNeeds: 'Wheelchair',
       phoneNumber: '',
       photoPath: 'assets/images/alex.png'),
   Rider(
       firstName: 'Luke',
-      accessibilityNeeds: ['Crutches'],
+      accessibilityNeeds: 'Crutches',
       phoneNumber: '',
       photoPath: 'assets/images/luke.png'),
 ];

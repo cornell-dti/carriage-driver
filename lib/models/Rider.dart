@@ -19,7 +19,7 @@ class Rider {
 
   ///The rider's accessibility needs.
   ///Can include 'Assistant', 'Crutches', 'Wheelchair'
-  final List<String> accessibilityNeeds;
+  final String accessibilityNeeds;
 
   ///The URL of the rider's profile picture.
   final String photoLink;
@@ -45,7 +45,7 @@ class Rider {
         phoneNumber: json['phoneNumber'],
         firstName: json['firstName'],
         lastName: json['lastName'],
-        accessibilityNeeds: List.from(json['accessibility']),
+        accessibilityNeeds: json['accessibility'] ?? "",
         photoLink: json['photoLink']);
   }
 

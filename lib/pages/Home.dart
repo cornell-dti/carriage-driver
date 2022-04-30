@@ -257,6 +257,7 @@ class _HomeState extends State<Home> {
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
+          type: BottomNavigationBarType.fixed,
         ),
       ),
     );
