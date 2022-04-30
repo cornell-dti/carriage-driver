@@ -10,10 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 enum NotifEvent {
-  DRIVER_ARRIVED,
-  DRIVER_ON_THE_WAY,
-  DRIVER_LATE,
-  DRIVER_NO_SHOW,
   RIDE_CREATED,
   RIDE_EDITED,
   RIDE_SCHEDULED,
@@ -22,14 +18,6 @@ enum NotifEvent {
 
 NotifEvent getNotifEventEnum(String notifEvent) {
   switch (notifEvent) {
-    case ('arrived'):
-      return NotifEvent.DRIVER_ARRIVED;
-    case ('on_the_way'):
-      return NotifEvent.DRIVER_ON_THE_WAY;
-    case ('late'):
-      return NotifEvent.DRIVER_LATE;
-    case ('no_show'):
-      return NotifEvent.DRIVER_NO_SHOW;
     case ('created'):
       return NotifEvent.RIDE_CREATED;
     case ('edited'):
@@ -40,22 +28,6 @@ NotifEvent getNotifEventEnum(String notifEvent) {
       return NotifEvent.RIDE_CANCELLED;
     default:
       throw Exception('Notif event is invalid');
-  }
-}
-
-class RiderNotification extends StatelessWidget {
-  RiderNotification(this.ride, this.notifTime, this.text);
-
-  final Ride ride;
-  final DateTime notifTime;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    Widget riderImage = ride.rider != null
-        ? ride.rider.profilePicture(48)
-        : Image.asset('assets/images/person.png', width: 48, height: 48);
-    return Notification(ride, notifTime, riderImage, 'Rider', text);
   }
 }
 
@@ -192,11 +164,6 @@ class _NotificationsState extends State<Notifications> {
   Widget buildNotification(
       NotifEvent type, String message, DateTime time, Ride ride) {
     switch (type) {
-      case NotifEvent.DRIVER_ARRIVED:
-      case NotifEvent.DRIVER_ON_THE_WAY:
-      case NotifEvent.DRIVER_LATE:
-        return RiderNotification(ride, time, message);
-      case NotifEvent.DRIVER_NO_SHOW:
       case NotifEvent.RIDE_CANCELLED:
         return AdminNotification(ride, time, message, Colors.red, Icons.close);
       case NotifEvent.RIDE_EDITED:
