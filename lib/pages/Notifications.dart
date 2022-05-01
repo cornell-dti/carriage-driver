@@ -51,7 +51,7 @@ class AdminNotification extends StatelessWidget {
           foregroundColor: Colors.white,
           child: Icon(iconData),
         ));
-    return Notification(this.ride, this.notifTime, icon, 'Admin', this.text);
+    return Notification(ride, notifTime, icon, 'Admin', text);
   }
 }
 
@@ -142,6 +142,7 @@ class BackendNotification {
   final DateTime timeSent;
   final String rideID;
 
+  @override
   String toString() => 'Notification $type: $rideID';
 }
 

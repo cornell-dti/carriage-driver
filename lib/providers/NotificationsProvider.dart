@@ -8,7 +8,7 @@ class NotificationsProvider with ChangeNotifier {
   // Notification ids and this id set are necessary to prevent duplicate
   // notifications, in the case where user receives foreground notification,
   // leaves app, then taps on notification.
-  Set<String> notifIds = new Set();
+  Set<String> notifIds = {};
 
   void addNewNotif(BackendNotification newNotif) {
     if (!notifIds.contains(newNotif.id)) {

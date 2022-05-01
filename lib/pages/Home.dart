@@ -161,16 +161,19 @@ class _HomeState extends State<Home> {
     Ride ride;
     if (notifEvent != NotifEvent.RIDE_CANCELLED) {
       ride = Ride.fromJson(json.decode(data['ride']));
-      try {
-        // Check if ride exists
-        ridesProvider.getRideByID(ride.id);
-      } catch (Exception) {
-        // Get most up to date rides from server
-        await ridesProvider.requestActiveRides(appConfig, authProvider);
-        await ridesProvider.requestPastRides(appConfig, authProvider);
-      } finally {
-        // Update ride with new information
-        ridesProvider.updateRideByID(ride);
+      // Don't need to care about rides not today
+      if (ride.isToday()) {
+        try {
+          // Check if ride exists
+          ridesProvider.getRideByID(ride.id);
+        } on Exception {
+          // Get most up to date rides from server
+          await ridesProvider.requestActiveRides(appConfig, authProvider);
+          await ridesProvider.requestPastRides(appConfig, authProvider);
+        } finally {
+          // Update ride with new information
+          ridesProvider.updateRideByID(ride);
+        }
       }
     } else {
       // Updating from server will remove cancelled ride

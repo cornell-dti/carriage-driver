@@ -97,6 +97,13 @@ class Ride {
       rider: Rider.fromJson(json['rider']),
     );
   }
+
+  isToday() {
+    var now = DateTime.now();
+    var today = DateTime(now.year, now.month, now.day);
+    var rideTime = DateTime(startTime.year, startTime.month, startTime.day);
+    return today == rideTime;
+  }
 }
 
 RideStatus getStatusEnum(String status) {
