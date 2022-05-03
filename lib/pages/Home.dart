@@ -230,8 +230,9 @@ class _HomeState extends State<Home> {
 
     if (notification != null) {
       _handleNotification(notification, notifId, data);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Notifications()));
+      setState(() {
+        _selectedIndex = 2;
+      });
     }
   }
 

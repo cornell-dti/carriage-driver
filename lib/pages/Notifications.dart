@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 
 enum NotifEvent {
   RIDE_CREATED,
-  RIDE_EDITED,
   RIDE_SCHEDULED,
   RIDE_CANCELLED,
 }
@@ -20,8 +19,6 @@ NotifEvent getNotifEventEnum(String notifEvent) {
   switch (notifEvent) {
     case ('created'):
       return NotifEvent.RIDE_CREATED;
-    case ('edited'):
-      return NotifEvent.RIDE_EDITED;
     case ('scheduled'):
       return NotifEvent.RIDE_SCHEDULED;
     case ('cancelled'):
@@ -88,12 +85,6 @@ class Notification extends StatelessWidget {
     }
 
     return InkWell(
-      onTap: () {
-        if (ride != null) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => RideHistory()));
-        }
-      },
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
@@ -167,8 +158,6 @@ class _NotificationsState extends State<Notifications> {
     switch (type) {
       case NotifEvent.RIDE_CANCELLED:
         return AdminNotification(ride, time, message, Colors.red, Icons.close);
-      case NotifEvent.RIDE_EDITED:
-        return AdminNotification(ride, time, message, Colors.red, Icons.edit);
       case NotifEvent.RIDE_SCHEDULED:
       case NotifEvent.RIDE_CREATED:
         return AdminNotification(
@@ -196,16 +185,17 @@ class _NotificationsState extends State<Notifications> {
           buildNotification(notif.type, notif.message, notif.timeSent, ride));
     }
 
-    return SafeArea(
-        child: SingleChildScrollView(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+    return Material(
+        child: SafeArea(
+            child: SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
             child: Text('Notifications', style: CarriageTheme.largeTitle),
           ),
           Column(children: notifWidgets.reversed.toList())
-        ])));
+        ]))));
   }
 }
