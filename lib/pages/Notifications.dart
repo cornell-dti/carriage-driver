@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:carriage/models/Ride.dart';
-import 'package:carriage/pages/RideHistory.dart';
 import 'package:carriage/providers/NotificationsProvider.dart';
 import 'package:carriage/providers/RidesProvider.dart';
 import 'package:carriage/utils/CarriageTheme.dart';

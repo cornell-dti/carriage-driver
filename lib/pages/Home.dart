@@ -226,6 +226,10 @@ class _HomeState extends State<Home> {
     String notifId = data['id'];
     print('app launched from message $notifId');
 
+    NotificationsProvider notifsProvider =
+        Provider.of<NotificationsProvider>(context, listen: false);
+    notifsProvider.notifOpened();
+
     RemoteNotification notification = message.notification;
 
     if (notification != null) {
@@ -238,6 +242,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    NotificationsProvider notifsProvider =
+        Provider.of<NotificationsProvider>(context, listen: true);
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -251,7 +257,27 @@ class _HomeState extends State<Home> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.schedule, size: 20), label: 'History'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.notifications_outlined, size: 20),
+                icon: Stack(
+                  children: <Widget>[
+                    Icon(Icons.notifications_outlined, size: 20),
+                    notifsProvider.hasNewNotif
+                        ? Positioned(
+                            right: 0,
+                            child: Container(
+                              padding: EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              constraints: BoxConstraints(
+                                minWidth: 6,
+                                minHeight: 6,
+                              ),
+                            ),
+                          )
+                        : SizedBox.shrink()
+                  ],
+                ),
                 activeIcon: Icon(Icons.notifications, size: 20),
                 label: 'Notifications'),
             BottomNavigationBarItem(
