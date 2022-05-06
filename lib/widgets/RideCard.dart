@@ -73,8 +73,7 @@ class _RideCardState extends State<RideCard> {
                                   ? SizedBox(
                                       width: textWidth,
                                       child: Text(
-                                          widget.ride.rider.accessibilityNeeds
-                                              .join(', '),
+                                          widget.ride.rider.accessibilityNeeds,
                                           style: TextStyle(
                                               color: CarriageTheme.gray2,
                                               fontStyle: FontStyle.italic,

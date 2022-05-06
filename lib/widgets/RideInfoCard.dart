@@ -22,7 +22,7 @@ class RideInfoCard extends StatelessWidget {
           ride.rider.accessibilityNeeds.isNotEmpty
               ? Padding(
                   padding: EdgeInsets.only(top: 8),
-                  child: Text(ride.rider.accessibilityNeeds.join(', '),
+                  child: Text(ride.rider.accessibilityNeeds,
                       style: CarriageTheme.body),
                 )
               : Container()

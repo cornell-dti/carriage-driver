@@ -13,10 +13,12 @@ import '../utils/app_config.dart';
 enum RideStatus {
   NOT_STARTED,
   ON_THE_WAY,
+  LATE,
   ARRIVED,
   PICKED_UP,
   COMPLETED,
-  NO_SHOW
+  NO_SHOW,
+  CANCELLED
 }
 
 ///Converts [status] to a string.
@@ -94,6 +96,13 @@ class Ride {
           .toLocal(),
       rider: Rider.fromJson(json['rider']),
     );
+  }
+
+  isToday() {
+    var now = DateTime.now();
+    var today = DateTime(now.year, now.month, now.day);
+    var rideTime = DateTime(startTime.year, startTime.month, startTime.day);
+    return today == rideTime;
   }
 }
 

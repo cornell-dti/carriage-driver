@@ -39,7 +39,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
             widget.ride.rider.accessibilityNeeds.isNotEmpty
                 ? Padding(
                     padding: EdgeInsets.only(top: 4),
-                    child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
+                    child: Text(widget.ride.rider.accessibilityNeeds,
                         style: CarriageTheme.body))
                 : Container()
           ],
