@@ -9,7 +9,7 @@ void main() async {
   await Firebase.initializeApp();
 
   AppConfig configuredApp = AppConfig(
-    baseUrl: "https://carriage-web.herokuapp.com/api",
+    baseUrl: "http://10.0.2.2:3001/api",
     child: MyApp(),
   );
 
