@@ -1,17 +1,18 @@
-import 'package:carriage/pages/RideHistory.dart';
-import 'package:flutter/material.dart';
-import '../utils/LocationTracker.dart';
-import 'Rides.dart';
-import 'Profile.dart';
 import 'dart:async';
-import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:io';
+
+import 'package:carriage/pages/RideHistory.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import '../utils/app_config.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+
 import '../providers/AuthProvider.dart';
+import '../utils/app_config.dart';
+import 'Profile.dart';
+import 'Rides.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
@@ -44,7 +45,7 @@ class _HomeState extends State<Home> {
     _initNotifications();
     FirebaseMessaging.onMessage.listen(_onMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
-    LocationTracker.initialize();
+    // LocationTracker.initialize();
   }
 
   Future<void> onSelectNotification(String payload) {

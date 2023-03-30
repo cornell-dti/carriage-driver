@@ -13,7 +13,6 @@ dependencies:
   google_sign_in: ^6.0.2
   http: ^0.13.0
   intl: ^0.18.0
-  geolocation: ^1.1.2
   provider: ^6.0.5
   wakelock: ^0.6.2
   loading_overlay: ^0.3.0
