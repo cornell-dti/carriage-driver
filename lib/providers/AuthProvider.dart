@@ -11,18 +11,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/app_config.dart';
 
-Future<String> auth(String baseUrl, String token, String email) async {
-  String endpoint = baseUrl + '/auth';
-  Map<String, dynamic> requestBody = {
-    "table": "Drivers",
-    "userInfo": jsonEncode({
-      "token": token,
-      "email": email,
-      "clientId": Platform.isAndroid
-          ? "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com"
-          : "241748771473-a4q5skhr0is8r994o7ie9scrnm5ua760.apps.googleusercontent.com",
-    })
-  };
+Future<String> auth(String baseUrl, String idToken, String email) async {
+  String endpoint = '$baseUrl/auth';
+  print(endpoint);
+  Map<String, dynamic> requestBody = {"idToken": idToken, "table": "Drivers"};
   return post(Uri.parse(endpoint), body: requestBody).then((res) {
     return res.body;
   });
@@ -53,8 +45,10 @@ class AuthProvider with ChangeNotifier {
     _userAuthSub = googleSignIn.onCurrentUserChanged.listen((newUser) async {
       if (newUser != null) {
         String googleToken = await tokenFromAccount(newUser);
+        print(googleToken);
         Map<String, dynamic> authResponse = jsonDecode(await auth(
             AppConfig.of(context).baseUrl, googleToken, newUser.email));
+        print(authResponse);
         String token = authResponse['jwt'];
         Map<String, dynamic> jwt = JwtDecoder.decode(token);
         id = jwt['id'];

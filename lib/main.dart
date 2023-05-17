@@ -9,7 +9,7 @@ void main() async {
   await Firebase.initializeApp();
 
   AppConfig configuredApp = AppConfig(
-    baseUrl: "http://10.0.2.2:3001/api",
+    baseUrl: "https://carriage-pratyush1712.cloud.okteto.net/api",
     child: MyApp(),
   );
 

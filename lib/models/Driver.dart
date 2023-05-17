@@ -32,16 +32,17 @@ class Driver {
   // force the network images that display it to re-fetch the photo, because it won't
   // if the URL is the same, and the URL does not change after an upload to backend.
   factory Driver.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] ?? json;
     return Driver(
-        firstName: json['firstName'],
-        lastName: json['lastName'],
+        firstName: data['firstName'],
+        lastName: data['lastName'],
         startDate: DateFormat('MM/yyyy')
-            .format((DateFormat('yyyy-MM-dd').parse(json['startDate']))),
-        phoneNumber: json['phoneNumber'],
-        email: json['email'],
-        photoLink: json['photoLink'] == null
+            .format((DateFormat('yyyy-MM-dd').parse(data['startDate']))),
+        phoneNumber: data['phoneNumber'],
+        email: data['email'],
+        photoLink: data['photoLink'] == null
             ? null
-            : json['photoLink'] +
+            : data['photoLink'] +
                 '?dummy=${DateTime.now().millisecondsSinceEpoch}');
   }
 

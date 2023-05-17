@@ -43,18 +43,19 @@ class MyApp extends StatelessWidget {
                 config, Provider.of<AuthProvider>(context, listen: false));
           },
           child: ChangeNotifierProvider<LocationsProvider>(
-            create: (BuildContext context) {
-              return LocationsProvider(
-                  config, Provider.of<AuthProvider>(context, listen: false));
-            },
-            child: MaterialApp(
+              create: (BuildContext context) {
+                return LocationsProvider(
+                    config, Provider.of<AuthProvider>(context, listen: false));
+              },
+              child: MaterialApp(
                 title: 'Carriage',
                 theme: ThemeData(
                     scaffoldBackgroundColor: Colors.white,
                     fontFamily: 'Inter',
                     accentColor: Color.fromRGBO(60, 60, 67, 0.6)),
-                home: HomeOrLogin()),
-          ),
+                home: HomeOrLogin(),
+                debugShowCheckedModeBanner: false,
+              )),
         ),
       ),
     );

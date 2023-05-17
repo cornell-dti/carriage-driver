@@ -39,14 +39,22 @@ class Rider {
 
   ///Creates a rider from JSON representation.
   factory Rider.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] ?? json;
+    List<String> accessibility;
+    if (data['accessibility'] is List) {
+      accessibility =
+          List<String>.from(data['accessibility'].map((x) => x.toString()));
+    } else {
+      accessibility = [data['accessibility']];
+    }
     return Rider(
-        id: json['id'],
-        email: json['email'],
-        phoneNumber: json['phoneNumber'],
-        firstName: json['firstName'],
-        lastName: json['lastName'],
-        accessibilityNeeds: List.from(json['accessibility']),
-        photoLink: json['photoLink']);
+        id: data['id'],
+        email: data['email'],
+        phoneNumber: data['phoneNumber'],
+        firstName: data['firstName'],
+        lastName: data['lastName'],
+        accessibilityNeeds: accessibility,
+        photoLink: data['photoLink']);
   }
 
   Widget profilePicture(double diameter) {

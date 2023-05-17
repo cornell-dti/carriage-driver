@@ -78,21 +78,24 @@ class Ride {
 
   ///Creates a ride from JSON representation.
   factory Ride.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] ?? json;
+    print("................ride....................");
+    print(data);
     return Ride(
-      id: json['id'],
-      type: json['type'],
-      status: getStatusEnum(json['status']),
-      startLocation: json['startLocation']['name'],
-      endLocation: json['endLocation']['name'],
-      startAddress: json['startLocation']['address'],
-      endAddress: json['endLocation']['address'],
+      id: data['id'],
+      type: data['type'],
+      status: getStatusEnum(data['status']),
+      startLocation: data['startLocation']['name'],
+      endLocation: data['endLocation']['name'],
+      startAddress: data['startLocation']['address'],
+      endAddress: data['endLocation']['address'],
       startTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-          .parse(json['startTime'], true)
+          .parse(data['startTime'], true)
           .toLocal(),
       endTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-          .parse(json['endTime'], true)
+          .parse(data['endTime'], true)
           .toLocal(),
-      rider: Rider.fromJson(json['rider']),
+      rider: Rider.fromJson(data['rider']),
     );
   }
 }
