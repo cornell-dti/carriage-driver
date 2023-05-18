@@ -59,19 +59,22 @@ class RidesProvider with ChangeNotifier {
     return res;
   }
 
-  Future<void> requestActiveRides(AppConfig config, AuthProvider authProvider) async {
+  Future<void> requestActiveRides(
+      AppConfig config, AuthProvider authProvider) async {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     DateTime now = DateTime.now();
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
-        Uri.parse('${config.baseUrl}/rides?type=active&date=${dateFormat.format(now)}&driver=${authProvider.id}'),
+        Uri.parse(
+            '${config.baseUrl}/rides?type=active&date=${dateFormat.format(now)}&driver=${authProvider.id}'),
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (response.statusCode == 200) {
       List<Ride> rides = ridesFromJson(response.body);
       currentRides = [];
       remainingRides = [];
       for (Ride r in rides) {
-        if (r.status == RideStatus.NOT_STARTED || r.status == RideStatus.ON_THE_WAY) {
+        if (r.status == RideStatus.NOT_STARTED ||
+            r.status == RideStatus.ON_THE_WAY) {
           remainingRides.add(r);
         } else {
           currentRides.add(r);
@@ -85,9 +88,12 @@ class RidesProvider with ChangeNotifier {
     }
   }
 
-  Future<void> requestPastRides(AppConfig config, AuthProvider authProvider) async {
+  Future<void> requestPastRides(
+      AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
-    final response = await http.get(Uri.parse('${config.baseUrl}/rides?type=past&driver=${authProvider.id}'),
+    final response = await http.get(
+        Uri.parse(
+            '${config.baseUrl}/rides?type=past&driver=${authProvider.id}'),
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (response.statusCode == 200) {
       pastRides = ridesFromJson(response.body);

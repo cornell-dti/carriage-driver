@@ -38,12 +38,14 @@ class _PickUpPageState extends State<PickUpPage> {
         onPressed: () async {
           if (_requestedContinue) return;
           setState(() => _requestedContinue = true);
-          final response = await updateRideStatus(context, widget.ride.id, RideStatus.PICKED_UP);
+          final response = await updateRideStatus(
+              context, widget.ride.id, RideStatus.PICKED_UP);
           if (!mounted) return;
           if (response.statusCode == 200) {
             setState(() => _requestedContinue = false);
             widget.ride.status = RideStatus.PICKED_UP;
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()));
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (BuildContext context) => Home()));
           } else {
             setState(() => _requestedContinue = false);
             throw Exception('Failed to update ride status');
@@ -65,7 +67,10 @@ class _PickUpPageState extends State<PickUpPage> {
               children: [
                 SingleChildScrollView(
                   child: Container(
-                    padding: EdgeInsets.only(bottom: buttonHeight + 2 * buttonVerticalPadding + noShowButtonHeight),
+                    padding: EdgeInsets.only(
+                        bottom: buttonHeight +
+                            2 * buttonVerticalPadding +
+                            noShowButtonHeight),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -74,11 +79,13 @@ class _PickUpPageState extends State<PickUpPage> {
                             ? Row(children: [
                                 Spacer(),
                                 MeasureRect(
-                                    onChange: widget.onContinueRectChange, child: CalendarButton(highlight: true))
+                                    onChange: widget.onContinueRectChange,
+                                    child: CalendarButton(highlight: true))
                               ])
                             : Padding(
                                 padding: const EdgeInsets.only(right: 16),
-                                child: Row(children: [Spacer(), CalendarButton()]),
+                                child:
+                                    Row(children: [Spacer(), CalendarButton()]),
                               ),
                         Divider(height: 32),
                         SizedBox(height: 24),
@@ -87,23 +94,33 @@ class _PickUpPageState extends State<PickUpPage> {
                           child: Column(children: [
                             Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text("Is ${widget.ride.rider.firstName} here?", style: CarriageTheme.title1)),
+                                child: Text(
+                                    "Is ${widget.ride.rider.firstName} here?",
+                                    style: CarriageTheme.title1)),
                             SizedBox(height: 24),
                             Row(children: [
                               Stack(clipBehavior: Clip.none, children: [
                                 widget.ride.rider.profilePicture(90),
                                 Positioned(
-                                    bottom: -12, right: -12, child: CallButton(widget.ride.rider.phoneNumber, 48))
+                                    bottom: -12,
+                                    right: -12,
+                                    child: CallButton(
+                                        widget.ride.rider.phoneNumber, 48))
                               ]),
                               SizedBox(width: 24),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(widget.ride.rider.firstName, style: CarriageTheme.title3),
-                                  widget.ride.rider.accessibilityNeeds.isNotEmpty
+                                  Text(widget.ride.rider.firstName,
+                                      style: CarriageTheme.title3),
+                                  widget.ride.rider.accessibilityNeeds
+                                          .isNotEmpty
                                       ? Padding(
                                           padding: EdgeInsets.only(top: 2),
-                                          child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
+                                          child: Text(
+                                              widget
+                                                  .ride.rider.accessibilityNeeds
+                                                  .join(', '),
                                               style: CarriageTheme.body),
                                         )
                                       : Container(),
@@ -122,19 +139,23 @@ class _PickUpPageState extends State<PickUpPage> {
                     alignment: Alignment.bottomCenter,
                     child: Container(
                         padding: EdgeInsets.only(top: buttonVerticalPadding),
-                        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                        decoration:
+                            BoxDecoration(color: Colors.white, boxShadow: [
                           BoxShadow(
                               blurRadius: 10,
                               spreadRadius: 1,
                               offset: Offset(0, -2),
                               color: Colors.black.withOpacity(0.05))
                         ]),
-                        child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        child:
+                            Column(mainAxisSize: MainAxisSize.min, children: [
                           Container(
                               width: MediaQuery.of(context).size.width,
                               padding: EdgeInsets.symmetric(horizontal: 34),
                               child: widget.highlightPickUpButton
-                                  ? MeasureRect(onChange: widget.onContinueRectChange, child: pickUpButton)
+                                  ? MeasureRect(
+                                      onChange: widget.onContinueRectChange,
+                                      child: pickUpButton)
                                   : pickUpButton),
                           DangerButton(
                               text: "Report No Show",
@@ -143,24 +164,41 @@ class _PickUpPageState extends State<PickUpPage> {
                                     context: context,
                                     builder: (_) => ConfirmDialog(
                                           title: "Report No Show",
-                                          content: "Would you like to report a no show to the dispatcher?",
+                                          content:
+                                              "Would you like to report a no show to the dispatcher?",
                                           actionName: "Report",
                                           onConfirm: () async {
                                             final noShowResponse =
-                                                await updateRideStatus(context, widget.ride.id, RideStatus.NO_SHOW);
-                                            if (noShowResponse.statusCode == 200) {
-                                              final pastResponse = await setRideToPast(context, widget.ride.id);
-                                              if (pastResponse.statusCode == 200) {
+                                                await updateRideStatus(
+                                                    context,
+                                                    widget.ride.id,
+                                                    RideStatus.NO_SHOW);
+                                            if (noShowResponse.statusCode ==
+                                                200) {
+                                              final pastResponse =
+                                                  await setRideToPast(
+                                                      context, widget.ride.id);
+                                              if (pastResponse.statusCode ==
+                                                  200) {
                                                 RidesProvider ridesProvider =
-                                                    Provider.of<RidesProvider>(context, listen: false);
-                                                ridesProvider.finishCurrentRide(widget.ride);
-                                                Navigator.of(context).pushReplacement(
-                                                    MaterialPageRoute(builder: (BuildContext context) => Home()));
+                                                    Provider.of<RidesProvider>(
+                                                        context,
+                                                        listen: false);
+                                                ridesProvider.finishCurrentRide(
+                                                    widget.ride);
+                                                Navigator.of(context)
+                                                    .pushReplacement(
+                                                        MaterialPageRoute(
+                                                            builder: (BuildContext
+                                                                    context) =>
+                                                                Home()));
                                               } else {
-                                                throw 'Failed to set no-show ride to past: ' + pastResponse.body;
+                                                throw 'Failed to set no-show ride to past: ' +
+                                                    pastResponse.body;
                                               }
                                             } else {
-                                              throw 'Failed to set no-show ride status: ' + noShowResponse.body;
+                                              throw 'Failed to set no-show ride status: ' +
+                                                  noShowResponse.body;
                                             }
                                           },
                                         ),

@@ -4,7 +4,8 @@ import '../utils/CarriageTheme.dart';
 import '../models/Ride.dart';
 
 class RideInProgressCard extends StatelessWidget {
-  RideInProgressCard(Key key, this.ride, this.selected, this.selectCallback) : super(key: key);
+  RideInProgressCard(Key key, this.ride, this.selected, this.selectCallback)
+      : super(key: key);
   final Ride ride;
   final Function selectCallback;
   final bool selected;
@@ -16,7 +17,11 @@ class RideInProgressCard extends StatelessWidget {
           color: selected ? CarriageTheme.gray3.withOpacity(0.2) : Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(8)),
           boxShadow: selected
-              ? [BoxShadow(blurRadius: 2, color: CarriageTheme.gray3.withOpacity(0.2))]
+              ? [
+                  BoxShadow(
+                      blurRadius: 2,
+                      color: CarriageTheme.gray3.withOpacity(0.2))
+                ]
               : [CarriageTheme.shadow]),
       child: Material(
         type: MaterialType.transparency,
@@ -32,7 +37,8 @@ class RideInProgressCard extends StatelessWidget {
                 padding: EdgeInsets.only(left: 8, top: 8),
                 child: selected
                     ? Icon(Icons.check_circle, size: 20, color: Colors.black)
-                    : Icon(Icons.circle, size: 20, color: Color.fromRGBO(196, 196, 196, 0.5))),
+                    : Icon(Icons.circle,
+                        size: 20, color: Color.fromRGBO(196, 196, 196, 0.5))),
             Container(
               padding: const EdgeInsets.all(16),
               child: Column(mainAxisSize: MainAxisSize.max, children: [
@@ -50,8 +56,9 @@ class RideInProgressCard extends StatelessWidget {
                               Container(
                                 width: 18,
                                 height: 18,
-                                decoration:
-                                    BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.white),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: Colors.white),
                               ),
                               Container(
                                   width: 14,
@@ -77,7 +84,8 @@ class RideInProgressCard extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                       text: 'To ',
-                      style: CarriageTheme.subheadline.copyWith(fontFamily: 'Inter', color: CarriageTheme.gray2),
+                      style: CarriageTheme.subheadline.copyWith(
+                          fontFamily: 'Inter', color: CarriageTheme.gray2),
                       children: [
                         TextSpan(
                             text: ride.endLocation,
@@ -94,7 +102,10 @@ class RideInProgressCard extends StatelessWidget {
                   text: TextSpan(
                       text: 'Drop off by ',
                       style: TextStyle(
-                          fontFamily: 'Inter', fontSize: 15, color: CarriageTheme.gray1, fontWeight: FontWeight.w400),
+                          fontFamily: 'Inter',
+                          fontSize: 15,
+                          color: CarriageTheme.gray1,
+                          fontWeight: FontWeight.w400),
                       children: [
                         TextSpan(
                             text: DateFormat('jm').format(ride.endTime),

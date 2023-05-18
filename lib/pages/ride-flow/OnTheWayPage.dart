@@ -42,7 +42,12 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
               SingleChildScrollView(
                 child: Container(
                   padding: EdgeInsets.only(
-                      left: 16, right: 16, bottom: buttonHeight + 2 * buttonVerticalPadding + delayButtonHeight + 16),
+                      left: 16,
+                      right: 16,
+                      bottom: buttonHeight +
+                          2 * buttonVerticalPadding +
+                          delayButtonHeight +
+                          16),
                   child: Column(
                     children: [
                       SizedBox(height: 16),
@@ -53,7 +58,8 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                         children: [
                           Align(
                               alignment: Alignment.centerLeft,
-                              child: Text("On your way to...", style: CarriageTheme.title1)),
+                              child: Text("On your way to...",
+                                  style: CarriageTheme.title1)),
                           SizedBox(height: 48),
                           Row(children: [
                             widget.ride.rider.profilePicture(90),
@@ -61,11 +67,14 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(widget.ride.rider.firstName, style: CarriageTheme.title3),
+                                Text(widget.ride.rider.firstName,
+                                    style: CarriageTheme.title3),
                                 widget.ride.rider.accessibilityNeeds.isNotEmpty
                                     ? Padding(
                                         padding: EdgeInsets.only(top: 2),
-                                        child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
+                                        child: Text(
+                                            widget.ride.rider.accessibilityNeeds
+                                                .join(', '),
                                             style: CarriageTheme.body),
                                       )
                                     : Container(),
@@ -75,18 +84,28 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                   SizedBox(width: 12),
                                   Container(
                                       height: 48,
-                                      decoration: BoxDecoration(boxShadow: [CarriageTheme.shadow], color: Colors.white),
+                                      decoration: BoxDecoration(
+                                          boxShadow: [CarriageTheme.shadow],
+                                          color: Colors.white),
                                       child: Material(
                                         type: MaterialType.transparency,
                                         child: InkWell(
                                           onTap: () {
-                                            widget.ride.status = RideStatus.NOT_STARTED;
-                                            Provider.of<RidesProvider>(context, listen: false).pauseRide(widget.ride);
-                                            Navigator.of(context).pushReplacement(
-                                                MaterialPageRoute(builder: (BuildContext context) => Home()));
+                                            widget.ride.status =
+                                                RideStatus.NOT_STARTED;
+                                            Provider.of<RidesProvider>(context,
+                                                    listen: false)
+                                                .pauseRide(widget.ride);
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                                    MaterialPageRoute(
+                                                        builder: (BuildContext
+                                                                context) =>
+                                                            Home()));
                                           },
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 16),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16),
                                             child: Center(
                                               child: Text('Pause Ride',
                                                   style: TextStyle(
@@ -109,7 +128,10 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                           padding: EdgeInsets.symmetric(horizontal: 28),
                           width: double.infinity,
                           child: RideDestPickupCard(
-                              false, widget.ride.startTime, widget.ride.startLocation, widget.ride.startAddress)),
+                              false,
+                              widget.ride.startTime,
+                              widget.ride.startLocation,
+                              widget.ride.startAddress)),
                     ],
                   ),
                 ),
@@ -117,8 +139,10 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
               Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                      padding: EdgeInsets.only(left: 34, right: 34, top: buttonVerticalPadding),
-                      decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                      padding: EdgeInsets.only(
+                          left: 34, right: 34, top: buttonVerticalPadding),
+                      decoration:
+                          BoxDecoration(color: Colors.white, boxShadow: [
                         BoxShadow(
                             blurRadius: 10,
                             spreadRadius: 1,
@@ -134,16 +158,20 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                               onPressed: () async {
                                 if (_requestedContinue) return;
                                 setState(() => _requestedContinue = true);
-                                final response = await updateRideStatus(context, widget.ride.id, RideStatus.ARRIVED);
+                                final response = await updateRideStatus(context,
+                                    widget.ride.id, RideStatus.ARRIVED);
                                 if (!mounted) return;
                                 if (response.statusCode == 200) {
                                   setState(() => _requestedContinue = false);
                                   widget.ride.status = RideStatus.ARRIVED;
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                      builder: (BuildContext context) => PickUpPage(ride: widget.ride)));
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              PickUpPage(ride: widget.ride)));
                                 } else {
                                   setState(() => _requestedContinue = false);
-                                  throw Exception('Failed to update ride status');
+                                  throw Exception(
+                                      'Failed to update ride status');
                                 }
                               }),
                         ),
@@ -156,11 +184,15 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
                                     context: context,
                                     builder: (_) => ConfirmDialog(
                                           title: "Notify Delay",
-                                          content: "Would you like to notify the rider of a delay?",
+                                          content:
+                                              "Would you like to notify the rider of a delay?",
                                           actionName: "Notify",
                                           onConfirm: () async {
-                                            await notifyDelay(context, widget.ride.id);
-                                            Navigator.of(context, rootNavigator: true).pop();
+                                            await notifyDelay(
+                                                context, widget.ride.id);
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop();
                                           },
                                         ),
                                     barrierDismissible: true);

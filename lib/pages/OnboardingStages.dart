@@ -16,7 +16,11 @@ import 'Onboarding.dart';
 // SAMPLE DATA
 
 final List<Rider> _sampleRiders = [
-  Rider(firstName: 'Marisa', accessibilityNeeds: ['Crutches'], phoneNumber: '', photoPath: 'assets/images/marisa.png'),
+  Rider(
+      firstName: 'Marisa',
+      accessibilityNeeds: ['Crutches'],
+      phoneNumber: '',
+      photoPath: 'assets/images/marisa.png'),
   Rider(
       firstName: 'Douglas',
       accessibilityNeeds: ['Wheelchair'],
@@ -27,9 +31,21 @@ final List<Rider> _sampleRiders = [
       accessibilityNeeds: ['Wheelchair'],
       phoneNumber: '',
       photoPath: 'assets/images/victoria.png'),
-  Rider(firstName: 'Nick', accessibilityNeeds: ['Crutches'], phoneNumber: '', photoPath: 'assets/images/nick.png'),
-  Rider(firstName: 'Alex', accessibilityNeeds: ['Wheelchair'], phoneNumber: '', photoPath: 'assets/images/alex.png'),
-  Rider(firstName: 'Luke', accessibilityNeeds: ['Crutches'], phoneNumber: '', photoPath: 'assets/images/luke.png'),
+  Rider(
+      firstName: 'Nick',
+      accessibilityNeeds: ['Crutches'],
+      phoneNumber: '',
+      photoPath: 'assets/images/nick.png'),
+  Rider(
+      firstName: 'Alex',
+      accessibilityNeeds: ['Wheelchair'],
+      phoneNumber: '',
+      photoPath: 'assets/images/alex.png'),
+  Rider(
+      firstName: 'Luke',
+      accessibilityNeeds: ['Crutches'],
+      phoneNumber: '',
+      photoPath: 'assets/images/luke.png'),
 ];
 
 final List<Ride> _sampleRides = [
@@ -105,9 +121,11 @@ Widget _start(OnboardingState state, BuildContext context) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset('assets/images/carScene.png', width: width * 0.6, height: width * 0.6),
+        Image.asset('assets/images/carScene.png',
+            width: width * 0.6, height: width * 0.6),
         SizedBox(height: height * 0.01),
-        Text('Welcome to Carriage', style: CarriageTheme.largeTitle, textAlign: TextAlign.center),
+        Text('Welcome to Carriage',
+            style: CarriageTheme.largeTitle, textAlign: TextAlign.center),
         SizedBox(height: height * 0.01),
         Text(
           "Let's take a tour.",
@@ -116,7 +134,10 @@ Widget _start(OnboardingState state, BuildContext context) {
         Spacer(),
         SizedBox(
             width: double.infinity,
-            child: CButton(text: "Continue", hasShadow: true, onPressed: () => state.nextStage(context))),
+            child: CButton(
+                text: "Continue",
+                hasShadow: true,
+                onPressed: () => state.nextStage(context))),
         SizedBox(height: height * 0.05),
       ],
     ),
@@ -127,12 +148,14 @@ Widget startRideCard(OnboardingState state, BuildContext context) {
   final piper = CallbackPiper<Rect>();
   return OnboardingOverlay(
       highlightPiper: piper,
-      child: _sampleHomePage(_sampleRides.sublist(0, 2), [], [], callback: (rect) {
+      child:
+          _sampleHomePage(_sampleRides.sublist(0, 2), [], [], callback: (rect) {
         piper.onCallback(rect);
       }, remaining: true),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context)),
+          RectPositioned(
+              rect: highlightRect, child: highlightRegion(state, context)),
           Positioned(
             top: highlightRect.bottom,
             left: 8,
@@ -149,7 +172,9 @@ Widget startRideCard(OnboardingState state, BuildContext context) {
       });
 }
 
-Widget _sampleBeginRidePage(Ride ride, {void Function(Rect) onContinueRectChange = RidesStateless.onChangeDefault}) {
+Widget _sampleBeginRidePage(Ride ride,
+    {void Function(Rect) onContinueRectChange =
+        RidesStateless.onChangeDefault}) {
   return IgnorePointer(
       child: BeginRidePage(
     ride: ride,
@@ -161,12 +186,15 @@ Widget beginRidePage(OnboardingState state, BuildContext context) {
   final piper = CallbackPiper<Rect>();
   return OnboardingOverlay(
       highlightPiper: piper,
-      child: _sampleBeginRidePage(_sampleRides[0], onContinueRectChange: (rect) {
+      child:
+          _sampleBeginRidePage(_sampleRides[0], onContinueRectChange: (rect) {
         piper.onCallback(rect);
       }),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context, radius: 2)),
+          RectPositioned(
+              rect: highlightRect,
+              child: highlightRegion(state, context, radius: 2)),
           Positioned(
             bottom: MediaQuery.of(context).size.height - highlightRect.top,
             left: 8,
@@ -185,7 +213,9 @@ Widget beginRidePage(OnboardingState state, BuildContext context) {
       });
 }
 
-Widget _sampleOnTheWayPage(Ride ride, {void Function(Rect) onContinueRectChange = RidesStateless.onChangeDefault}) {
+Widget _sampleOnTheWayPage(Ride ride,
+    {void Function(Rect) onContinueRectChange =
+        RidesStateless.onChangeDefault}) {
   return IgnorePointer(
       child: OnTheWayPage(
     ride: _sampleRides[0],
@@ -205,7 +235,9 @@ Widget onTheWayPage(OnboardingState state, BuildContext context) {
       ),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context, radius: 2)),
+          RectPositioned(
+              rect: highlightRect,
+              child: highlightRegion(state, context, radius: 2)),
           Positioned(
             bottom: MediaQuery.of(context).size.height - highlightRect.top,
             left: 8,
@@ -215,7 +247,8 @@ Widget onTheWayPage(OnboardingState state, BuildContext context) {
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                     title: "Let your rider know you've arrived.",
-                    body: 'Try it! Press on the button to let your rider know you’ve arrived.',
+                    body:
+                        'Try it! Press on the button to let your rider know you’ve arrived.',
                     nipLocation: NipLocation.BOTTOM),
               ),
             ),
@@ -246,7 +279,9 @@ Widget pickUpPage(OnboardingState state, BuildContext context) {
       }, highlightPickUpButton: true, highlightScheduleButton: false),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context, radius: 2)),
+          RectPositioned(
+              rect: highlightRect,
+              child: highlightRegion(state, context, radius: 2)),
           Positioned(
             bottom: MediaQuery.of(context).size.height - highlightRect.top,
             left: 8,
@@ -267,7 +302,8 @@ Widget pickUpPage(OnboardingState state, BuildContext context) {
       });
 }
 
-Widget _sampleHomePage(List<Ride> remainingRides, List<Ride> currentRides, List<String> selectedRideIDs,
+Widget _sampleHomePage(List<Ride> remainingRides, List<Ride> currentRides,
+    List<String> selectedRideIDs,
     {void Function(Rect) callback = RidesStateless.onChangeDefault,
     bool remaining = false,
     bool firstCurrent = false,
@@ -296,12 +332,14 @@ Widget startRideCard2(OnboardingState state, BuildContext context) {
   final piper = CallbackPiper<Rect>();
   return OnboardingOverlay(
       highlightPiper: piper,
-      child: _sampleHomePage([_sampleRides[1]], [_sampleRides[0]], [], callback: (rect) {
+      child: _sampleHomePage([_sampleRides[1]], [_sampleRides[0]], [],
+          callback: (rect) {
         piper.onCallback(rect);
       }, remaining: true),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context)),
+          RectPositioned(
+              rect: highlightRect, child: highlightRegion(state, context)),
           Positioned(
             bottom: MediaQuery.of(context).size.height - highlightRect.top,
             left: 8,
@@ -325,12 +363,15 @@ Widget beginRidePage2(OnboardingState state, BuildContext context) {
   final piper = CallbackPiper<Rect>();
   return OnboardingOverlay(
       highlightPiper: piper,
-      child: _sampleBeginRidePage(_sampleRides[1], onContinueRectChange: (rect) {
+      child:
+          _sampleBeginRidePage(_sampleRides[1], onContinueRectChange: (rect) {
         piper.onCallback(rect);
       }),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context, radius: 2)),
+          RectPositioned(
+              rect: highlightRect,
+              child: highlightRegion(state, context, radius: 2)),
           Positioned(
             bottom: MediaQuery.of(context).size.height - highlightRect.top,
             left: 8,
@@ -340,7 +381,8 @@ Widget beginRidePage2(OnboardingState state, BuildContext context) {
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                     title: 'Begin another ride.',
-                    body: 'Try it! Press on the button to add a new rider and complete multiple rides at once.',
+                    body:
+                        'Try it! Press on the button to add a new rider and complete multiple rides at once.',
                     nipLocation: NipLocation.BOTTOM),
               ),
             ),
@@ -361,7 +403,9 @@ Widget onTheWayPage2(OnboardingState state, BuildContext context) {
       ),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context, radius: 2)),
+          RectPositioned(
+              rect: highlightRect,
+              child: highlightRegion(state, context, radius: 2)),
           Positioned(
             bottom: MediaQuery.of(context).size.height - highlightRect.top,
             left: 8,
@@ -371,7 +415,8 @@ Widget onTheWayPage2(OnboardingState state, BuildContext context) {
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                     title: "Let your rider know you've arrived.",
-                    body: 'Try it! Press on the button to let your rider know you’ve arrived.',
+                    body:
+                        'Try it! Press on the button to let your rider know you’ve arrived.',
                     nipLocation: NipLocation.BOTTOM),
               ),
             ),
@@ -389,14 +434,19 @@ Widget checkYourSchedule(OnboardingState state, BuildContext context) {
       }, highlightPickUpButton: false, highlightScheduleButton: true),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context, hide: true)),
+          RectPositioned(
+              rect: highlightRect,
+              child: highlightRegion(state, context, hide: true)),
           Positioned(
             top: highlightRect.bottom + 8,
             right: 8,
             child: SizedBox(
                 width: 32,
                 child: SpeechBubble(
-                    color: highlightColor, borderRadius: 11, nipLocation: NipLocation.TOP, child: Container())),
+                    color: highlightColor,
+                    borderRadius: 11,
+                    nipLocation: NipLocation.TOP,
+                    child: Container())),
           ),
           Positioned(
             top: highlightRect.bottom + 8,
@@ -405,7 +455,8 @@ Widget checkYourSchedule(OnboardingState state, BuildContext context) {
               width: MediaQuery.of(context).size.width * 0.75,
               child: OnboardingBubble(
                 title: 'Check your schedule',
-                body: 'Try it! Tap to check your schedule while completing a ride.',
+                body:
+                    'Try it! Tap to check your schedule while completing a ride.',
               ),
             ),
           ),
@@ -414,7 +465,8 @@ Widget checkYourSchedule(OnboardingState state, BuildContext context) {
 }
 
 Widget _sampleSchedulePage(
-    {void Function(Rect) carButtonRectCb = RidesStateless.onChangeDefault, bool highlightCarButton}) {
+    {void Function(Rect) carButtonRectCb = RidesStateless.onChangeDefault,
+    bool highlightCarButton}) {
   return IgnorePointer(
       child: RidesStateless(
     remainingRides: _sampleRides.sublist(2, 4),
@@ -450,7 +502,8 @@ Widget viewSchedulePage(OnboardingState state, BuildContext context) {
                     child: Column(children: [
                       OnboardingBubble(
                         title: 'View Schedule',
-                        body: 'Check your schedule to make sure you are on track!',
+                        body:
+                            'Check your schedule to make sure you are on track!',
                       ),
                       SizedBox(height: 16),
                       CButton(
@@ -478,14 +531,19 @@ Widget scheduleButtonPage(OnboardingState state, BuildContext context) {
           highlightCarButton: true),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context, hide: true)),
+          RectPositioned(
+              rect: highlightRect,
+              child: highlightRegion(state, context, hide: true)),
           Positioned(
             top: highlightRect.bottom + 8,
             right: 12,
             child: SizedBox(
                 width: 32,
                 child: SpeechBubble(
-                    color: highlightColor, borderRadius: 11, nipLocation: NipLocation.TOP, child: Container())),
+                    color: highlightColor,
+                    borderRadius: 11,
+                    nipLocation: NipLocation.TOP,
+                    child: Container())),
           ),
           FutureBuilder(
               future: Future.delayed(Duration(seconds: 2)),
@@ -497,7 +555,8 @@ Widget scheduleButtonPage(OnboardingState state, BuildContext context) {
                     width: MediaQuery.of(context).size.width * 0.75,
                     child: OnboardingBubble(
                       title: 'Return to your current ride.',
-                      body: 'Try it! Tap to return to the ride you were completing.',
+                      body:
+                          'Try it! Tap to return to the ride you were completing.',
                     ),
                   ),
                 );
@@ -515,7 +574,9 @@ Widget pickUpPage2(OnboardingState state, BuildContext context) {
       }, highlightPickUpButton: true, highlightScheduleButton: false),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context, radius: 2)),
+          RectPositioned(
+              rect: highlightRect,
+              child: highlightRegion(state, context, radius: 2)),
           Positioned(
             bottom: MediaQuery.of(context).size.height - highlightRect.top,
             left: 8,
@@ -540,12 +601,15 @@ Widget selectFirstCurrent(OnboardingState state, BuildContext context) {
   final piper = CallbackPiper<Rect>();
   return OnboardingOverlay(
       highlightPiper: piper,
-      child: _sampleHomePage(_sampleRides.sublist(2, 4), _sampleRides.sublist(0, 2), [], callback: (rect) {
+      child: _sampleHomePage(
+          _sampleRides.sublist(2, 4), _sampleRides.sublist(0, 2), [],
+          callback: (rect) {
         piper.onCallback(rect);
       }, firstCurrent: true),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context)),
+          RectPositioned(
+              rect: highlightRect, child: highlightRegion(state, context)),
           Positioned(
             top: highlightRect.bottom,
             left: 64,
@@ -554,7 +618,10 @@ Widget selectFirstCurrent(OnboardingState state, BuildContext context) {
               child: SizedBox(
                   width: 32,
                   child: SpeechBubble(
-                      color: highlightColor, borderRadius: 11, nipLocation: NipLocation.TOP, child: Container())),
+                      color: highlightColor,
+                      borderRadius: 11,
+                      nipLocation: NipLocation.TOP,
+                      child: Container())),
             ),
           ),
           Positioned(
@@ -566,7 +633,8 @@ Widget selectFirstCurrent(OnboardingState state, BuildContext context) {
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                   title: 'Select a rider to drop off.',
-                  body: "Try it! Tap when you have reached the drop off location and it's time to drop off your rider.",
+                  body:
+                      "Try it! Tap when you have reached the drop off location and it's time to drop off your rider.",
                 ),
               ),
             ),
@@ -579,13 +647,14 @@ Widget selectSecondCurrent(OnboardingState state, BuildContext context) {
   final piper = CallbackPiper<Rect>();
   return OnboardingOverlay(
       highlightPiper: piper,
-      child: _sampleHomePage(_sampleRides.sublist(2, 4), _sampleRides.sublist(0, 2), [_sampleRides[0].id],
-          callback: (rect) {
+      child: _sampleHomePage(_sampleRides.sublist(2, 4),
+          _sampleRides.sublist(0, 2), [_sampleRides[0].id], callback: (rect) {
         piper.onCallback(rect);
       }, secondCurrent: true),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context)),
+          RectPositioned(
+              rect: highlightRect, child: highlightRegion(state, context)),
           Positioned(
             top: highlightRect.bottom,
             right: 64,
@@ -594,7 +663,10 @@ Widget selectSecondCurrent(OnboardingState state, BuildContext context) {
               child: SizedBox(
                   width: 32,
                   child: SpeechBubble(
-                      color: highlightColor, borderRadius: 11, nipLocation: NipLocation.TOP, child: Container())),
+                      color: highlightColor,
+                      borderRadius: 11,
+                      nipLocation: NipLocation.TOP,
+                      child: Container())),
             ),
           ),
           Positioned(
@@ -606,7 +678,8 @@ Widget selectSecondCurrent(OnboardingState state, BuildContext context) {
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: OnboardingBubble(
                   title: 'Choose multiple riders.',
-                  body: 'Try it! Tap to choose the second rider you are dropping off.',
+                  body:
+                      'Try it! Tap to choose the second rider you are dropping off.',
                 ),
               ),
             ),
@@ -619,13 +692,17 @@ Widget dropOffRiders(OnboardingState state, BuildContext context) {
   final piper = CallbackPiper<Rect>();
   return OnboardingOverlay(
       highlightPiper: piper,
-      child: _sampleHomePage(_sampleRides.sublist(2, 4), _sampleRides.sublist(0, 2),
-          _sampleRides.sublist(0, 2).map((Ride r) => r.id).toList(), callback: (rect) {
+      child: _sampleHomePage(
+          _sampleRides.sublist(2, 4),
+          _sampleRides.sublist(0, 2),
+          _sampleRides.sublist(0, 2).map((Ride r) => r.id).toList(),
+          callback: (rect) {
         piper.onCallback(rect);
       }, dropOffButton: true),
       overlayBuilder: (context, highlightRect) {
         return Stack(children: [
-          RectPositioned(rect: highlightRect, child: highlightRegion(state, context)),
+          RectPositioned(
+              rect: highlightRect, child: highlightRegion(state, context)),
           Positioned(
             bottom: MediaQuery.of(context).size.height - highlightRect.top,
             child: Padding(
@@ -677,7 +754,8 @@ Widget pullToRefresh(OnboardingState state, BuildContext context) {
                   width: MediaQuery.of(context).size.width * 0.75,
                   child: OnboardingBubble(
                     title: 'Pull to refresh.',
-                    body: 'Try it! Pull downward on the screen and release to refresh and update your schedule.',
+                    body:
+                        'Try it! Pull downward on the screen and release to refresh and update your schedule.',
                   ),
                 ),
               ),
@@ -723,8 +801,10 @@ Widget refreshed(OnboardingState state, BuildContext context) {
                                   text: 'Start',
                                   hasShadow: false,
                                   onPressed: () {
-                                    Navigator.of(context)
-                                        .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()));
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                Home()));
                                   })
                             ])),
                       ],
@@ -737,7 +817,8 @@ Widget refreshed(OnboardingState state, BuildContext context) {
       });
 }
 
-List<Widget Function(OnboardingState state, BuildContext context)> stageBuilders = [
+List<Widget Function(OnboardingState state, BuildContext context)>
+    stageBuilders = [
   _start,
   startRideCard,
   beginRidePage,

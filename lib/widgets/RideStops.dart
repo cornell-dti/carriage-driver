@@ -8,7 +8,8 @@ import 'RideDestPickupCard.dart';
 class RideStops extends StatefulWidget {
   final Ride ride;
   final bool carIcon;
-  RideStops({Key key, @required this.ride, @required this.carIcon}) : super(key: key);
+  RideStops({Key key, @required this.ride, @required this.carIcon})
+      : super(key: key);
 
   @override
   RideStopsState createState() => RideStopsState();
@@ -22,7 +23,8 @@ class RideStopsState extends State<RideStops> {
     double carWidth = 34;
     double circleRadius = 12;
 
-    Widget stopCircle = Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
+    Widget stopCircle =
+        Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
       Container(
           width: circleRadius * 2,
           height: circleRadius * 2,
@@ -58,42 +60,53 @@ class RideStopsState extends State<RideStops> {
               _height = size.height;
             });
           },
-          child: ListView(shrinkWrap: true, physics: NeverScrollableScrollPhysics(), children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: max(carWidth, circleRadius * 2),
-                    child: widget.carIcon ? Image.asset('assets/images/carIcon.png', width: carWidth) : stopCircle,
+          child: ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: max(carWidth, circleRadius * 2),
+                        child: widget.carIcon
+                            ? Image.asset('assets/images/carIcon.png',
+                                width: carWidth)
+                            : stopCircle,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: RideDestPickupCard(
+                              false,
+                              widget.ride.startTime,
+                              widget.ride.startLocation,
+                              widget.ride.startAddress),
+                        ),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 16),
-                      child: RideDestPickupCard(
-                          false, widget.ride.startTime, widget.ride.startLocation, widget.ride.startAddress),
-                    ),
+                ),
+                SizedBox(height: 40),
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                          width: max(carWidth, circleRadius * 2),
+                          child: stopCircle),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: RideDestPickupCard(true, widget.ride.endTime,
+                              widget.ride.endLocation, widget.ride.endAddress),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            SizedBox(height: 40),
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Row(
-                children: [
-                  SizedBox(width: max(carWidth, circleRadius * 2), child: stopCircle),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 16),
-                      child: RideDestPickupCard(
-                          true, widget.ride.endTime, widget.ride.endLocation, widget.ride.endAddress),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ])),
+                )
+              ])),
     ]);
   }
 }

@@ -11,7 +11,10 @@ class CButton extends StatelessWidget {
   final bool hasShadow;
   final void Function() onPressed;
 
-  CButton({@required this.text, @required this.hasShadow, @required this.onPressed});
+  CButton(
+      {@required this.text,
+      @required this.hasShadow,
+      @required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,8 @@ class CButton extends StatelessWidget {
               padding: EdgeInsets.all(16),
               primary: Colors.black,
               onPrimary: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(3))),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(3))),
               minimumSize: Size(
                 MediaQuery.of(context).size.width * 0.8,
                 50,
@@ -43,7 +47,9 @@ class DangerButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: TextButton(
-            child: Text(text, style: CarriageTheme.button.copyWith(color: Color.fromRGBO(240, 134, 134, 1))),
+            child: Text(text,
+                style: CarriageTheme.button
+                    .copyWith(color: Color.fromRGBO(240, 134, 134, 1))),
             onPressed: onPressed));
   }
 }
@@ -60,11 +66,14 @@ class ShadowedCircleButton extends StatelessWidget {
       width: diameter,
       height: diameter,
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(100), boxShadow: [CarriageTheme.shadow]),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(100),
+          boxShadow: [CarriageTheme.shadow]),
       child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+              customBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100)),
               onTap: onPressed,
               child: icon)),
     );
@@ -124,13 +133,16 @@ class CalendarButton extends StatelessWidget {
       height: 40,
       child: IconButton(
           icon: Image.asset(
-            highlight ? 'assets/images/highlightedCalendarButton.png' : 'assets/images/calendarButton.png',
+            highlight
+                ? 'assets/images/highlightedCalendarButton.png'
+                : 'assets/images/calendarButton.png',
             width: highlight ? 24 : 20,
             height: highlight ? 24 : 20,
           ),
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => Scaffold(body: SafeArea(child: Rides(interactive: false)))));
+                builder: (BuildContext context) => Scaffold(
+                    body: SafeArea(child: Rides(interactive: false)))));
           }),
     );
   }

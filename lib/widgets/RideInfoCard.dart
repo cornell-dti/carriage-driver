@@ -22,7 +22,8 @@ class RideInfoCard extends StatelessWidget {
           ride.rider.accessibilityNeeds.isNotEmpty
               ? Padding(
                   padding: EdgeInsets.only(top: 8),
-                  child: Text(ride.rider.accessibilityNeeds.join(', '), style: CarriageTheme.body),
+                  child: Text(ride.rider.accessibilityNeeds.join(', '),
+                      style: CarriageTheme.body),
                 )
               : Container()
         ]),
@@ -38,8 +39,11 @@ class RideInfoCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             _picAndName(context),
-            RideDestPickupCard(dropoff, dropoff ? ride.endTime : ride.startTime,
-                dropoff ? ride.endLocation : ride.startLocation, dropoff ? ride.endAddress : ride.startAddress)
+            RideDestPickupCard(
+                dropoff,
+                dropoff ? ride.endTime : ride.startTime,
+                dropoff ? ride.endLocation : ride.startLocation,
+                dropoff ? ride.endAddress : ride.startAddress)
           ]),
     );
   }
