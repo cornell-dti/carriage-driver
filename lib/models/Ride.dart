@@ -10,14 +10,7 @@ import 'Rider.dart';
 import '../utils/app_config.dart';
 
 ///A ride's status.
-enum RideStatus {
-  NOT_STARTED,
-  ON_THE_WAY,
-  ARRIVED,
-  PICKED_UP,
-  COMPLETED,
-  NO_SHOW
-}
+enum RideStatus { NOT_STARTED, ON_THE_WAY, ARRIVED, PICKED_UP, COMPLETED, NO_SHOW }
 
 ///Converts [status] to a string.
 String toString(RideStatus status) {
@@ -89,12 +82,8 @@ class Ride {
       endLocation: data['endLocation']['name'],
       startAddress: data['startLocation']['address'],
       endAddress: data['endLocation']['address'],
-      startTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-          .parse(data['startTime'], true)
-          .toLocal(),
-      endTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-          .parse(data['endTime'], true)
-          .toLocal(),
+      startTime: DateFormat('yyyy-MM-ddTHH:mm:ss').parse(data['startTime'], true).toLocal(),
+      endTime: DateFormat('yyyy-MM-ddTHH:mm:ss').parse(data['endTime'], true).toLocal(),
       rider: Rider.fromJson(data['rider']),
     );
   }
@@ -125,25 +114,16 @@ Future<http.Response> notifyDelay(BuildContext context, String id) async {
   String token = await authProvider.secureStorage.read(key: 'token');
   final body = jsonEncode(<String, bool>{'late': true});
   return http.put(Uri.parse(AppConfig.of(context).baseUrl + '/rides/$id'),
-      body: body,
-      headers: {
-        'Content-Type': 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer $token'
-      });
+      body: body, headers: {'Content-Type': 'application/json', HttpHeaders.authorizationHeader: 'Bearer $token'});
 }
 
 ///Modifies the ride with [id] to have status [status].
-Future<http.Response> updateRideStatus(
-    BuildContext context, String id, RideStatus status) async {
+Future<http.Response> updateRideStatus(BuildContext context, String id, RideStatus status) async {
   AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
   String token = await authProvider.secureStorage.read(key: 'token');
   final body = jsonEncode(<String, String>{"status": toString(status)});
   return http.put(Uri.parse(AppConfig.of(context).baseUrl + '/rides/$id'),
-      body: body,
-      headers: {
-        "Content-Type": "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $token"
-      });
+      body: body, headers: {"Content-Type": "application/json", HttpHeaders.authorizationHeader: "Bearer $token"});
 }
 
 Future<http.Response> setRideToPast(BuildContext context, String id) async {
@@ -151,15 +131,10 @@ Future<http.Response> setRideToPast(BuildContext context, String id) async {
   AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
   String token = await authProvider.secureStorage.read(key: 'token');
   return http.put(Uri.parse(AppConfig.of(context).baseUrl + '/rides/$id'),
-      body: body,
-      headers: {
-        "Content-Type": "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $token"
-      });
+      body: body, headers: {"Content-Type": "application/json", HttpHeaders.authorizationHeader: "Bearer $token"});
 }
 
-T getOrNull<T>(Map<String, dynamic> map, String key,
-    {T Function(dynamic s) parse}) {
+T getOrNull<T>(Map<String, dynamic> map, String key, {T Function(dynamic s) parse}) {
   var x = map.containsKey(key) ? map[key] : null;
   if (x == null) return null;
   if (parse == null) return x;

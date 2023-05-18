@@ -54,8 +54,7 @@ class _HomeState extends State<Home> {
   }
 
   subscribe(String token) async {
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
     String authToken = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
       Uri.parse("${AppConfig.of(context).baseUrl}/notification/subscribe"),
@@ -129,14 +128,12 @@ class _HomeState extends State<Home> {
     /// We use this channel in the `AndroidManifest.xml` file to override the
     /// default FCM channel to enable heads up notifications.
     await notificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     /// Update the iOS foreground notification presentation options to allow
     /// heads up notifications.
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
@@ -179,12 +176,9 @@ class _HomeState extends State<Home> {
           selectedItemColor: Colors.black,
           unselectedItemColor: Colors.grey,
           items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: Icon(Icons.directions_car, size: 20), label: 'Rides'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.schedule, size: 20), label: 'History'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person, size: 20), label: 'Profile')
+            BottomNavigationBarItem(icon: Icon(Icons.directions_car, size: 20), label: 'Rides'),
+            BottomNavigationBarItem(icon: Icon(Icons.schedule, size: 20), label: 'History'),
+            BottomNavigationBarItem(icon: Icon(Icons.person, size: 20), label: 'Profile')
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,

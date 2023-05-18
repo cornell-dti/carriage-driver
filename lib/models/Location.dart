@@ -21,11 +21,6 @@ class Location {
 
   //Creates a location from JSON representation.
   factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
-        id: json['id'],
-        name: json['name'],
-        address: json['address'],
-        info: json['info'],
-        tag: json['tag']);
+    return Location(id: json['id'], name: json['name'], address: json['address'], info: json['info'], tag: json['tag']);
   }
 }

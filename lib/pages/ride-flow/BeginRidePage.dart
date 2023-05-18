@@ -25,8 +25,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
 
   Widget _picAndName(BuildContext context) {
     return Center(
-      child:
-          Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
+      child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
         widget.ride.rider.profilePicture(64),
         SizedBox(width: 16),
         Column(
@@ -39,8 +38,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
             widget.ride.rider.accessibilityNeeds.isNotEmpty
                 ? Padding(
                     padding: EdgeInsets.only(top: 4),
-                    child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
-                        style: CarriageTheme.body))
+                    child: Text(widget.ride.rider.accessibilityNeeds.join(', '), style: CarriageTheme.body))
                 : Container()
           ],
         )
@@ -50,18 +48,14 @@ class _BeginRidePageState extends State<BeginRidePage> {
 
   Widget _homeButton() {
     return InkWell(
-      onTap: () => Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => Home())),
+      onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home())),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.arrow_back_ios, size: 21),
-              Text("Home", style: TextStyle(fontSize: 17))
-            ]),
+            children: [Icon(Icons.arrow_back_ios, size: 21), Text("Home", style: TextStyle(fontSize: 17))]),
       ),
     );
   }
@@ -82,10 +76,7 @@ class _BeginRidePageState extends State<BeginRidePage> {
                 SingleChildScrollView(
                   child: Container(
                     padding: EdgeInsets.only(
-                        left: 16,
-                        right: 16,
-                        top: 8,
-                        bottom: buttonHeight + 2 * buttonVerticalPadding + 42),
+                        left: 16, right: 16, top: 8, bottom: buttonHeight + 2 * buttonVerticalPadding + 42),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -101,14 +92,10 @@ class _BeginRidePageState extends State<BeginRidePage> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 34, vertical: buttonVerticalPadding),
+                    padding: EdgeInsets.symmetric(horizontal: 34, vertical: buttonVerticalPadding),
                     decoration: BoxDecoration(color: Colors.white, boxShadow: [
                       BoxShadow(
-                          blurRadius: 10,
-                          spreadRadius: 1,
-                          offset: Offset(0, -2),
-                          color: Colors.black.withOpacity(0.05))
+                          blurRadius: 10, spreadRadius: 1, offset: Offset(0, -2), color: Colors.black.withOpacity(0.05))
                     ]),
                     child: MeasureRect(
                       onChange: widget.onContinueRectChange,
@@ -118,19 +105,14 @@ class _BeginRidePageState extends State<BeginRidePage> {
                           onPressed: () async {
                             if (_requestedContinue) return;
                             setState(() => _requestedContinue = true);
-                            final response = await updateRideStatus(
-                                context, widget.ride.id, RideStatus.ON_THE_WAY);
+                            final response = await updateRideStatus(context, widget.ride.id, RideStatus.ON_THE_WAY);
                             if (!mounted) return;
                             if (response.statusCode == 200) {
                               widget.ride.status = RideStatus.ON_THE_WAY;
-                              RidesProvider ridesProvider =
-                                  Provider.of<RidesProvider>(context,
-                                      listen: false);
+                              RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
                               ridesProvider.changeRideToCurrent(widget.ride);
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          OnTheWayPage(ride: widget.ride)));
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                  builder: (BuildContext context) => OnTheWayPage(ride: widget.ride)));
                             } else {
                               setState(() => _requestedContinue = false);
                               throw Exception('Failed to update ride status');

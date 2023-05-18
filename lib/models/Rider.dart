@@ -42,8 +42,7 @@ class Rider {
     final data = json['data'] ?? json;
     List<String> accessibility;
     if (data['accessibility'] is List) {
-      accessibility =
-          List<String>.from(data['accessibility'].map((x) => x.toString()));
+      accessibility = List<String>.from(data['accessibility'].map((x) => x.toString()));
     } else {
       accessibility = [data['accessibility']];
     }
@@ -64,13 +63,11 @@ class Rider {
       child: ClipRRect(
           borderRadius: BorderRadius.circular(100),
           child: photoLink == null
-              ? Image.asset(photoPath ?? 'assets/images/person.png',
-                  width: diameter, height: diameter)
+              ? Image.asset(photoPath ?? 'assets/images/person.png', width: diameter, height: diameter)
               : Image.network(
                   photoLink,
                   fit: BoxFit.cover,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent loadingProgress) {
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
                     if (loadingProgress == null) {
                       return child;
                     } else {

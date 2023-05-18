@@ -33,9 +33,7 @@ class _RideCardState extends State<RideCard> {
 
     return Container(
         decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [CarriageTheme.shadow],
-            borderRadius: BorderRadius.circular(12)),
+            color: Colors.white, boxShadow: [CarriageTheme.shadow], borderRadius: BorderRadius.circular(12)),
         child: Material(
             type: MaterialType.transparency,
             child: InkWell(
@@ -43,73 +41,59 @@ class _RideCardState extends State<RideCard> {
                 borderRadius: BorderRadius.circular(12),
               ),
               onTap: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        BeginRidePage(ride: widget.ride)));
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (BuildContext context) => BeginRidePage(ride: widget.ride)));
               },
               child: Padding(
                 padding: EdgeInsets.all(padding),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(children: [
-                        widget.ride.rider.profilePicture(profilePictureSize),
-                        SizedBox(width: picNameSpacing),
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: textWidth,
-                                child: FittedBox(
-                                  alignment: Alignment.centerLeft,
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(widget.ride.rider.firstName,
-                                      style: CarriageTheme.title3),
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              widget.ride.rider.accessibilityNeeds.isNotEmpty &&
-                                      textWidth > 0
-                                  ? SizedBox(
-                                      width: textWidth,
-                                      child: Text(
-                                          widget.ride.rider.accessibilityNeeds
-                                              .join(', '),
-                                          style: TextStyle(
-                                              color: CarriageTheme.gray2,
-                                              fontStyle: FontStyle.italic,
-                                              fontSize: 15)),
-                                    )
-                                  : Container()
-                            ]),
-                        SizedBox(width: nameButtonSpacing),
-                        textWidth == 0 ||
-                                widget.ride.rider.accessibilityNeeds.isEmpty
-                            ? Spacer()
-                            : Container(),
-                        MeasureSize(
-                          onChange: (size) {
-                            setState(() {
-                              buttonsWidth = size.width;
-                              textWidth = MediaQuery.of(context).size.width -
-                                  (2 * margin) -
-                                  (2 * padding) -
-                                  buttonsWidth -
-                                  profilePictureSize -
-                                  picNameSpacing -
-                                  nameButtonSpacing;
-                            });
-                          },
-                          child: Row(children: [
-                            CallButton(widget.ride.rider.phoneNumber, 48),
-                            SizedBox(width: 8),
-                            NotifyButton(widget.ride, 48)
-                          ]),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(children: [
+                    widget.ride.rider.profilePicture(profilePictureSize),
+                    SizedBox(width: picNameSpacing),
+                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      SizedBox(
+                        width: textWidth,
+                        child: FittedBox(
+                          alignment: Alignment.centerLeft,
+                          fit: BoxFit.scaleDown,
+                          child: Text(widget.ride.rider.firstName, style: CarriageTheme.title3),
                         ),
-                      ]),
-                      SizedBox(height: 32),
-                      TimeLine(widget.ride)
+                      ),
+                      SizedBox(height: 4),
+                      widget.ride.rider.accessibilityNeeds.isNotEmpty && textWidth > 0
+                          ? SizedBox(
+                              width: textWidth,
+                              child: Text(widget.ride.rider.accessibilityNeeds.join(', '),
+                                  style:
+                                      TextStyle(color: CarriageTheme.gray2, fontStyle: FontStyle.italic, fontSize: 15)),
+                            )
+                          : Container()
                     ]),
+                    SizedBox(width: nameButtonSpacing),
+                    textWidth == 0 || widget.ride.rider.accessibilityNeeds.isEmpty ? Spacer() : Container(),
+                    MeasureSize(
+                      onChange: (size) {
+                        setState(() {
+                          buttonsWidth = size.width;
+                          textWidth = MediaQuery.of(context).size.width -
+                              (2 * margin) -
+                              (2 * padding) -
+                              buttonsWidth -
+                              profilePictureSize -
+                              picNameSpacing -
+                              nameButtonSpacing;
+                        });
+                      },
+                      child: Row(children: [
+                        CallButton(widget.ride.rider.phoneNumber, 48),
+                        SizedBox(width: 8),
+                        NotifyButton(widget.ride, 48)
+                      ]),
+                    ),
+                  ]),
+                  SizedBox(height: 32),
+                  TimeLine(widget.ride)
+                ]),
               ),
             )));
   }
@@ -134,17 +118,13 @@ class _TimeLineState extends State<TimeLine> {
       width: size,
       height: size,
       child: Icon(Icons.circle, size: 9.75, color: grey),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          boxShadow: [CarriageTheme.shadow]),
+      decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [CarriageTheme.shadow]),
     );
   }
 
   Widget locationInfo(bool isPickup, DateTime time, String location) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(isPickup ? 'Pickup' : 'Dropoff',
-          style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3)),
+      Text(isPickup ? 'Pickup' : 'Dropoff', style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3)),
       SizedBox(height: 2),
       Row(
         children: [
@@ -153,11 +133,8 @@ class _TimeLineState extends State<TimeLine> {
               text: TextSpan(children: [
                 TextSpan(
                     text: DateFormat('jm').format(time),
-                    style: CarriageTheme.body.copyWith(
-                        fontFamily: 'Inter', fontWeight: FontWeight.bold)),
-                TextSpan(
-                    text: ' @ $location',
-                    style: CarriageTheme.body.copyWith(fontFamily: 'Inter'))
+                    style: CarriageTheme.body.copyWith(fontFamily: 'Inter', fontWeight: FontWeight.bold)),
+                TextSpan(text: ' @ $location', style: CarriageTheme.body.copyWith(fontFamily: 'Inter'))
               ]),
             ),
           ),
@@ -183,9 +160,7 @@ class _TimeLineState extends State<TimeLine> {
     }
 
     Widget buildLine() {
-      return timelineHeight != null &&
-              firstRowKey.currentContext != null &&
-              lastRowKey.currentContext != null
+      return timelineHeight != null && firstRowKey.currentContext != null && lastRowKey.currentContext != null
           ? Container(
               margin: EdgeInsets.only(left: size / 2 - (lineWidth / 2)),
               width: 4,
@@ -208,25 +183,18 @@ class _TimeLineState extends State<TimeLine> {
           child: Column(children: [
             Container(
                 key: firstRowKey,
-                child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      locationCircle(),
-                      SizedBox(width: 16),
-                      Expanded(
-                          child: locationInfo(true, widget.ride.startTime,
-                              widget.ride.startLocation))
-                    ])),
+                child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  locationCircle(),
+                  SizedBox(width: 16),
+                  Expanded(child: locationInfo(true, widget.ride.startTime, widget.ride.startLocation))
+                ])),
             SizedBox(height: 24),
             Container(
                 key: lastRowKey,
-                child:
-                    Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   locationCircle(),
                   SizedBox(width: 16),
-                  Expanded(
-                      child: locationInfo(
-                          false, widget.ride.endTime, widget.ride.endLocation))
+                  Expanded(child: locationInfo(false, widget.ride.endTime, widget.ride.endLocation))
                 ])),
           ]),
         ),

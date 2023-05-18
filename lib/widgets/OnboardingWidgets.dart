@@ -14,12 +14,7 @@ class RectPositioned extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-        height: rect.height,
-        child: child);
+    return Positioned(top: rect.top, left: rect.left, width: rect.width, height: rect.height, child: child);
   }
 }
 
@@ -30,21 +25,17 @@ class OnboardingBubble extends StatelessWidget {
 
   static double borderRadius = 11;
 
-  const OnboardingBubble(
-      {Key key, @required this.title, @required this.body, this.nipLocation})
-      : super(key: key);
+  const OnboardingBubble({Key key, @required this.title, @required this.body, this.nipLocation}) : super(key: key);
 
   Widget _inner() {
     return Padding(
-        padding:
-            const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 20),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 20),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(title,
-                  style: CarriageTheme.title3.copyWith(color: Colors.white)),
+              Text(title, style: CarriageTheme.title3.copyWith(color: Colors.white)),
               SizedBox(height: 16),
               Text(body, style: TextStyle(fontSize: 15, color: Colors.white))
             ]));
@@ -54,23 +45,14 @@ class OnboardingBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              spreadRadius: 3,
-              blurRadius: 10,
-              offset: Offset(0, 9)),
+          BoxShadow(color: Colors.black.withOpacity(0.05), spreadRadius: 3, blurRadius: 10, offset: Offset(0, 9)),
         ]),
         child: nipLocation == null
             ? Container(
-                decoration: BoxDecoration(
-                    color: highlightColor,
-                    borderRadius: BorderRadius.circular(borderRadius)),
+                decoration: BoxDecoration(color: highlightColor, borderRadius: BorderRadius.circular(borderRadius)),
                 child: _inner())
             : SpeechBubble(
-                color: highlightColor,
-                borderRadius: borderRadius,
-                nipLocation: nipLocation,
-                child: _inner()));
+                color: highlightColor, borderRadius: borderRadius, nipLocation: nipLocation, child: _inner()));
   }
 }
 
@@ -86,19 +68,13 @@ class CallbackPiper<T> {
 
 class OnboardingOverlay extends StatefulWidget {
   final Widget child;
-  final Widget Function(BuildContext context, Rect highlightRect)
-      overlayBuilder;
+  final Widget Function(BuildContext context, Rect highlightRect) overlayBuilder;
   final double radius;
   final CallbackPiper<Rect> highlightPiper;
   final bool noButton;
 
   const OnboardingOverlay(
-      {Key key,
-      this.overlayBuilder,
-      this.child,
-      this.highlightPiper,
-      this.radius = 5,
-      this.noButton = false})
+      {Key key, this.overlayBuilder, this.child, this.highlightPiper, this.radius = 5, this.noButton = false})
       : super(key: key);
 
   @override
@@ -151,15 +127,13 @@ class OnboardingOverlayState extends State<OnboardingOverlay> {
   }
 }
 
-Widget highlightRegion(OnboardingState state, BuildContext context,
-    {double radius = 3, bool hide = false}) {
+Widget highlightRegion(OnboardingState state, BuildContext context, {double radius = 3, bool hide = false}) {
   return GestureDetector(
     onTap: () => state.nextStage(context),
     child: Container(
       decoration: BoxDecoration(
         color: Colors.transparent,
-        border: Border.all(
-            color: hide ? Colors.transparent : highlightColor, width: 4),
+        border: Border.all(color: hide ? Colors.transparent : highlightColor, width: 4),
         borderRadius: BorderRadius.circular(radius),
       ),
     ),

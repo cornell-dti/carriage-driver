@@ -29,8 +29,7 @@ class RideHistory extends StatelessWidget {
       DateTime now = DateTime.now();
       DateTime today = DateTime(now.year, now.month, now.day);
       for (Ride ride in pastRides) {
-        DateTime rideDate = DateTime(
-            ride.startTime.year, ride.startTime.month, ride.startTime.day);
+        DateTime rideDate = DateTime(ride.startTime.year, ride.startTime.month, ride.startTime.day);
         int daysAgo = today.difference(rideDate).inDays;
         if (rideGroups.containsKey(daysAgo)) {
           rideGroups[daysAgo].add(ride);
@@ -61,8 +60,7 @@ class RideHistory extends StatelessWidget {
                 itemCount: days.length,
                 itemBuilder: (context, index) {
                   int daysAgo = days[index];
-                  return PastRideGroup(
-                      rideGroups[daysAgo].first.startTime, rideGroups[daysAgo]);
+                  return PastRideGroup(rideGroups[daysAgo].first.startTime, rideGroups[daysAgo]);
                 },
                 separatorBuilder: (context, index) {
                   return SizedBox(height: 48);
@@ -78,8 +76,7 @@ class RideHistory extends StatelessWidget {
 }
 
 class LocationInfo extends StatelessWidget {
-  LocationInfo(this.isPickup, this.directionWidth, this.setDirectionWidth,
-      this.location, this.dateTime);
+  LocationInfo(this.isPickup, this.directionWidth, this.setDirectionWidth, this.location, this.dateTime);
   final bool isPickup;
   final String location;
   final DateTime dateTime;
@@ -88,8 +85,8 @@ class LocationInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Text directionText = Text(isPickup ? 'Pickup' : 'Dropoff',
-        style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3));
+    Text directionText =
+        Text(isPickup ? 'Pickup' : 'Dropoff', style: CarriageTheme.caption1.copyWith(color: CarriageTheme.gray3));
 
     return Row(
       children: [
@@ -105,9 +102,7 @@ class LocationInfo extends StatelessWidget {
         SizedBox(
             // TODO: try to make this less hard-coded?
             width: MediaQuery.of(context).size.width / 2,
-            child: Text(
-                location + ' @ ' + intl.DateFormat('jm').format(dateTime),
-                style: CarriageTheme.body))
+            child: Text(location + ' @ ' + intl.DateFormat('jm').format(dateTime), style: CarriageTheme.body))
       ],
     );
   }
@@ -143,22 +138,12 @@ class _RideHistoryRowState extends State<RideHistoryRow> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.ride.rider.firstName,
-                style:
-                    CarriageTheme.body.copyWith(fontWeight: FontWeight.w600)),
+            Text(widget.ride.rider.firstName, style: CarriageTheme.body.copyWith(fontWeight: FontWeight.w600)),
             SizedBox(height: 8),
-            LocationInfo(
-                true,
-                locationWidth,
-                (size) => setLocationWidth(size.width),
-                widget.ride.startLocation,
+            LocationInfo(true, locationWidth, (size) => setLocationWidth(size.width), widget.ride.startLocation,
                 widget.ride.startTime),
             SizedBox(height: 4),
-            LocationInfo(
-                false,
-                locationWidth,
-                (size) => setLocationWidth(size.width),
-                widget.ride.endLocation,
+            LocationInfo(false, locationWidth, (size) => setLocationWidth(size.width), widget.ride.endLocation,
                 widget.ride.endTime),
           ],
         )
@@ -181,8 +166,7 @@ class PastRideGroup extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           itemCount: rides.length + 1,
           itemBuilder: (context, index) => index == 0
-              ? RideGroupTitle(
-                  intl.DateFormat('yMMMMd').format(date), rides.length)
+              ? RideGroupTitle(intl.DateFormat('yMMMMd').format(date), rides.length)
               : RideHistoryRow(rides[index - 1]),
           separatorBuilder: (context, index) => index > 0
               ? Padding(

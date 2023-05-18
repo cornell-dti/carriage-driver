@@ -10,8 +10,7 @@ class Login extends StatelessWidget {
     try {
       authProvider.signInSilently();
     } catch (e) {
-      print(
-          'User has not logged in previously, therefore, we should not proceed');
+      print('User has not logged in previously, therefore, we should not proceed');
     }
     return SafeArea(
         child: Scaffold(
@@ -28,8 +27,7 @@ class Login extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: Text('Welcome to Carriage',
-                        style: TextStyle(fontSize: 33, color: Colors.white)),
+                    child: Text('Welcome to Carriage', style: TextStyle(fontSize: 33, color: Colors.white)),
                   ),
                 ],
               ),
@@ -40,8 +38,7 @@ class Login extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('Sign in using your Cornell email',
-                      style: TextStyle(fontSize: 15, color: Colors.white54)),
+                  Text('Sign in using your Cornell email', style: TextStyle(fontSize: 15, color: Colors.white54)),
                 ],
               ),
             ),
@@ -69,11 +66,9 @@ class SignInButton extends StatelessWidget {
     AuthProvider authProvider = Provider.of(context);
     return TextButton(
       style: ButtonStyle(
-          minimumSize: MaterialStateProperty.all(
-              Size(MediaQuery.of(context).size.width * 0.8, 40)),
+          minimumSize: MaterialStateProperty.all(Size(MediaQuery.of(context).size.width * 0.8, 40)),
           backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-          overlayColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) {
+          overlayColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
             if (states.contains(MaterialState.pressed)) return Colors.grey;
             return null; // Defer to the widget's default.
           }),
@@ -86,8 +81,7 @@ class SignInButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Image(
-              image: AssetImage('assets/images/google_logo.png'), height: 20.0),
+          Image(image: AssetImage('assets/images/google_logo.png'), height: 20.0),
           SizedBox(
             width: 8,
           ),
@@ -95,10 +89,7 @@ class SignInButton extends StatelessWidget {
             padding: EdgeInsets.only(left: 10),
             child: Text(
               'Sign in with Google',
-              style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
             ),
           )
         ],
