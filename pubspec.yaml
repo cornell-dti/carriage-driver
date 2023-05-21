@@ -21,7 +21,7 @@ dependencies:
   jwt_decoder: ^2.0.1
   flutter_secure_storage: ^8.0.0
   image_picker: ^0.8.4+1
-  url_launcher:
+  url_launcher: ^6.1.11
   shared_preferences:
   firebase_messaging: ^14.4.0
   firebase_core:
